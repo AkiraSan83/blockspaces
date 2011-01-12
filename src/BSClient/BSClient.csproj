@@ -47,10 +47,6 @@
     <DocumentationFile>..\..\bin\debug\BSClient.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=1.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\OpenTK\1.0\Binaries\OpenTK\Release\OpenTK.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -80,6 +76,10 @@
     <ProjectReference Include="..\Ninject\Ninject.csproj">
       <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
       <Name>Ninject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenTK\1.0\Source\OpenTK\OpenTK.csproj">
+      <Project>{A37A7E14-0000-0000-0000-000000000000}</Project>
+      <Name>OpenTK</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
