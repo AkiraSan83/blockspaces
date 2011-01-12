@@ -67,11 +67,11 @@ namespace JollyBit.BS.Rendering
 
             v = new Vbo<VertexPositionColor>(CubeVertices, CubeElements);
 
-            Point center = new Point();
-            center.X = (int)(this.Location.X + Width / 2.0f);
-            center.Y = (int)(this.Location.Y + Height / 2.0f);
-            System.Windows.Forms.Cursor.Position = center;
-            System.Windows.Forms.Cursor.Hide();
+            //Point center = new Point();
+            //center.X = (int)(this.Location.X + Width / 2.0f);
+            //center.Y = (int)(this.Location.Y + Height / 2.0f);
+            //System.Windows.Forms.Cursor.Position = center;
+            //System.Windows.Forms.Cursor.Hide();
         }
 
         protected override void OnResize(EventArgs e)
@@ -87,8 +87,8 @@ namespace JollyBit.BS.Rendering
         }
 
 
-        bool firstUpdate = true;
-        Point mouseCenter;
+        //bool firstUpdate = true;
+        //Point mouseCenter;
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             // Application control flow
@@ -104,29 +104,30 @@ namespace JollyBit.BS.Rendering
             if (Keyboard[Key.A])
                 camera.StrafeRight(-keySpeed);
             if (Keyboard[Key.Q])
-                camera.RotateZ(-keySpeed);
+                camera.RotateY(keySpeed);
             if (Keyboard[Key.E])
-                camera.RotateZ(keySpeed);
+                camera.RotateY(-keySpeed);
+			
+            //if (firstUpdate)
+            //{
+            //    mouseCenter = new Point(Mouse.X, Mouse.Y);
+            //    firstUpdate = false;
+            //}
+            //float mouseXDelta = mouseCenter.X - Mouse.X;
+            //if (mouseXDelta != 0)
+            //{
+            //    camera.RotateY(-mouseXDelta * mouseSpeed);
+            //}
+            //float mouseYDelta = mouseCenter.Y - Mouse.Y;
+            //if (mouseYDelta != 0)
+            //{
+            //    camera.RotateX(-mouseYDelta * mouseSpeed);
+            //}
+            //Point center = new Point();
+            //center.X = (int)(this.Location.X + Width / 2.0f);
+            //center.Y = (int)(this.Location.Y + Height / 2.0f);
+            //System.Windows.Forms.Cursor.Position = center;
 
-            if (firstUpdate)
-            {
-                mouseCenter = new Point(Mouse.X, Mouse.Y);
-                firstUpdate = false;
-            }
-            float mouseXDelta = mouseCenter.X - Mouse.X;
-            if (mouseXDelta != 0)
-            {
-                camera.RotateY(-mouseXDelta * mouseSpeed);
-            }
-            float mouseYDelta = mouseCenter.Y - Mouse.Y;
-            if (mouseYDelta != 0)
-            {
-                camera.RotateX(-mouseYDelta * mouseSpeed);
-            }
-            Point center = new Point();
-            center.X = (int)(this.Location.X + Width / 2.0f);
-            center.Y = (int)(this.Location.Y + Height / 2.0f);
-            System.Windows.Forms.Cursor.Position = center;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -138,8 +139,8 @@ namespace JollyBit.BS.Rendering
             camera.Render();
 
             //Render Trident
+            GL.LineWidth(2f);
             GL.Begin(BeginMode.Lines);
-                GL.LineWidth(5f);
                 GL.Color3(Color.Red); 
                 GL.Vertex3(0f, 0f, 0f);
                 GL.Vertex3(1f, 0f, 0f);
@@ -151,8 +152,7 @@ namespace JollyBit.BS.Rendering
                 GL.Vertex3(0f, 0f, 1f);
             GL.End();            
 
-            v.Render();
-            //camera.Render();
+            //v.Render();
 
             SwapBuffers();
         }

@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="AutomatedRelease" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="c:\Users\Richard\Documents\Projects\BlockSpaces\trunk\src\Ninject\Infrastructure\Language\ExtensionsForMemberInfo.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workbench ActiveDocument="BSClient\Game.cs" ctype="Workbench">
     <Files>
-      <File FileName="c:\Users\Richard\Documents\Projects\BlockSpaces\trunk\src\Ninject\Infrastructure\Language\ExtensionsForMemberInfo.cs" Line="32" Column="44" />
+      <File FileName="BSClient\Game.cs" Line="114" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
