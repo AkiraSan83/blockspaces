@@ -117,10 +117,10 @@ Left--> | ______________________ | |  | | |   |
           ---------------------->
                 +X axis
          */
-        public static void _createCubeSide(out VertexPositionColor[] vertexes, out short[] indicies, int startIndex, ref Vector3 centeOfSide, CubeSideTypes sideType)
-        {
+        //public static void _createCubeSide(out VertexPositionColor[] vertexes, out short[] indicies, int startIndex, ref Vector3 centeOfSide, CubeSideTypes sideType)
+        //{
             
-        }
+        //}
 
         public enum CubeSideTypes
         {
