@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
@@ -25,13 +25,12 @@
     <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\debug\</OutputPath>
+    <OutputPath>..\..\bin\debug\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DOTNET;DOTNET_2_0;NET_2_API</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>NLog.xml</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoWarn>1699</NoWarn>
@@ -44,12 +43,12 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\release\</OutputPath>
+    <OutputPath>..\..\bin\release\</OutputPath>
     <BaseAddress>285212672</BaseAddress>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
     <DefineConstants>DOTNET;DOTNET_2_0;NET_2_API</DefineConstants>
-    <DocumentationFile>bin\release\NLog.xml</DocumentationFile>
+    <DocumentationFile>..\..\bin\release\NLog.xml</DocumentationFile>
     <FileAlignment>4096</FileAlignment>
     <NoWarn>1699</NoWarn>
     <Optimize>false</Optimize>
