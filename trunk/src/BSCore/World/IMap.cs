@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JollyBit.BS.Utility;
+using JollyBit.BS.World.Generation;
 
 namespace JollyBit.BS.World
 {
@@ -16,13 +17,12 @@ namespace JollyBit.BS.World
     public interface IChunk
     {
         IBlock this[byte x, byte y, byte z] { get; set; }
-        Point3L Location { get; }
         event EventHandler<BlockChangedEventArgs> BlockChanged;
     }
 
     public interface IMap
     {
-        IChunk this[long x, long y, long z] { get; set; }
+        IChunk this[long x, long y, long z] { get; }
         Point3L GetChunkLocation(IChunk chunk);
         IEnumerable<IChunk> Chunks { get; }
         event EventHandler<ItemChangedEventArgs<IChunk>> ChunkChanged;
