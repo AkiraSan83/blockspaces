@@ -58,6 +58,7 @@
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\MapRenderer.cs" />
+    <Compile Include="Rendering\Trident.cs" />
     <Compile Include="Rendering\Vbo.cs" />
     <Compile Include="Rendering\VertexColorPosition.cs" />
   </ItemGroup>

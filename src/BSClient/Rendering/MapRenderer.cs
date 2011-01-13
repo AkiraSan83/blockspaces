@@ -91,8 +91,8 @@ namespace JollyBit.BS.Rendering
                     }
         }
 
-        /*
-            	 _________________________
+/*
+            	 _________________________ (1,1,1)
                 / _________Top_________  /|
                / / ___________________/ / |   
               / / /| |               / /  |  /|\
@@ -113,23 +113,73 @@ Left--> | ______________________ | |  | | |   |
         | | |/_/_______________| |  /     /
         | |____________________| | /     /
         |________Front___________|/     /
-       
+     (0,0,0)
           ---------------------->
                 +X axis
-         */
-        //public static void _createCubeSide(out VertexPositionColor[] vertexes, out short[] indicies, int startIndex, ref Vector3 centeOfSide, CubeSideTypes sideType)
-        //{
-            
-        //}
+*/
+        public static void _createCubeSide(ref VertexPositionColor[] vertexes, int vertexesStartIndex, ref short[] indices, int indicesStartIndex, ref Vector3 centerOfCube, CubeSideTypes sideType)
+        {
+            //Create indicies
+            indices[indicesStartIndex + 0] = (short)(vertexesStartIndex + 0);
+            indices[indicesStartIndex + 1] = (short)(vertexesStartIndex + 1);
+            indices[indicesStartIndex + 2] = (short)(vertexesStartIndex + 2);
+            indices[indicesStartIndex + 3] = (short)(vertexesStartIndex + 2);
+            indices[indicesStartIndex + 4] = (short)(vertexesStartIndex + 3);
+            indices[indicesStartIndex + 5] = (short)(vertexesStartIndex + 0);
+
+            //Create vertexes
+            float x = centerOfCube.X;
+            float y = centerOfCube.Y;
+            float z = centerOfCube.Z;
+            switch (sideType)
+            {
+                case CubeSideTypes.Front:
+                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y - 0.5f, z - 0.5f, Color.Red);
+                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y - 0.5f, z - 0.5f, Color.Green);
+                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y + 0.5f, z - 0.5f, Color.Blue);
+                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y + 0.5f, z - 0.5f, Color.Purple);
+                    break;
+                case CubeSideTypes.Back:
+                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y - 0.5f, z + 0.5f, Color.Red);
+                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y - 0.5f, z + 0.5f, Color.Green);
+                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y + 0.5f, z + 0.5f, Color.Blue);
+                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
+                    break;
+                case CubeSideTypes.Left:
+                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y - 0.5f, z + 0.5f, Color.Red);
+                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x - 0.5f, y - 0.5f, z - 0.5f, Color.Green);
+                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x - 0.5f, y + 0.5f, z - 0.5f, Color.Blue);
+                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
+                    break;
+                case CubeSideTypes.Right:
+                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x + 0.5f, y - 0.5f, z + 0.5f, Color.Red);
+                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y - 0.5f, z - 0.5f, Color.Green);
+                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y + 0.5f, z - 0.5f, Color.Blue);
+                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x + 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
+                    break;
+                case CubeSideTypes.Top:
+                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y + 0.5f, z - 0.5f, Color.Red);
+                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y + 0.5f, z - 0.5f, Color.Green);
+                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y + 0.5f, z + 0.5f, Color.Blue);
+                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
+                    break;
+                case CubeSideTypes.Bottom:
+                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y - 0.5f, z - 0.5f, Color.Red);
+                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y - 0.5f, z - 0.5f, Color.Green);
+                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y - 0.5f, z + 0.5f, Color.Blue);
+                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y - 0.5f, z + 0.5f, Color.Purple);
+                    break;
+            }
+        }
 
         public enum CubeSideTypes
         {
-            Front,
-            Back,
-            Left,
-            Right,
-            Top,
-            Bottom
+            Front = 0x0,
+            Back = 0x1,
+            Left = 0x2,
+            Right = 0x4,
+            Top = 0x8,
+            Bottom = 0x10
         }
 
         public void Render()
