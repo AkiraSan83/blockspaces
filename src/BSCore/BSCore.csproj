@@ -44,12 +44,14 @@
     <Compile Include="Utility\ChangedEventArgs.cs" />
     <Compile Include="Utility\IExtendableObject.cs" />
     <Compile Include="Utility\Point.cs" />
+    <Compile Include="World\Chunk.cs" />
     <Compile Include="World\Generation\IGenerator.cs" />
     <Compile Include="World\Generation\SphereGenerator.cs" />
     <Compile Include="World\IBlock.cs" />
     <Compile Include="World\IBlockManager.cs" />
     <Compile Include="World\IMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="World\Map.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">

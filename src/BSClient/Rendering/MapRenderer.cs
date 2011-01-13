@@ -75,20 +75,7 @@ namespace JollyBit.BS.Rendering
 
         private void _rebuild()
         {
-            Point3L loc = Chunk.Location;
-            List<VertexPositionColor> vertexes = new List<VertexPositionColor>();
-            List<short> indices = new List<short>();
-            short currentIndx = 0;
-            for (byte x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
-                for (byte y = 0; x < BSCoreConstants.CHUNK_SIZE_Y; y++)
-                    for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
-                    {
-                        if (Chunk[x,y,z] != null)
-                        {
 
-                            break;
-                        }
-                    }
         }
 
 /*
