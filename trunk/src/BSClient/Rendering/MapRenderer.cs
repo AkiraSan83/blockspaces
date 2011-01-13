@@ -15,11 +15,6 @@ using Ninject.Parameters;
 
 namespace JollyBit.BS.Rendering
 {
-    public interface IMapRenderer : IRenderable
-    {
-        IMap Map { get; }
-    }
-
     public class MapRenderer : IRenderable
     {
         public readonly IMap Map;
@@ -32,7 +27,7 @@ namespace JollyBit.BS.Rendering
             //Create renderers for all chunks that already exist
             foreach (IChunk chunk in Map.Chunks)
             {
-                Map_ChunkChanged(this, new ItemChangedEventArgs<IChunk>(null, chunk)); 
+                Map_ChunkChanged(this, new ItemChangedEventArgs<IChunk>(null, chunk));
             }
         }
 
@@ -62,10 +57,12 @@ namespace JollyBit.BS.Rendering
     internal class ChunkRenderer : IRenderable
     {
         public readonly IChunk Chunk;
+        private Vbo<VertexPositionColor> _vbo;
         public ChunkRenderer(IChunk chunk)
         {
             Chunk = chunk;
             Chunk.BlockChanged += new EventHandler<BlockChangedEventArgs>(Chunk_BlockChanged);
+            rebuild();
         }
 
         void Chunk_BlockChanged(object sender, BlockChangedEventArgs e)
@@ -75,41 +72,59 @@ namespace JollyBit.BS.Rendering
 
         private void rebuild()
         {
-            for (int x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
-                for (int y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
-                    for (int z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
+            IList<VertexPositionColor> vertexes = new List<VertexPositionColor>();
+            IList<short> indices = new List<short>();
+            for (byte x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
+                for (byte y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
+                    for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
                     {
-
+                        if (Chunk[x, y, z] == null) continue;
+                        BlockSides sides = BlockSides.None;
+                        if (z == 0 || Chunk[x, y, (byte)(z - 1)] == null)
+                            sides |= BlockSides.Front;
+                        if (z == BSCoreConstants.CHUNK_SIZE_Z - 1 || Chunk[x, y, (byte)(z + 1)] == null)
+                            sides |= BlockSides.Back;
+                        if (x == 0 || Chunk[(byte)(x - 1), y, z] == null)
+                            sides |= BlockSides.Left;
+                        if (x == BSCoreConstants.CHUNK_SIZE_X - 1 || Chunk[(byte)(x + 1), y, z] == null)
+                            sides |= BlockSides.Right;
+                        if (y == 0 || Chunk[x, (byte)(y - 1), z] == null)
+                            sides |= BlockSides.Bottom;
+                        if (y == BSCoreConstants.CHUNK_SIZE_Y - 1 || Chunk[x, (byte)(y + 1), z] == null)
+                            sides |= BlockSides.Top;
+                        createCubeSide(ref vertexes, ref indices, new Vector3(x, y, z), sides);
                     }
+            if (_vbo != null) _vbo.Dispose();
+            _vbo = new Vbo<VertexPositionColor>(vertexes.ToArray(), indices.ToArray());
         }
 
-/*
-            	 _________________________ (1,1,1)
-                / _________Top_________  /|
-               / / ___________________/ / |   
-              / / /| |               / /  |  /|\
-             / / / | |              / / . |   |
-            / / /| | |             / / /| |   |
-           / / / | | |            / / / | |   |
-          / / /  | | |           / / /| | |   | +Y axis
-         / /_/__________________/ / / | | |   |
-        /________________________/ /  | | |   |
-Left--> | ______________________ | |  | | |   | 
-        | | |    | | |_________| | |__| | |   |
-        | | |    | |___________| | |____| |   |
-        | | |   / / ___________| | |_  / /    
-        | | |  / / /           | | |/ / /     /
-        | | | / / /            | | | / /     /
-        | | |/ / /             | | |/ /     /
-        | | | / /              | | ' /     /  +Z axis
-        | | |/_/_______________| |  /     /
-        | |____________________| | /     /
-        |________Front___________|/    \/
-     (0,0,0)
-          ---------------------->
-                +X axis
-*/
-        public static void _createCubeSide(ref IList<VertexPositionColor> vertexes, ref IList<short> indices, ref Vector3 frontBottomLeftOfCube, BlockSides sideType)
+        /*
+                         _________________________ (1,1,1)
+                        / _________Top_________  /|
+                       / / ___________________/ / |   
+                      / / /| |               / /  |  /|\
+                     / / / | |              / / . |   |
+                    / / /| | |             / / /| |   |
+                   / / / | | |            / / / | |   |
+                  / / /  | | |           / / /| | |   | +Y axis
+                 / /_/__________________/ / / | | |   |
+                /________________________/ /  | | |   |
+        Left--> | ______________________ | |  | | |   | 
+                | | |    | | |_________| | |__| | |   |
+                | | |    | |___________| | |____| |   |
+                | | |   / / ___________| | |_  / /    
+                | | |  / / /           | | |/ / /     /
+                | | | / / /            | | | / /     /
+                | | |/ / /             | | |/ /     /
+                | | | / /              | | ' /     /  +Z axis
+                | | |/_/_______________| |  /     /
+                | |____________________| | /     /
+                |________Front___________|/    \/
+             (0,0,0)
+                  ---------------------->
+                        +X axis
+        */
+        public static void createCubeSide(ref IList<VertexPositionColor> vertexes, ref IList<short> indices, Vector3 frontBottomLeftOfCube, BlockSides sideType)
         {
             //Create vertexes
             float x = frontBottomLeftOfCube.X;
@@ -179,7 +194,7 @@ Left--> | ______________________ | |  | | |   |
 
         public void Render()
         {
-            throw new NotImplementedException();
+            _vbo.Render();
         }
     }
 }

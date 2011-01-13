@@ -8,12 +8,13 @@ namespace JollyBit.BS.World
     [Flags]
     public enum BlockSides
     {
-        Front = 0x0,
-        Back = 0x1,
-        Left = 0x2,
-        Right = 0x4,
-        Top = 0x8,
-        Bottom = 0x10
+        None = 0x0,
+        Front = 0x1,
+        Back = 0x2,
+        Left = 0x4,
+        Right = 0x8,
+        Top = 0x10,
+        Bottom = 0x20
     }
     public interface IBlock
     {

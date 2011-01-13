@@ -12,7 +12,7 @@ namespace JollyBit.BS.Rendering
     public class Camera
     {
 
-        private Vector3 _position = new Vector3(0,0,5);
+        private Vector3 _position = new Vector3(5,0,10);
 
         private Vector3 _x = Vector3.UnitX;
         private Vector3 _y = Vector3.UnitY;

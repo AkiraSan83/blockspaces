@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Ninject.Modules;
 using Ninject;
+using JollyBit.BS.World;
+using JollyBit.BS.World.Generation;
 
 namespace JollyBit.BS
 {
@@ -11,6 +13,9 @@ namespace JollyBit.BS
     {
         public override void Load()
         {
+            Bind<IMap>().To<Map>();
+            Bind<IGenerator>().To<SphereGenerator>();
+            Bind<IChunk>().To<Chunk>();
         }
     }
 }
