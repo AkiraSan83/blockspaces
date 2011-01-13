@@ -44,6 +44,8 @@
     <Compile Include="Utility\ChangedEventArgs.cs" />
     <Compile Include="Utility\IExtendableObject.cs" />
     <Compile Include="Utility\Point.cs" />
+    <Compile Include="World\Generation\IGenerator.cs" />
+    <Compile Include="World\Generation\SphereGenerator.cs" />
     <Compile Include="World\IBlock.cs" />
     <Compile Include="World\IBlockManager.cs" />
     <Compile Include="World\IMap.cs" />

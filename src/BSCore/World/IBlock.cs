@@ -9,4 +9,5 @@ namespace JollyBit.BS.World
     {
 
     }
+    public class Block : IBlock { }
 }
