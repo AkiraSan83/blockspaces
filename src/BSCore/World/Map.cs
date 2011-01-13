@@ -10,7 +10,7 @@ namespace JollyBit.BS.World
 {
     public class Map : IMap
     {
-        private IDictionary<UInt64, IChunk> _chunks = new Dictionary<UInt64, IChunk>();
+        private IDictionary<Point3L, IChunk> _chunks = new Dictionary<Point3L, IChunk>();
         private IKernel _kernel;
         private IGenerator _generator;
 
@@ -26,11 +26,11 @@ namespace JollyBit.BS.World
             get
             {
                 IChunk chunk;
-                ulong hashedValue = hash((ulong)x, (ulong)y, (ulong)z);
-                if (!_chunks.TryGetValue(hashedValue, out chunk))
+                Point3L chunkLocation = calcChunkLocation(new Point3L(x, y, z));                
+                if (!_chunks.TryGetValue(chunkLocation, out chunk))
                 {
                     chunk = createChunk(calcChunkLocation(new Point3L(x, y, z)));
-                    _chunks.Add(hashedValue, chunk);
+                    _chunks.Add(chunkLocation, chunk);
                 }
                 return chunk;
             }
@@ -63,21 +63,5 @@ namespace JollyBit.BS.World
         }
 
         public event EventHandler<Utility.ItemChangedEventArgs<IChunk>> ChunkChanged;
-
-        private const UInt64 FNV_PRIME = 1099511628211;
-        private const UInt64 OFFSET_BASIS = 14695981039346656037;
-        /// <summary>
-        /// Hahes a xyz coordinate using FNV hash. Look at
-        /// http://isthe.com/chongo/tech/comp/fnv/ for more info on FNV hash.
-        /// </summary>
-        protected UInt64 hash(UInt64 x, UInt64 y, UInt64 z)
-        {
-            //hash = offset_basis
-            //for each octet_of_data to be hashed
-            //    hash = hash xor octet_of_data
-            //    hash = hash * FNV_prime
-            //return hash
-            return (((((OFFSET_BASIS ^ x) * FNV_PRIME) ^ y) * FNV_PRIME) ^ z) * FNV_PRIME;
-        }
     }
 }
