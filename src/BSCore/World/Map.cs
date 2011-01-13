@@ -52,14 +52,9 @@ namespace JollyBit.BS.World
             return chunk;
         }
 
-        public Utility.Point3L GetChunkLocation(IChunk chunk)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<IChunk> Chunks
         {
-            get { throw new NotImplementedException(); }
+            get { return _chunks.Values; }
         }
 
         public event EventHandler<Utility.ItemChangedEventArgs<IChunk>> ChunkChanged;
