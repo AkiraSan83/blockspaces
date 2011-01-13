@@ -21,12 +21,12 @@ namespace JollyBit.BS.World
             _generator = generator;
         }
 
-        public IChunk this[long x, long y, long z]
+        public IChunk this[Point3L blockLocation]
         {
             get
             {
                 IChunk chunk;
-                Point3L chunkLocation = calcChunkLocation(new Point3L(x, y, z));                
+                Point3L chunkLocation = calcChunkLocation(blockLocation);                
                 if (!_chunks.TryGetValue(chunkLocation, out chunk))
                 {
                     chunk = createChunk(chunkLocation);

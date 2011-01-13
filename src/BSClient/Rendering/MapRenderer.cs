@@ -59,7 +59,7 @@ namespace JollyBit.BS.Rendering
         }
     }
 
-    public class ChunkRenderer : IRenderable
+    internal class ChunkRenderer : IRenderable
     {
         public readonly IChunk Chunk;
         public ChunkRenderer(IChunk chunk)
@@ -70,12 +70,17 @@ namespace JollyBit.BS.Rendering
 
         void Chunk_BlockChanged(object sender, BlockChangedEventArgs e)
         {
-            _rebuild();
+            rebuild();
         }
 
-        private void _rebuild()
+        private void rebuild()
         {
+            for (int x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
+                for (int y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
+                    for (int z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
+                    {
 
+                    }
         }
 
 /*
@@ -93,80 +98,83 @@ Left--> | ______________________ | |  | | |   |
         | | |    | | |_________| | |__| | |   |
         | | |    | |___________| | |____| |   |
         | | |   / / ___________| | |_  / /    
-        | | |  / / /           | | |/ / /     /\
+        | | |  / / /           | | |/ / /     /
         | | | / / /            | | | / /     /
         | | |/ / /             | | |/ /     /
         | | | / /              | | ' /     /  +Z axis
         | | |/_/_______________| |  /     /
         | |____________________| | /     /
-        |________Front___________|/     /
+        |________Front___________|/    \/
      (0,0,0)
           ---------------------->
                 +X axis
 */
-        public static void _createCubeSide(ref VertexPositionColor[] vertexes, int vertexesStartIndex, ref short[] indices, int indicesStartIndex, ref Vector3 centerOfCube, CubeSideTypes sideType)
+        public static void _createCubeSide(ref IList<VertexPositionColor> vertexes, ref IList<short> indices, ref Vector3 frontBottomLeftOfCube, BlockSides sideType)
         {
-            //Create indicies
-            indices[indicesStartIndex + 0] = (short)(vertexesStartIndex + 0);
-            indices[indicesStartIndex + 1] = (short)(vertexesStartIndex + 1);
-            indices[indicesStartIndex + 2] = (short)(vertexesStartIndex + 2);
-            indices[indicesStartIndex + 3] = (short)(vertexesStartIndex + 2);
-            indices[indicesStartIndex + 4] = (short)(vertexesStartIndex + 3);
-            indices[indicesStartIndex + 5] = (short)(vertexesStartIndex + 0);
-
             //Create vertexes
-            float x = centerOfCube.X;
-            float y = centerOfCube.Y;
-            float z = centerOfCube.Z;
-            switch (sideType)
+            float x = frontBottomLeftOfCube.X;
+            float y = frontBottomLeftOfCube.Y;
+            float z = frontBottomLeftOfCube.Z;
+            if ((sideType & BlockSides.Front) == BlockSides.Front)
             {
-                case CubeSideTypes.Front:
-                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y - 0.5f, z - 0.5f, Color.Red);
-                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y - 0.5f, z - 0.5f, Color.Green);
-                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y + 0.5f, z - 0.5f, Color.Blue);
-                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y + 0.5f, z - 0.5f, Color.Purple);
-                    break;
-                case CubeSideTypes.Back:
-                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y - 0.5f, z + 0.5f, Color.Red);
-                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y - 0.5f, z + 0.5f, Color.Green);
-                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y + 0.5f, z + 0.5f, Color.Blue);
-                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
-                    break;
-                case CubeSideTypes.Left:
-                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y - 0.5f, z + 0.5f, Color.Red);
-                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x - 0.5f, y - 0.5f, z - 0.5f, Color.Green);
-                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x - 0.5f, y + 0.5f, z - 0.5f, Color.Blue);
-                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
-                    break;
-                case CubeSideTypes.Right:
-                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x + 0.5f, y - 0.5f, z + 0.5f, Color.Red);
-                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y - 0.5f, z - 0.5f, Color.Green);
-                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y + 0.5f, z - 0.5f, Color.Blue);
-                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x + 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
-                    break;
-                case CubeSideTypes.Top:
-                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y + 0.5f, z - 0.5f, Color.Red);
-                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y + 0.5f, z - 0.5f, Color.Green);
-                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y + 0.5f, z + 0.5f, Color.Blue);
-                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y + 0.5f, z + 0.5f, Color.Purple);
-                    break;
-                case CubeSideTypes.Bottom:
-                    vertexes[vertexesStartIndex + 3] = new VertexPositionColor(x - 0.5f, y - 0.5f, z - 0.5f, Color.Red);
-                    vertexes[vertexesStartIndex + 2] = new VertexPositionColor(x + 0.5f, y - 0.5f, z - 0.5f, Color.Green);
-                    vertexes[vertexesStartIndex + 1] = new VertexPositionColor(x + 0.5f, y - 0.5f, z + 0.5f, Color.Blue);
-                    vertexes[vertexesStartIndex + 0] = new VertexPositionColor(x - 0.5f, y - 0.5f, z + 0.5f, Color.Purple);
-                    break;
+                appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z - 0.0f, Color.Red));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z - 0.0f, Color.Green));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z - 0.0f, Color.Blue));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z - 0.0f, Color.Purple));
+            }
+            if ((sideType & BlockSides.Back) == BlockSides.Back)
+            {
+                appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z + 1.0f, Color.Purple));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z + 1.0f, Color.Blue));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z + 1.0f, Color.Green));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z + 1.0f, Color.Red));
+            }
+            if ((sideType & BlockSides.Left) == BlockSides.Left)
+            {
+                appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z + 1.0f, Color.Red));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z - 0.0f, Color.Green));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z - 0.0f, Color.Blue));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z + 1.0f, Color.Purple));
+            }
+            if ((sideType & BlockSides.Right) == BlockSides.Right)
+            {
+                appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z + 1.0f, Color.Purple));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z - 0.0f, Color.Blue));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z - 0.0f, Color.Green));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z + 1.0f, Color.Red));
+            }
+            if ((sideType & BlockSides.Top) == BlockSides.Top)
+            {
+                appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z - 0.0f, Color.Red));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z - 0.0f, Color.Green));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z + 1.0f, Color.Blue));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z + 1.0f, Color.Purple));
+            }
+            if ((sideType & BlockSides.Bottom) == BlockSides.Bottom)
+            {
+                appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z + 1.0f, Color.Purple));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z + 1.0f, Color.Blue));
+                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z - 0.0f, Color.Green));
+                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z - 0.0f, Color.Red));
             }
         }
 
-        public enum CubeSideTypes
+        private static void appendIndiciesForSideOfCube(ref IList<VertexPositionColor> vertexes, ref IList<short> indices)
         {
-            Front = 0x0,
-            Back = 0x1,
-            Left = 0x2,
-            Right = 0x4,
-            Top = 0x8,
-            Bottom = 0x10
+            //Create indicies
+            int vertexesStartIndex = vertexes.Count;
+            indices.Add((short)(vertexesStartIndex + 0));
+            indices.Add((short)(vertexesStartIndex + 1));
+            indices.Add((short)(vertexesStartIndex + 2));
+            indices.Add((short)(vertexesStartIndex + 2));
+            indices.Add((short)(vertexesStartIndex + 3));
+            indices.Add((short)(vertexesStartIndex + 0));
         }
 
         public void Render()
