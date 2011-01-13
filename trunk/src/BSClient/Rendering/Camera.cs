@@ -12,11 +12,11 @@ namespace JollyBit.BS.Rendering
     public class Camera
     {
 
-        private Vector3 _position = new Vector3(0,0,-5);
+        private Vector3 _position = new Vector3(0,0,5);
 
         private Vector3 _x = Vector3.UnitX;
         private Vector3 _y = Vector3.UnitY;
-        private Vector3 _z = -Vector3.UnitZ; //negative so camera is facing +Z direction
+        private Vector3 _z = Vector3.UnitZ; //negative so camera is facing +Z direction
 
         public void Render()
         {

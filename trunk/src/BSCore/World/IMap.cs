@@ -37,7 +37,6 @@ namespace JollyBit.BS.World
     public interface IMap
     {
         IChunk this[long x, long y, long z] { get; }
-        Point3L GetChunkLocation(IChunk chunk);
         IEnumerable<IChunk> Chunks { get; }
         event EventHandler<ItemChangedEventArgs<IChunk>> ChunkChanged;
     }
