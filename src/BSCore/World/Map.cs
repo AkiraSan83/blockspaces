@@ -38,7 +38,10 @@ namespace JollyBit.BS.World
         }
 
         private Point3L calcChunkLocation(Point3L blockLocation) {
-            return new Point3L(blockLocation.X / BSCoreConstants.CHUNK_SIZE_X * BSCoreConstants.CHUNK_SIZE_X, blockLocation.Y / BSCoreConstants.CHUNK_SIZE_Y * BSCoreConstants.CHUNK_SIZE_Y, blockLocation.Z / BSCoreConstants.CHUNK_SIZE_Z * BSCoreConstants.CHUNK_SIZE_Z);
+            return new Point3L(
+                blockLocation.X / BSCoreConstants.CHUNK_SIZE_X * BSCoreConstants.CHUNK_SIZE_X, 
+                blockLocation.Y / BSCoreConstants.CHUNK_SIZE_Y * BSCoreConstants.CHUNK_SIZE_Y, 
+                blockLocation.Z / BSCoreConstants.CHUNK_SIZE_Z * BSCoreConstants.CHUNK_SIZE_Z);
         }
 
         private IChunk createChunk(Point3L chunkLocation)

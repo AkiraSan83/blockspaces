@@ -17,6 +17,8 @@ using OpenTK.Platform;
 using OpenTK.Input;
 using System.Drawing;
 using System.Linq;
+using Ninject;
+using Ninject.Modules;
 
 using JollyBit.BS.Rendering;
 using JollyBit.BS.World;
@@ -29,6 +31,7 @@ namespace JollyBit.BS
     {
 		private IList<IRenderable> _renderList = new List<IRenderable>();
 		private Camera _camera = new Camera();
+        
 		
 		public IList<IRenderable> RenderList {
 			get { return _renderList; }
@@ -43,25 +46,38 @@ namespace JollyBit.BS
         {
             base.OnLoad(e);
 
+            //Setup Ninject
+            IKernel kenel = new StandardKernel();
+            kenel.Bind<IKernel>().ToSelf().InSingletonScope();
+            kenel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
+
 			// Handle mouse and keyboard events
 			new Input(this);
 				
             // Set OpenGL options
-			GL.ClearColor(System.Drawing.Color.MidnightBlue);
+			GL.ClearColor(System.Drawing.Color.Black);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Back);
 
-			// Build Dynamic Cube!
-            IList<VertexPositionColor> verts = new List<VertexPositionColor>();
-            IList<short> indexs = new List<short>();
-            Vector3 pos = new Vector3(0, 0, 0);
-            ChunkRenderer._createCubeSide(ref verts, ref indexs, ref pos, BlockSides.Front | BlockSides.Back | BlockSides.Left | BlockSides.Right | BlockSides.Bottom | BlockSides.Top);
+            // Create World Renderer
+            MapRenderer mapRenderer = kenel.Get<MapRenderer>();
+            _renderList.Add(mapRenderer);
+            IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
+            c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
+            c = mapRenderer.Map[new Utility.Point3L(0, -1, 0)];
+            c = mapRenderer.Map[new Utility.Point3L(0, 0, -1)];
 
-			// Add the cube to the render list
-            VertexPositionColor[] vertsArr = verts.ToArray();
-            short[] indexsArr = indexs.ToArray();
-            _renderList.Add(new Vbo<VertexPositionColor>(vertsArr, indexsArr));
+            //// Build Dynamic Cube!
+            //IList<VertexPositionColor> verts = new List<VertexPositionColor>();
+            //IList<short> indexs = new List<short>();
+            //Vector3 pos = new Vector3(0, 0, 0);
+            //ChunkRenderer.createCubeSide(ref verts, ref indexs, pos, BlockSides.Front | BlockSides.Back | BlockSides.Left | BlockSides.Right | BlockSides.Bottom | BlockSides.Top);
+
+            //// Add the cube to the render list
+            //VertexPositionColor[] vertsArr = verts.ToArray();
+            //short[] indexsArr = indexs.ToArray();
+            //_renderList.Add(new Vbo<VertexPositionColor>(vertsArr, indexsArr));
 			
 			// Build trident and add to the render list
 			_renderList.Add( new Trident() );
