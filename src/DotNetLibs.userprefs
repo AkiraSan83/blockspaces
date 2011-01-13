@@ -2,10 +2,10 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
   <MonoDevelop.Ide.Workbench ActiveDocument="BSClient/Game.cs" ctype="Workbench">
     <Files>
-      <File FileName="BSClient/Game.cs" Line="30" Column="29" />
-      <File FileName="OpenTK/1.0/Source/OpenTK/GameWindow.cs" Line="74" Column="16" />
-      <File FileName="Assembly Browser" />
+      <File FileName="BSClient/Game.cs" Line="64" Column="30" />
+      <File FileName="OpenTK/1.0/Source/OpenTK/GameWindow.cs" Line="37" Column="1" />
       <File FileName="OpenTK/1.0/Source/OpenTK/NativeWindow.cs" Line="723" Column="33" />
+      <File FileName="BSClient/Input.cs" Line="11" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
