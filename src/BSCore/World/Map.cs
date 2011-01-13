@@ -29,7 +29,7 @@ namespace JollyBit.BS.World
                 Point3L chunkLocation = calcChunkLocation(new Point3L(x, y, z));                
                 if (!_chunks.TryGetValue(chunkLocation, out chunk))
                 {
-                    chunk = createChunk(calcChunkLocation(new Point3L(x, y, z)));
+                    chunk = createChunk(chunkLocation);
                     _chunks.Add(chunkLocation, chunk);
                 }
                 return chunk;
