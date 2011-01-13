@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -50,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">
+      <Project>{031C8CFF-F147-44EA-B7E5-0A5644808A7E}</Project>
+      <Name>LibNoise</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ninject.Extensions.Logging.NLog\Ninject.Extensions.Logging.NLog.csproj">
       <Project>{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}</Project>
       <Name>Ninject.Extensions.Logging.NLog</Name>
