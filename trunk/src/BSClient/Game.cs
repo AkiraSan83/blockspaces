@@ -23,50 +23,34 @@ using JollyBit.BS.Rendering;
 
 namespace JollyBit.BS
 {
-
-	
 	public class BSClient : GameWindow
     {
-        public Camera camera = new Camera();
-
-        VertexPositionColor[] CubeVertices = new VertexPositionColor[]
-        {
-                new VertexPositionColor(-1.0f, -1.0f,  1.0f, Color.DarkRed),
-                new VertexPositionColor( 1.0f, -1.0f,  1.0f, Color.DarkRed),
-                new VertexPositionColor( 1.0f,  1.0f,  1.0f, Color.Gold),
-                new VertexPositionColor(-1.0f,  1.0f,  1.0f, Color.Gold),
-                new VertexPositionColor(-1.0f, -1.0f, -1.0f, Color.DarkRed),
-                new VertexPositionColor( 1.0f, -1.0f, -1.0f, Color.DarkRed), 
-                new VertexPositionColor( 1.0f,  1.0f, -1.0f, Color.Gold),
-                new VertexPositionColor(-1.0f,  1.0f, -1.0f, Color.Gold) 
-        };
-
-        readonly short[] CubeElements = new short[]
-        {
-            0, 1, 2, 2, 3, 0, // front face
-            3, 2, 6, 6, 7, 3, // top face
-            7, 6, 5, 5, 4, 7, // back face
-            4, 0, 3, 3, 7, 4, // left face
-            0, 1, 5, 5, 4, 0, // bottom face
-            1, 5, 6, 6, 2, 1, // right face
-        };
+		private IList<IRenderable> _renderList = new List<IRenderable>();
+		private Camera _camera = new Camera();
+		
+		public IList<IRenderable> RenderList {
+			get { return _renderList; }
+		}
+		public Camera Camera {
+			get { return _camera; }
+		}
 
         public BSClient() : base(800, 600) { }
 
-        private Vbo<VertexPositionColor> v;
-		
-		private Point _center;
 		protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
-			Input i = new Input(this);
-			
-            GL.ClearColor(System.Drawing.Color.MidnightBlue);
+			// Handle mouse and keyboard events
+			new Input(this);
+				
+            // Set OpenGL options
+			GL.ClearColor(System.Drawing.Color.MidnightBlue);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
             GL.CullFace(CullFaceMode.Back);
 
+			// Build Dynamic Cube!
             VertexPositionColor[] verts = new VertexPositionColor[4 * 6];
             short[] indexs = new short[6 * 6];
             Vector3 pos = new Vector3(0, 0, 0);
@@ -76,7 +60,12 @@ namespace JollyBit.BS
             ChunkRenderer._createCubeSide(ref verts, 4 * 3, ref indexs, 6 * 3, ref pos, ChunkRenderer.CubeSideTypes.Right);
             ChunkRenderer._createCubeSide(ref verts, 4 * 4, ref indexs, 6 * 4, ref pos, ChunkRenderer.CubeSideTypes.Bottom);
             ChunkRenderer._createCubeSide(ref verts, 4 * 5, ref indexs, 6 * 5, ref pos, ChunkRenderer.CubeSideTypes.Top);
-            v = new Vbo<VertexPositionColor>(verts, indexs);
+            
+			// Add the cube to the render list
+			_renderList.Add( new Vbo<VertexPositionColor>(verts, indexs) );
+			
+			// Build trident and add to the render list
+			_renderList.Add( new Trident() );
         }    
 
         protected override void OnResize(EventArgs e)
@@ -91,30 +80,19 @@ namespace JollyBit.BS
             GL.LoadMatrix(ref perpective);
         }
 
-
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            camera.Render();
+			// Render the camera
+            _camera.Render();
 
-            //Render Trident
-            GL.LineWidth(2f);
-            GL.Begin(BeginMode.Lines);
-                GL.Color3(Color.Red); 
-                GL.Vertex3(0f, 0f, 0f);
-                GL.Vertex3(1f, 0f, 0f);
-                GL.Color3(Color.Green);
-                GL.Vertex3(0f, 0f, 0f);
-                GL.Vertex3(0f, 1f, 0f);
-                GL.Color3(Color.Blue);
-                GL.Vertex3(0f, 0f, 0f);
-                GL.Vertex3(0f, 0f, 1f);
-            GL.End();            
-
-            v.Render();
+			// Render each item in the render list
+			foreach(var renderable in _renderList) {
+				renderable.Render();
+			}
 
             SwapBuffers();
         }

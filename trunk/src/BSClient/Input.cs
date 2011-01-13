@@ -61,21 +61,21 @@ namespace JollyBit.BS {
 	                this._gameWindow.Exit();
 			
 				if (this._gameWindow.Keyboard[Key.W])
-	                this._gameWindow.camera.MoveForward(_keySpeed);
+	                this._gameWindow.Camera.MoveForward(_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.S])
-	                this._gameWindow.camera.MoveForward(-_keySpeed);
+	                this._gameWindow.Camera.MoveForward(-_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.D])
-	                this._gameWindow.camera.StrafeRight(_keySpeed);
+	                this._gameWindow.Camera.StrafeRight(_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.A])
-	                this._gameWindow.camera.StrafeRight(-_keySpeed);
+	                this._gameWindow.Camera.StrafeRight(-_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.Q])
-	                this._gameWindow.camera.RotateY(_keySpeed);
+	                this._gameWindow.Camera.RotateY(_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.E])
-	                this._gameWindow.camera.RotateY(-_keySpeed);
+	                this._gameWindow.Camera.RotateY(-_keySpeed);
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
-				this._gameWindow.camera.RotateY(-delta.X * _mouseSpeed);
-				this._gameWindow.camera.RotateX(-delta.Y * _mouseSpeed);
+				this._gameWindow.Camera.RotateY(-delta.X * _mouseSpeed);
+				this._gameWindow.Camera.RotateX(-delta.Y * _mouseSpeed);
 				System.Windows.Forms.Cursor.Position = _center;
 			}
 		}
