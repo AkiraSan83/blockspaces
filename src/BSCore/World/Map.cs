@@ -31,6 +31,7 @@ namespace JollyBit.BS.World
                 {
                     chunk = createChunk(chunkLocation);
                     _chunks.Add(chunkLocation, chunk);
+                    if (ChunkChanged != null) ChunkChanged(this, new ItemChangedEventArgs<IChunk>(null, chunk));
                 }
                 return chunk;
             }
@@ -49,6 +50,7 @@ namespace JollyBit.BS.World
                     {
                         chunk[x, y, z] = _generator.GenerateBlock(chunkLocation + new Point3L(x, y, z));
                     }
+            chunk.Location = chunkLocation;
             return chunk;
         }
 
