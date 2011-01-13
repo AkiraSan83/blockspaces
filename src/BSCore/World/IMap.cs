@@ -24,6 +24,14 @@ namespace JollyBit.BS.World
     {
         IBlock this[byte x, byte y, byte z] { get; set; }
         event EventHandler<BlockChangedEventArgs> BlockChanged;
+		Point3L Location {
+			get;
+			set;
+		}
+		IMap Map {
+			get;
+			set;
+		}
     }
 
     public interface IMap
