@@ -12,6 +12,12 @@ namespace JollyBit.BS.World
         public readonly Point3L BlockLocation;
         public readonly IBlock OldValue;
         public readonly IBlock NewValue;
+        public BlockChangedEventArgs(Point3L blockLocation, IBlock oldValue, IBlock newValue)
+        {
+            BlockLocation = blockLocation;
+            OldValue = oldValue;
+            NewValue = newValue;
+        }
     }
 
     public interface IChunk

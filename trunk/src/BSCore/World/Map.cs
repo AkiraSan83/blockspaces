@@ -48,7 +48,6 @@ namespace JollyBit.BS.World
                     for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
                     {
                         chunk[x, y, z] = _generator.GenerateBlock(chunkLocation + new Point3L(x, y, z));
-
                     }
             return chunk;
         }
