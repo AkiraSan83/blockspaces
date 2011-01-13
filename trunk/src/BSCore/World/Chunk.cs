@@ -3,10 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using JollyBit.BS.Utility;
+
 namespace JollyBit.BS.World
 {
     public class Chunk : IChunk
     {
+		public Point3L Location {
+			get;
+			set;
+		}
+		public IMap Map {
+			get;
+			set;
+		}
+				
         private IBlock[, ,] _blocks = new IBlock[BSCoreConstants.CHUNK_SIZE_X, BSCoreConstants.CHUNK_SIZE_Y, BSCoreConstants.CHUNK_SIZE_Z];
         public IBlock this[byte x, byte y, byte z]
         {
