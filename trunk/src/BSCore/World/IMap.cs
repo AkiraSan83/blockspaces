@@ -24,34 +24,25 @@ namespace JollyBit.BS.World
     {
         IBlock this[byte x, byte y, byte z] { get; set; }
         event EventHandler<BlockChangedEventArgs> BlockChanged;
-		Point3L Location {
-			get;
-			set;
-		}
-		IMap Map {
-			get;
-			set;
-		}
+        Point3L Location { get; set; }
+        IMap Map { get; set; }
     }
 
     public interface IMap
     {
-        IChunk this[long x, long y, long z] { get; }
+        IChunk this[Point3L blockLocation] { get; }
         IEnumerable<IChunk> Chunks { get; }
         event EventHandler<ItemChangedEventArgs<IChunk>> ChunkChanged;
     }
 
     public static class MapExtensions
     {
-        public static IBlock GetBlock(this IMap self, Point3L point)
+        public static IBlock GetBlock(this IMap self, Point3L blockLocation)
         {
-            return self.GetBlock(point.X, point.Y, point.Z);
-        }
-        public static IBlock GetBlock(this IMap self, long x, long y, long z)
-        {
-            return self[x, y, z][(byte)(x % (long)BSCoreConstants.CHUNK_SIZE_X),
-                (byte)(y % (long)BSCoreConstants.CHUNK_SIZE_Y),
-                (byte)(z % (long)BSCoreConstants.CHUNK_SIZE_Z)];
+            throw new System.NotImplementedException("Does not currently work for negative numbers");
+            return self[blockLocation][(byte)(blockLocation.X % (long)BSCoreConstants.CHUNK_SIZE_X),
+                (byte)(blockLocation.Y % (long)BSCoreConstants.CHUNK_SIZE_Y),
+                (byte)(blockLocation.Z % (long)BSCoreConstants.CHUNK_SIZE_Z)];
         }
     }
 }

@@ -21,12 +21,12 @@ namespace JollyBit.BS.World
             }
             set
             {
-                IBlock block = _blocks[x, y, z];
+                IBlock block = this[x, y, z];
                 if (block != value)
                 {
-                    IBlock oldBlock = block;
                     _blocks[x, y, z] = value;
-                    //if (BlockChanged != null) BlockChanged(this, new BlockChangedEventArgs(
+                    if (BlockChanged != null)
+                        BlockChanged(this, new BlockChangedEventArgs(Location + new Point3L(x, y, z), block, value));
                 }
             }
         }

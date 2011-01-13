@@ -16,8 +16,10 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using OpenTK.Input;
 using System.Drawing;
+using System.Linq;
 
 using JollyBit.BS.Rendering;
+using JollyBit.BS.World;
 
 #endregion
 
@@ -51,18 +53,15 @@ namespace JollyBit.BS
             GL.CullFace(CullFaceMode.Back);
 
 			// Build Dynamic Cube!
-            VertexPositionColor[] verts = new VertexPositionColor[4 * 6];
-            short[] indexs = new short[6 * 6];
+            IList<VertexPositionColor> verts = new List<VertexPositionColor>();
+            IList<short> indexs = new List<short>();
             Vector3 pos = new Vector3(0, 0, 0);
-            ChunkRenderer._createCubeSide(ref verts, 4 * 0, ref indexs, 6 * 0, ref pos, ChunkRenderer.CubeSideTypes.Front);
-            ChunkRenderer._createCubeSide(ref verts, 4 * 1, ref indexs, 6 * 1, ref pos, ChunkRenderer.CubeSideTypes.Back);
-            ChunkRenderer._createCubeSide(ref verts, 4 * 2, ref indexs, 6 * 2, ref pos, ChunkRenderer.CubeSideTypes.Left);
-            ChunkRenderer._createCubeSide(ref verts, 4 * 3, ref indexs, 6 * 3, ref pos, ChunkRenderer.CubeSideTypes.Right);
-            ChunkRenderer._createCubeSide(ref verts, 4 * 4, ref indexs, 6 * 4, ref pos, ChunkRenderer.CubeSideTypes.Bottom);
-            ChunkRenderer._createCubeSide(ref verts, 4 * 5, ref indexs, 6 * 5, ref pos, ChunkRenderer.CubeSideTypes.Top);
-            
+            ChunkRenderer._createCubeSide(ref verts, ref indexs, ref pos, BlockSides.Front | BlockSides.Back | BlockSides.Left | BlockSides.Right | BlockSides.Bottom | BlockSides.Top);
+
 			// Add the cube to the render list
-			_renderList.Add( new Vbo<VertexPositionColor>(verts, indexs) );
+            VertexPositionColor[] vertsArr = verts.ToArray();
+            short[] indexsArr = indexs.ToArray();
+            _renderList.Add(new Vbo<VertexPositionColor>(vertsArr, indexsArr));
 			
 			// Build trident and add to the render list
 			_renderList.Add( new Trident() );
