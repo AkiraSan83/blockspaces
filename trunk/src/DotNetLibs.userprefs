@@ -1,8 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="AutomatedRelease" ctype="Workspace" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="BSClient\Game.cs" ctype="Workbench">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" ctype="Workspace" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="BSClient/Game.cs" ctype="Workbench">
     <Files>
-      <File FileName="BSClient\Game.cs" Line="114" Column="31" />
+      <File FileName="BSClient/Game.cs" Line="30" Column="29" />
+      <File FileName="OpenTK/1.0/Source/OpenTK/GameWindow.cs" Line="74" Column="16" />
+      <File FileName="Assembly Browser" />
+      <File FileName="OpenTK/1.0/Source/OpenTK/NativeWindow.cs" Line="723" Column="33" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
