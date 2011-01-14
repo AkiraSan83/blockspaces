@@ -8,8 +8,8 @@ namespace JollyBit.BS
 {
     public static class BSCoreConstants
     {
-        public const byte CHUNK_SIZE_X = 5;
-        public const byte CHUNK_SIZE_Y = 5;
-        public const byte CHUNK_SIZE_Z = 5;
+        public const byte CHUNK_SIZE_X = 50;
+        public const byte CHUNK_SIZE_Y = 50;
+        public const byte CHUNK_SIZE_Z = 50;
     }
 }
