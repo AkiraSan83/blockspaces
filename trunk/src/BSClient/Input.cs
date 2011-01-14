@@ -18,6 +18,7 @@ namespace JollyBit.BS {
 		
 		private readonly BSClient _gameWindow;
 		private Point _center;
+		private bool _registered = true;
 		
 		public Input(BSClient client) {
 			this._gameWindow = client;
@@ -43,20 +44,35 @@ namespace JollyBit.BS {
 			System.Windows.Forms.Cursor.Hide();
 		}
 		
+		protected void register() {
+			this._registered = true;
+			this.recenter();
+		}
+		
+		protected void unregister() {
+			this._registered = false;
+			System.Windows.Forms.Cursor.Show();	// Unhide the cursor
+		}
+		
 		protected void handler(Object sender, EventArgs e) {
-			if(this._gameWindow.Focused)
+			if(this._registered)
 				this.recenter();
 		}
 		
 		protected void OnFocusedChanged(Object sender, EventArgs e) {
-			if(this._gameWindow.Focused)
-				this.recenter();
-			else
-				System.Windows.Forms.Cursor.Show();	// Unhide the cursor
+			if(!this._gameWindow.Focused) // We lost the focus - unregister
+				this.unregister();
 		}
 		
 		protected void OnUpdateFrame(Object sender, FrameEventArgs e) {
-			if(this._gameWindow.Focused) {
+			if (this._gameWindow.Keyboard[Key.Space]) {
+				if(this._registered)
+					this.unregister();
+				else
+					this.register();
+			}
+			
+			if(_registered) {             
 				if (this._gameWindow.Keyboard[Key.Escape])
 	                this._gameWindow.Exit();
 			
@@ -72,6 +88,10 @@ namespace JollyBit.BS {
 	                this._gameWindow.Camera.RotateY(_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.E])
 	                this._gameWindow.Camera.RotateY(-_keySpeed);
+				if (this._gameWindow.Keyboard[Key.Z])
+	                this._gameWindow.Camera.RotateX(_keySpeed);
+	            if (this._gameWindow.Keyboard[Key.X])
+	                this._gameWindow.Camera.RotateX(-_keySpeed);
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
 				this._gameWindow.Camera.RotateY(-delta.X * _mouseSpeed);
