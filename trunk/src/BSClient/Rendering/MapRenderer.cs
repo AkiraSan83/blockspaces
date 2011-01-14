@@ -92,7 +92,7 @@ namespace JollyBit.BS.Rendering
                             sides |= BlockSides.Bottom;
                         if (y == BSCoreConstants.CHUNK_SIZE_Y - 1 || Chunk[x, (byte)(y + 1), z] == null)
                             sides |= BlockSides.Top;
-                        createCubeSide(ref vertexes, ref indices, new Vector3(x, y, z), sides);
+                        createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), sides);
                     }
             if (_vbo != null) _vbo.Dispose();
             _vbo = new Vbo<VertexPositionColor>(vertexes.ToArray(), indices.ToArray());
