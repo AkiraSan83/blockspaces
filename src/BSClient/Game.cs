@@ -48,7 +48,6 @@ namespace JollyBit.BS
 
             //Setup Ninject
             IKernel kenel = new StandardKernel();
-            kenel.Bind<IKernel>().ToSelf().InSingletonScope();
             kenel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
 
 			// Handle mouse and keyboard events
