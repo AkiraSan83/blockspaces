@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OpenTK;
+
+namespace JollyBit.BS.World
+{
+    public interface IPositionable
+    {
+        Vector3 Position { get; set; }
+    }
+}
