@@ -64,7 +64,7 @@ namespace JollyBit.BS
 
             _camera.Position = new Vector3(0, 0, 5);
 
-            tex = new GLTextureObject(new Bitmap("C:\\Users\\Richard\\Documents\\smile.bmp"));
+            tex = new GLTextureObject(new Bitmap("/home/eswanson/smile.png"));
 
             // Create World Renderer
             //MapRenderer mapRenderer = kenel.Get<MapRenderer>();
@@ -91,10 +91,23 @@ namespace JollyBit.BS
             GL.LoadMatrix(ref perpective);
         }
 
+		private double _fps = 0; // render frequency adder
+		private int _fpsCount = 0; // Frames since last FPS update
+		private readonly int _maxFpsCount = 60; // Max number of frames between FPS updates
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
 
+			// Put FPS in title bar
+			_fps += this.RenderFrequency;
+			_fpsCount += 1;
+			if(_fpsCount == _maxFpsCount) {
+				this.Title = string.Format("BlockSpaces - {0:0d}FPS",_fps/_fpsCount);
+				_fps = 0;
+				_fpsCount = 0;
+			}
+
+			// Remove previous rendering
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
 			// Render the camera

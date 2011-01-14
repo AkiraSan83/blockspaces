@@ -16,18 +16,21 @@ namespace JollyBit.BS.Rendering
 
         private Vector3 _x = Vector3.UnitX;
         private Vector3 _y = Vector3.UnitY;
-        private Vector3 _z = Vector3.UnitZ; //negative so camera is facing +Z direction
+        private Vector3 _z = Vector3.UnitZ;
 
         public void Render()
         {
             GL.MatrixMode(MatrixMode.Modelview);
-
+			
             Matrix4 rot = new Matrix4(new Vector4(_x.X, _y.X, _z.X, 0.0f),
                                         new Vector4(_x.Y, _y.Y, _z.Y, 0.0f),
                                         new Vector4(_x.Z, _y.Z, _z.Z, 0.0f),
                                         Vector4.UnitW);
 
             Matrix4 trans = Matrix4.CreateTranslation(-_position);
+			
+			//System.Console.WriteLine("x,y,z = {0} {1} {2}\nrot = {3}\ntrans = {4}\n",_x,_y,_z,rot,trans);
+			
             Matrix4 m = trans * rot;
             GL.LoadMatrix(ref m);
         }
