@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenTK;
 
 namespace JollyBit.BS.Utility
 {
@@ -15,8 +16,7 @@ namespace JollyBit.BS.Utility
             X = x;
             Y = y;
             Z = z;
-        }
-
+        }        
         public static Point3L operator +(Point3L c1, Point3L c2)
         {
             return new Point3L(c1.X + c2.X, c1.Y + c2.Y, c1.Z + c2.Z);
@@ -24,6 +24,18 @@ namespace JollyBit.BS.Utility
         public static Point3L operator -(Point3L c1, Point3L c2)
         {
             return new Point3L(c1.X - c2.X, c1.Y - c2.Y, c1.Z - c2.Z);
+        }
+        public static Point3L operator *(Point3L c1, Point3L c2)
+        {
+            return new Point3L(c1.X * c2.X, c1.Y * c2.Y, c1.Z * c2.Z);
+        }
+        public static Point3L operator /(Point3L c1, Point3L c2)
+        {
+            return new Point3L(c1.X / c2.X, c1.Y / c2.Y, c1.Z / c2.Z);
+        }
+        public static explicit operator Vector3(Point3L c)  // explicit byte to digit conversion operator
+        {
+            return new Vector3(c.X, c.Y, c.Z);
         }
         public override string ToString()
         {

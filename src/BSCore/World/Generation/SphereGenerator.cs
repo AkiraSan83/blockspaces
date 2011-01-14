@@ -10,7 +10,7 @@ namespace JollyBit.BS.World.Generation
         private long _radiusSquared = BSCoreConstants.CHUNK_SIZE_X * BSCoreConstants.CHUNK_SIZE_X / 2;
         public long Radius
         {
-            get{ return (long)Math.Sqrt(_radiusSquared); }
+            get { return (long)Math.Sqrt(_radiusSquared); }
             set { _radiusSquared = value * value; }
         }
         public IBlock GenerateBlock(Utility.Point3L location)
