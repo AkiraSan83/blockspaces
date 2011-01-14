@@ -69,10 +69,6 @@
       <Project>{6781D227-7561-4D66-B1DB-BC072393B4F9}</Project>
       <Name>BSCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ninject.Extensions.Logging.NLog\Ninject.Extensions.Logging.NLog.csproj">
-      <Project>{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}</Project>
-      <Name>Ninject.Extensions.Logging.NLog</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Ninject.Extensions.Logging\Ninject.Extensions.Logging.csproj">
       <Project>{1C0E875E-B2D2-4DDA-874B-D8A9E45A3888}</Project>
       <Name>Ninject.Extensions.Logging</Name>
