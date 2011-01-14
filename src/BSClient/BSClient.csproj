@@ -57,6 +57,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Rendering\GLTextureObject.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\MapRenderer.cs" />
     <Compile Include="Rendering\Trident.cs" />

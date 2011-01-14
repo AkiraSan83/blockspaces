@@ -9,10 +9,10 @@ using JollyBit.BS.World;
 
 namespace JollyBit.BS.Rendering
 {
-    public class Camera
+    public class Camera : IPositionable
     {
 
-        private Vector3 _position = new Vector3(0,0,60);
+        private Vector3 _position = new Vector3(0,0,0);
 
         private Vector3 _x = Vector3.UnitX;
         private Vector3 _y = Vector3.UnitY;

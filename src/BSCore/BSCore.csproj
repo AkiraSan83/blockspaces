@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
     <Compile Include="BSCoreConstants.cs" />
-    <Compile Include="Rendering\IRGBTexture.cs" />
+    <Compile Include="Rendering\IRGBATexture.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />
     <Compile Include="Utility\IFileSystem.cs" />
     <Compile Include="Utility\Point.cs" />
@@ -54,6 +54,7 @@
     <Compile Include="World\IBlockManager.cs" />
     <Compile Include="World\IMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="World\IPositionable.cs" />
     <Compile Include="World\Map.cs" />
   </ItemGroup>
   <ItemGroup>

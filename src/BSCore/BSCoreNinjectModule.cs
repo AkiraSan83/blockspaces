@@ -39,8 +39,6 @@ namespace JollyBit.BS
                 //activate
                 NLog.LogManager.Configuration = config;
             }
-
-            Kernel.Get<Ninject.Extensions.Logging.ILoggerFactory>().GetCurrentClassLogger().Debug("test");
         }
     }
 }

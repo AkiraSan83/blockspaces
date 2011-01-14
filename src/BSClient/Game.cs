@@ -42,6 +42,8 @@ namespace JollyBit.BS
 
         public BSClient() : base(800, 600) { }
 
+
+        GLTextureObject tex;
 		protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -57,26 +59,21 @@ namespace JollyBit.BS
 			GL.ClearColor(System.Drawing.Color.Black);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
+            GL.Enable(EnableCap.Texture2D);
             GL.CullFace(CullFaceMode.Back);
 
+            _camera.Position = new Vector3(0, 0, 5);
+
+            tex = new GLTextureObject(new Bitmap("C:\\Users\\Richard\\Documents\\smile.bmp"));
+
             // Create World Renderer
-            MapRenderer mapRenderer = kenel.Get<MapRenderer>();
-            _renderList.Add(mapRenderer);
-            IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
-            c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
-            c = mapRenderer.Map[new Utility.Point3L(0, -1, 0)];
-            c = mapRenderer.Map[new Utility.Point3L(0, 0, -1)];
-
-            //// Build Dynamic Cube!
-            //IList<VertexPositionColor> verts = new List<VertexPositionColor>();
-            //IList<short> indexs = new List<short>();
-            //Vector3 pos = new Vector3(0, 0, 0);
-            //ChunkRenderer.createCubeSide(ref verts, ref indexs, pos, BlockSides.Front | BlockSides.Back | BlockSides.Left | BlockSides.Right | BlockSides.Bottom | BlockSides.Top);
-
-            //// Add the cube to the render list
-            //VertexPositionColor[] vertsArr = verts.ToArray();
-            //short[] indexsArr = indexs.ToArray();
-            //_renderList.Add(new Vbo<VertexPositionColor>(vertsArr, indexsArr));
+            //MapRenderer mapRenderer = kenel.Get<MapRenderer>();
+            //_renderList.Add(mapRenderer);
+            //_camera.Position = new Vector3(0, 0, 60);
+            //IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
+            //c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
+            //c = mapRenderer.Map[new Utility.Point3L(0, -1, 0)];
+            //c = mapRenderer.Map[new Utility.Point3L(0, 0, -1)];
 			
 			// Build trident and add to the render list
 			_renderList.Add( new Trident() );
@@ -103,11 +100,27 @@ namespace JollyBit.BS
 			// Render the camera
             _camera.Render();
 
+            //Render a texture
+            tex.Render();
+            GL.Color3(Color.White);
+            GL.Begin(BeginMode.Quads);
+            //GL.Color3(Color.Pink); 
+            GL.Vertex2(-0.6f, 0.4f); GL.TexCoord2(0.0f, 0.0f);
+            //GL.Color3(Color.Blue);
+            GL.Vertex2(0.6f, 0.4f); GL.TexCoord2(1.0f, 0.0f);
+            //GL.Color3(Color.Green);
+            GL.Vertex2(0.6f, -0.4f); GL.TexCoord2(1.0f, 1.0f);
+            //GL.Color3(Color.Red);
+            GL.Vertex2(-0.6f, -0.4f); GL.TexCoord2(0.0f, 1.0f);
+
+            GL.End();
+
 			// Render each item in the render list
 			foreach(var renderable in _renderList) {
 				renderable.Render();
 			}
 
+           
             SwapBuffers();
         }
 
