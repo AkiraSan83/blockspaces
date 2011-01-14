@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -41,8 +42,8 @@
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
     <Compile Include="BSCoreConstants.cs" />
+    <Compile Include="Rendering\IRGBTexture.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />
-    <Compile Include="Utility\IExtendableObject.cs" />
     <Compile Include="Utility\IFileSystem.cs" />
     <Compile Include="Utility\Point.cs" />
     <Compile Include="Utility\StandardFileSystem.cs" />
@@ -71,6 +72,10 @@
     <ProjectReference Include="..\Ninject\Ninject.csproj">
       <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
       <Name>Ninject</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NLog\NLog.csproj">
+      <Project>{020354EE-5073-4BB5-9AA2-A7EADA8CAD09}</Project>
+      <Name>NLog</Name>
     </ProjectReference>
     <ProjectReference Include="..\OpenTK\1.0\Source\OpenTK\OpenTK.csproj">
       <Project>{A37A7E14-0000-0000-0000-000000000000}</Project>
