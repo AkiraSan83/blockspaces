@@ -13,6 +13,7 @@ namespace JollyBit.BS
     {
         public override void Load()
         {
+            Bind<IKernel>().ToConstant(this.Kernel);
             Bind<IMap>().To<Map>();
             Bind<IGenerator>().To<SphereGenerator>();
             Bind<IChunk>().To<Chunk>();

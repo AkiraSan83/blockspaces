@@ -43,7 +43,9 @@
     <Compile Include="BSCoreConstants.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />
     <Compile Include="Utility\IExtendableObject.cs" />
+    <Compile Include="Utility\IFileSystem.cs" />
     <Compile Include="Utility\Point.cs" />
+    <Compile Include="Utility\StandardFileSystem.cs" />
     <Compile Include="World\Chunk.cs" />
     <Compile Include="World\Generation\IGenerator.cs" />
     <Compile Include="World\Generation\SphereGenerator.cs" />
