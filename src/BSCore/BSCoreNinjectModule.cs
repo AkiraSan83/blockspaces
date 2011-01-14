@@ -29,7 +29,7 @@ namespace JollyBit.BS
 
                 fileTarget.FileName = "${basedir}/log.txt";
                 fileTarget.Layout = "${longdate}|${level}|${message}";
-                consoleTarget.Layout = "${date:format=HH\\:MM\\:ss} ${level} ${message}";
+                consoleTarget.Layout = "${date:format=HH\\:MM\\:ss} ${level} '${message}'";
                 //rules
                 NLog.Config.LoggingRule loggingRule;
                 loggingRule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Debug, fileTarget);
