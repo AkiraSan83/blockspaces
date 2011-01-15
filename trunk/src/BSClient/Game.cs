@@ -22,6 +22,7 @@ using Ninject.Modules;
 
 using JollyBit.BS.Rendering;
 using JollyBit.BS.World;
+using JollyBit.BS.Utility;
 
 #endregion
 
@@ -64,7 +65,10 @@ namespace JollyBit.BS
 
             _camera.Position = new Vector3(0, 0, 5);
 
-            tex = new GLTextureObject(new Bitmap("/home/eswanson/smile.png"));
+            using (System.IO.Stream stream = kenel.Get<IFileSystem>().OpenFile("smile.jpg"))
+            {
+                tex = new GLTextureObject(new Bitmap(stream));
+            }
 
             // Create World Renderer
             //MapRenderer mapRenderer = kenel.Get<MapRenderer>();

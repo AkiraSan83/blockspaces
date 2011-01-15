@@ -6,6 +6,8 @@ using Ninject.Modules;
 using Ninject;
 using JollyBit.BS.Utility;
 using Ninject.Parameters;
+using System.IO;
+using System.Windows.Forms;
 
 namespace JollyBit.BS
 {
@@ -13,9 +15,9 @@ namespace JollyBit.BS
     {
         public override void Load()
         {
-            Bind<IFileSystem>().To<StandardFileSystem>()
-                .InSingletonScope()
-                .WithParameter(new ConstructorArgument("workingDirectory", this.GetType().Assembly.CodeBase + "resources"));
+            string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
+            Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
+                .WithConstructorArgument("workingDirectory", path + "assets/");
         }
     }
 }

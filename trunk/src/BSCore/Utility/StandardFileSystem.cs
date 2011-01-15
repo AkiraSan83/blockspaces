@@ -13,6 +13,7 @@ namespace JollyBit.BS.Utility
         [Inject]
         public StandardFileSystem(string workingDirectory)
         {
+            _workingDirectory = workingDirectory;
             if (_workingDirectory[_workingDirectory.Length - 1] != '/' ||
                 _workingDirectory[_workingDirectory.Length - 1] != '\\')
             {
