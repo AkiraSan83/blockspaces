@@ -8,6 +8,6 @@ namespace JollyBit.BS.Rendering
 {
     interface IRGBATexture
     {
-        Color[,] TextureData { get; }
+        Bitmap TextureData { get; }
     }
 }
