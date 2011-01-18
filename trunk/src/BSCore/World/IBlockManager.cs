@@ -7,7 +7,7 @@ namespace JollyBit.BS.World
 {
     public interface IBlockManager
     {
-
+        
     }
 
     public class BlockManager

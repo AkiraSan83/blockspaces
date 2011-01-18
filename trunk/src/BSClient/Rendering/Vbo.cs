@@ -70,12 +70,15 @@ namespace JollyBit.BS.Rendering
 
             GL.EnableClientState(ArrayCap.ColorArray);
             GL.EnableClientState(ArrayCap.VertexArray);
+            GL.EnableClientState(ArrayCap.TextureCoordArray);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vboId);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _eboId);
 
             GL.VertexPointer(3, VertexPointerType.Float, _stride, new IntPtr(0));
             GL.ColorPointer(4, ColorPointerType.UnsignedByte, _stride, new IntPtr(12));
+            GL.TexCoordPointer(2, TexCoordPointerType.Float, _stride, new IntPtr(16));
+            
 
             GL.DrawElements(BeginMode.Triangles, _numElements, DrawElementsType.UnsignedShort, IntPtr.Zero);
         }

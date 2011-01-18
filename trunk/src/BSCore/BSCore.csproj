@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -42,8 +41,8 @@
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
     <Compile Include="BSCoreConstants.cs" />
-    <Compile Include="Rendering\IRGBATexture.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />
+    <Compile Include="Utility\IFileReference.cs" />
     <Compile Include="Utility\IFileSystem.cs" />
     <Compile Include="Utility\Point.cs" />
     <Compile Include="Utility\StandardFileSystem.cs" />

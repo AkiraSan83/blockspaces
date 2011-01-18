@@ -12,15 +12,17 @@ using System.Drawing;
 namespace JollyBit.BS.Rendering
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct VertexPositionColor
+    public struct VertexPositionColorTexture
     {
         public Vector3 Position;
         public uint Color;
+        public Vector2 Texture;
 
-        public VertexPositionColor(float x, float y, float z, Color color)
+        public VertexPositionColorTexture(float x, float y, float z, Color color, float textureX, float textureY)
         {
             Position = new Vector3(x, y, z);
             Color = ToRgba(color);
+            Texture = new Vector2(textureX, textureY);
         }
 
         static uint ToRgba(Color color)

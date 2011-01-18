@@ -8,6 +8,7 @@ using JollyBit.BS.Utility;
 using Ninject.Parameters;
 using System.IO;
 using System.Windows.Forms;
+using JollyBit.BS.Rendering;
 
 namespace JollyBit.BS
 {
@@ -18,6 +19,8 @@ namespace JollyBit.BS
             string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
             Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
                 .WithConstructorArgument("workingDirectory", path + "assets/");
+            Bind<GLState>().To<GLState>().InSingletonScope();
+            Bind<ITextureManager>().To<TextureManager>();
         }
     }
 }

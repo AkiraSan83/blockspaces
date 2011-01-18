@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JollyBit.BS.World;
+using JollyBit.BS.Utility;
 
 namespace JollyBit.BS.World
 {
@@ -18,7 +20,17 @@ namespace JollyBit.BS.World
     }
     public interface IBlock
     {
-
+        IFileReference GetTextureForSide(BlockSides side);
     }
-    public class Block : IBlock { }
+    public class Block : IBlock
+    {
+        public IFileReference GetTextureForSide(BlockSides side)
+        {
+            if (side == BlockSides.Top)
+            {
+                return new FileReference("grass.png");
+            }
+            return new FileReference("dirt.png");
+        }
+    }
 }
