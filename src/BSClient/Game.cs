@@ -57,27 +57,23 @@ namespace JollyBit.BS
 			new Input(this);
 				
             // Set OpenGL options
-			GL.ClearColor(System.Drawing.Color.Black);
-            GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
-            GL.Enable(EnableCap.Texture2D);
-            GL.CullFace(CullFaceMode.Back);
+            kenel.Get<GLState>();
 
             _camera.Position = new Vector3(0, 0, 5);
 
-            using (System.IO.Stream stream = kenel.Get<IFileSystem>().OpenFile("smile.jpg"))
-            {
-                tex = new GLTextureObject(new Bitmap(stream));
-            }
+            //using (System.IO.Stream stream = kenel.Get<IFileSystem>().OpenFile("smile.png"))
+            //{
+            //    tex = new GLTextureObject(new Bitmap(stream));
+            //}
 
             // Create World Renderer
-            //MapRenderer mapRenderer = kenel.Get<MapRenderer>();
-            //_renderList.Add(mapRenderer);
-            //_camera.Position = new Vector3(0, 0, 60);
-            //IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
-            //c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
-            //c = mapRenderer.Map[new Utility.Point3L(0, -1, 0)];
-            //c = mapRenderer.Map[new Utility.Point3L(0, 0, -1)];
+            MapRenderer mapRenderer = kenel.Get<MapRenderer>();
+            _renderList.Add(mapRenderer);
+            _camera.Position = new Vector3(0, 0, 60);
+            IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
+            c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
+            c = mapRenderer.Map[new Utility.Point3L(0, -1, 0)];
+            c = mapRenderer.Map[new Utility.Point3L(0, 0, -1)];
 			
 			// Build trident and add to the render list
 			_renderList.Add( new Trident() );
@@ -117,20 +113,19 @@ namespace JollyBit.BS
 			// Render the camera
             _camera.Render();
 
-            //Render a texture
-            tex.Render();
-            GL.Color3(Color.White);
-            GL.Begin(BeginMode.Quads);
-            //GL.Color3(Color.Pink); 
-            GL.Vertex2(-0.6f, 0.4f); GL.TexCoord2(0.0f, 0.0f);
-            //GL.Color3(Color.Blue);
-            GL.Vertex2(0.6f, 0.4f); GL.TexCoord2(1.0f, 0.0f);
-            //GL.Color3(Color.Green);
-            GL.Vertex2(0.6f, -0.4f); GL.TexCoord2(1.0f, 1.0f);
-            //GL.Color3(Color.Red);
-            GL.Vertex2(-0.6f, -0.4f); GL.TexCoord2(0.0f, 1.0f);
-
-            GL.End();
+            ////Render a texture
+            //tex.Render();
+            //GL.Color3(Color.White);
+            //GL.Begin(BeginMode.Quads);
+            ////GL.Color3(Color.Pink); 
+            //GL.Vertex2(-0.6f, 0.4f); GL.TexCoord2(0.0f, 0.0f);
+            ////GL.Color3(Color.Blue);
+            //GL.Vertex2(0.6f, 0.4f); GL.TexCoord2(1.0f, 0.0f);
+            ////GL.Color3(Color.Green);
+            //GL.Vertex2(0.6f, -0.4f); GL.TexCoord2(1.0f, 1.0f);
+            ////GL.Color3(Color.Red);
+            //GL.Vertex2(-0.6f, -0.4f); GL.TexCoord2(0.0f, 1.0f);
+            //GL.End();
 
 			// Render each item in the render list
 			foreach(var renderable in _renderList) {

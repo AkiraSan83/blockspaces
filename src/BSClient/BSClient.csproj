@@ -57,12 +57,16 @@
     <Compile Include="Game.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Rendering\GLState.cs" />
     <Compile Include="Rendering\GLTextureObject.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
+    <Compile Include="Rendering\ITextureReference.cs" />
     <Compile Include="Rendering\MapRenderer.cs" />
+    <Compile Include="Rendering\TextureAtlas.cs" />
+    <Compile Include="Rendering\TextureManager.cs" />
     <Compile Include="Rendering\Trident.cs" />
     <Compile Include="Rendering\Vbo.cs" />
-    <Compile Include="Rendering\VertexColorPosition.cs" />
+    <Compile Include="Rendering\VertexColorPositionTexture.cs" />
     <Compile Include="Input.cs" />
   </ItemGroup>
   <ItemGroup>

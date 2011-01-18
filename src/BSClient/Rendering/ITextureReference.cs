@@ -6,8 +6,8 @@ using System.Drawing;
 
 namespace JollyBit.BS.Rendering
 {
-    interface IRGBATexture
+    public interface ITextureReference : IRenderable
     {
-        Bitmap TextureData { get; }
+        RectangleF TextureLocation { get; }
     }
 }

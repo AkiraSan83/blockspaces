@@ -19,10 +19,12 @@ namespace JollyBit.BS.Rendering
     {
         public readonly IMap Map;
         private readonly ICollection<ChunkRenderer> _renderers = new List<ChunkRenderer>();
+        private readonly ITextureManager _textureManager;
         [Inject]
-        public MapRenderer(IMap map, IKernel kernel)
+        public MapRenderer(IMap map, IKernel kernel, ITextureManager textureManager)
         {
             Map = map;
+            _textureManager = textureManager;
             Map.ChunkChanged += new EventHandler<ItemChangedEventArgs<IChunk>>(Map_ChunkChanged);
             //Create renderers for all chunks that already exist
             foreach (IChunk chunk in Map.Chunks)
@@ -40,13 +42,14 @@ namespace JollyBit.BS.Rendering
             }
             if (e.NewValue != null)
             {
-                ChunkRenderer renderer = new ChunkRenderer(e.NewValue);
+                ChunkRenderer renderer = new ChunkRenderer(e.NewValue, _textureManager);
                 _renderers.Add(renderer);
             }
         }
 
         public void Render()
         {
+            _textureManager.RenderCubeTexture();
             foreach (ChunkRenderer renderer in _renderers)
             {
                 renderer.Render();
@@ -57,10 +60,12 @@ namespace JollyBit.BS.Rendering
     internal class ChunkRenderer : IRenderable
     {
         public readonly IChunk Chunk;
-        private Vbo<VertexPositionColor> _vbo;
-        public ChunkRenderer(IChunk chunk)
+        private Vbo<VertexPositionColorTexture> _vbo;
+        private readonly ITextureManager _textureManger;
+        public ChunkRenderer(IChunk chunk, ITextureManager textureManger)
         {
             Chunk = chunk;
+            _textureManger = textureManger;
             Chunk.BlockChanged += new EventHandler<BlockChangedEventArgs>(Chunk_BlockChanged);
             rebuild();
         }
@@ -72,30 +77,35 @@ namespace JollyBit.BS.Rendering
 
         private void rebuild()
         {
-            IList<VertexPositionColor> vertexes = new List<VertexPositionColor>();
+            IList<VertexPositionColorTexture> vertexes = new List<VertexPositionColorTexture>();
             IList<short> indices = new List<short>();
             for (byte x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
                 for (byte y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
                     for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
                     {
-                        if (Chunk[x, y, z] == null) continue;
-                        BlockSides sides = BlockSides.None;
+                        IBlock block = Chunk[x, y, z];
+                        if (block == null) continue;
                         if (z == 0 || Chunk[x, y, (byte)(z - 1)] == null)
-                            sides |= BlockSides.Front;
+                            createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Front,
+                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Front)));
                         if (z == BSCoreConstants.CHUNK_SIZE_Z - 1 || Chunk[x, y, (byte)(z + 1)] == null)
-                            sides |= BlockSides.Back;
+                            createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Back,
+                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Back)));
                         if (x == 0 || Chunk[(byte)(x - 1), y, z] == null)
-                            sides |= BlockSides.Left;
+                            createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Left,
+                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Left)));
                         if (x == BSCoreConstants.CHUNK_SIZE_X - 1 || Chunk[(byte)(x + 1), y, z] == null)
-                            sides |= BlockSides.Right;
+                            createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Right,
+                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Right)));
                         if (y == 0 || Chunk[x, (byte)(y - 1), z] == null)
-                            sides |= BlockSides.Bottom;
+                            createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Bottom,
+                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Bottom)));
                         if (y == BSCoreConstants.CHUNK_SIZE_Y - 1 || Chunk[x, (byte)(y + 1), z] == null)
-                            sides |= BlockSides.Top;
-                        createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), sides);
+                            createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Top,
+                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Top)));
                     }
             if (_vbo != null) _vbo.Dispose();
-            _vbo = new Vbo<VertexPositionColor>(vertexes.ToArray(), indices.ToArray());
+            _vbo = new Vbo<VertexPositionColorTexture>(vertexes.ToArray(), indices.ToArray());
         }
 
         /*
@@ -124,63 +134,61 @@ namespace JollyBit.BS.Rendering
                   ---------------------->
                         +X axis
         */
-        public static void createCubeSide(ref IList<VertexPositionColor> vertexes, ref IList<short> indices, Vector3 frontBottomLeftOfCube, BlockSides sideType)
+        public static void createCubeSide(ref IList<VertexPositionColorTexture> vertexes, ref IList<short> indices, Vector3 frontBottomLeftOfCube, BlockSides sideType, ITextureReference texture)
         {
             //Create vertexes
             float x = frontBottomLeftOfCube.X;
             float y = frontBottomLeftOfCube.Y;
             float z = frontBottomLeftOfCube.Z;
-            if ((sideType & BlockSides.Front) == BlockSides.Front)
+            RectangleF textLoc = texture.TextureLocation;
+            switch (sideType)
             {
-                appendIndiciesForSideOfCube(ref vertexes, ref indices);
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z - 0.0f, Color.Red));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z - 0.0f, Color.Green));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z - 0.0f, Color.Blue));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z - 0.0f, Color.Purple));
-            }
-            if ((sideType & BlockSides.Back) == BlockSides.Back)
-            {
-                appendIndiciesForSideOfCube(ref vertexes, ref indices);
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z + 1.0f, Color.Purple));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z + 1.0f, Color.Blue));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z + 1.0f, Color.Green));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z + 1.0f, Color.Red));
-            }
-            if ((sideType & BlockSides.Left) == BlockSides.Left)
-            {
-                appendIndiciesForSideOfCube(ref vertexes, ref indices);
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z + 1.0f, Color.Red));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z - 0.0f, Color.Green));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z - 0.0f, Color.Blue));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z + 1.0f, Color.Purple));
-            }
-            if ((sideType & BlockSides.Right) == BlockSides.Right)
-            {
-                appendIndiciesForSideOfCube(ref vertexes, ref indices);
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z + 1.0f, Color.Purple));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z - 0.0f, Color.Blue));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z - 0.0f, Color.Green));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z + 1.0f, Color.Red));
-            }
-            if ((sideType & BlockSides.Top) == BlockSides.Top)
-            {
-                appendIndiciesForSideOfCube(ref vertexes, ref indices);
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z - 0.0f, Color.Red));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z - 0.0f, Color.Green));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y + 1.0f, z + 1.0f, Color.Blue));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y + 1.0f, z + 1.0f, Color.Purple));
-            }
-            if ((sideType & BlockSides.Bottom) == BlockSides.Bottom)
-            {
-                appendIndiciesForSideOfCube(ref vertexes, ref indices);
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z + 1.0f, Color.Purple));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z + 1.0f, Color.Blue));
-                vertexes.Add(new VertexPositionColor(x + 1.0f, y - 0.0f, z - 0.0f, Color.Green));
-                vertexes.Add(new VertexPositionColor(x - 0.0f, y - 0.0f, z - 0.0f, Color.Red));
+                case BlockSides.Front:
+                    appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y - 0.0f, z - 0.0f, Color.Gray, textLoc.X, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y - 0.0f, z - 0.0f, Color.Gray, textLoc.X + textLoc.Width, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y + 1.0f, z - 0.0f, Color.White, textLoc.X + textLoc.Width, textLoc.Y + textLoc.Height));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y + 1.0f, z - 0.0f, Color.White, textLoc.X, textLoc.Y + textLoc.Height));
+                    break;
+                case BlockSides.Back:
+                    appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y + 1.0f, z + 1.0f, Color.White, textLoc.X, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y + 1.0f, z + 1.0f, Color.White, textLoc.X + textLoc.Width, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y - 0.0f, z + 1.0f, Color.Gray, textLoc.X + textLoc.Width, textLoc.Y + textLoc.Height));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y - 0.0f, z + 1.0f, Color.Gray, textLoc.X, textLoc.Y + textLoc.Height));
+                    break;
+                case BlockSides.Left:
+                    appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y - 0.0f, z + 1.0f, Color.Gray, textLoc.X, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y - 0.0f, z - 0.0f, Color.Gray, textLoc.X + textLoc.Width, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y + 1.0f, z - 0.0f, Color.White, textLoc.X + textLoc.Width, textLoc.Y + textLoc.Height));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y + 1.0f, z + 1.0f, Color.White, textLoc.X, textLoc.Y + textLoc.Height));
+                    break;
+                case BlockSides.Right:
+                    appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y + 1.0f, z + 1.0f, Color.White, textLoc.X, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y + 1.0f, z - 0.0f, Color.White, textLoc.X + textLoc.Width, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y - 0.0f, z - 0.0f, Color.Gray, textLoc.X + textLoc.Width, textLoc.Y + textLoc.Height));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y - 0.0f, z + 1.0f, Color.Gray, textLoc.X, textLoc.Y + textLoc.Height));
+                    break;
+                case BlockSides.Top:
+                    appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y + 1.0f, z - 0.0f, Color.White, textLoc.X, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y + 1.0f, z - 0.0f, Color.White, textLoc.X + textLoc.Width, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y + 1.0f, z + 1.0f, Color.White, textLoc.X + textLoc.Width, textLoc.Y + textLoc.Height));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y + 1.0f, z + 1.0f, Color.White, textLoc.X, textLoc.Y + textLoc.Height));
+                    break;
+                case BlockSides.Bottom:
+                    appendIndiciesForSideOfCube(ref vertexes, ref indices);
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y - 0.0f, z + 1.0f, Color.Gray, textLoc.X, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y - 0.0f, z + 1.0f, Color.Gray, textLoc.X + textLoc.Width, textLoc.Y));
+                    vertexes.Add(new VertexPositionColorTexture(x + 1.0f, y - 0.0f, z - 0.0f, Color.Gray, textLoc.X + textLoc.Width, textLoc.Y + textLoc.Height));
+                    vertexes.Add(new VertexPositionColorTexture(x - 0.0f, y - 0.0f, z - 0.0f, Color.Gray, textLoc.X, textLoc.Y + textLoc.Height));
+                    break;
             }
         }
 
-        private static void appendIndiciesForSideOfCube(ref IList<VertexPositionColor> vertexes, ref IList<short> indices)
+        private static void appendIndiciesForSideOfCube(ref IList<VertexPositionColorTexture> vertexes, ref IList<short> indices)
         {
             //Create indicies
             int vertexesStartIndex = vertexes.Count;
