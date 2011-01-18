@@ -10,6 +10,13 @@ namespace JollyBit.BS.Rendering
 {
     public interface ITextureManager
     {
+        /// <summary>
+        /// Adds a cube texture and returns a reference to the created texture.
+        /// If the texture already exists a new texture is not created and a reference to the
+        /// existing texture is returned.
+        /// </summary>
+        /// <param name="cubeTexture">A reference to the file from wich to create the texture from.</param>
+        /// <returns>A reference to the created texture.</returns>
         ITextureReference AddCubeTexture(IFileReference cubeTexture);
         void RenderCubeTexture();
     }
@@ -26,7 +33,7 @@ namespace JollyBit.BS.Rendering
         {
             _fileSystem = fileSystem;
             _glState = glState;
-            _cubeTextureAtlas = new TextureAtlas(new Size(1024, 1024), new Size(62, 62), 1);
+            _cubeTextureAtlas = new TextureAtlas(1024, 64, 4);
         }
         public ITextureReference AddCubeTexture(IFileReference cubeTexture)
         {
@@ -55,7 +62,7 @@ namespace JollyBit.BS.Rendering
         {
             if (_cubeTextureAtlasTextureObject == null)
             {
-                _cubeTextureAtlasTextureObject = new GLTextureObject(_cubeTextureAtlas.Texture);
+                _cubeTextureAtlasTextureObject = new GLTextureObject(_cubeTextureAtlas.Texture, 4);
             }
             _cubeTextureAtlasTextureObject.Render();
         }
