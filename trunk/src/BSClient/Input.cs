@@ -29,8 +29,7 @@ namespace JollyBit.BS {
 			this._gameWindow = client;
 			
 			// Get the config
-			IConfigManager configManager = BSCoreConstants.Kernel.Get<IConfigManager>();
-			_config = configManager.GetConfig<InputConfig>();
+			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<InputConfig>();
 			
 			// Center and hide the cursor
 			this.recenter();
