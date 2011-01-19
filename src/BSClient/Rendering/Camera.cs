@@ -29,8 +29,6 @@ namespace JollyBit.BS.Rendering
 
             Matrix4 trans = Matrix4.CreateTranslation(-_position);
 			
-			//System.Console.WriteLine("x,y,z = {0} {1} {2}\nrot = {3}\ntrans = {4}\n",_x,_y,_z,rot,trans);
-			
             Matrix4 m = trans * rot;
             GL.LoadMatrix(ref m);
         }
@@ -58,30 +56,46 @@ namespace JollyBit.BS.Rendering
 
         public void RotateX(float angle)
         {
-            Matrix4 rot = Matrix4.CreateRotationX(angle);
-            _z = Vector3.Transform(_z, rot);
-            _z.Normalize();
-            Vector3.Cross(ref _x, ref _z, out _y);
-            _y.Normalize();
+			if(angle != 0f) {
+	            Matrix4 rot = Matrix4.CreateRotationX(angle);
+	            _z = Vector3.Transform(_z, rot);
+	            _y = Vector3.Transform(_y,rot);
+				GrahmSchmidt();
+			}
         }
 
         public void RotateY(float angle)
         {
-            Matrix4 rot = Matrix4.CreateRotationY(angle);
-            _z = Vector3.Transform(_z, rot);
-            _z.Normalize();
-            Vector3.Cross(ref _z, ref _y, out _x);
-            _x.Normalize();
+			if(angle != 0f) {
+	            Matrix4 rot = Matrix4.CreateRotationY(angle);
+	            _z = Vector3.Transform(_z, rot);
+				_x = Vector3.Transform(_x, rot);
+				GrahmSchmidt();
+			}
         }
 
         public void RotateZ(float angle)
         {
-            Matrix4 rot = Matrix4.CreateRotationZ(angle);
-            _y = Vector3.Transform(_y, rot);
-            _y.Normalize();
-            Vector3.Cross(ref _z, ref _y, out _x);
-            _x.Normalize();
+			if(angle != 0f) {
+	            Matrix4 rot = Matrix4.CreateRotationZ(angle);
+	            _y = Vector3.Transform(_y, rot);
+	            _x = Vector3.Transform(_x, rot);
+				GrahmSchmidt();
+			}
         }
+		
+		private void GrahmSchmidt() {
+			_y = _y - projection(_y,_x);
+			_z = _z - projection(_z,_x);
+			_z = _z - projection(_z,_y);
+			_x.Normalize();
+			_y.Normalize();
+			_z.Normalize();
+		}
+		
+		private Vector3 projection(Vector3 x, Vector3 y) {
+			return (Vector3.Dot(x,y) / y.LengthSquared) * y;
+		}
 
         public Vector3 Position
         {

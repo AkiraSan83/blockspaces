@@ -9,11 +9,9 @@ using OpenTK.Platform;
 using OpenTK.Input;
 using System.Drawing;
 
-//using JollyBit.BS;
-
 namespace JollyBit.BS {
 	public class Input {
-		private float _keySpeed = 0.05f;
+		private float _keySpeed = 0.25f;
         private float _mouseSpeed = 0.001f;
 		
 		private readonly BSClient _gameWindow;
@@ -85,16 +83,16 @@ namespace JollyBit.BS {
 	            if (this._gameWindow.Keyboard[Key.A])
 	                this._gameWindow.Camera.StrafeRight(-_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.Q])
-	                this._gameWindow.Camera.RotateY(_keySpeed);
-	            if (this._gameWindow.Keyboard[Key.E])
 	                this._gameWindow.Camera.RotateY(-_keySpeed);
+	            if (this._gameWindow.Keyboard[Key.E])
+	                this._gameWindow.Camera.RotateY(_keySpeed);
 				if (this._gameWindow.Keyboard[Key.Z])
-	                this._gameWindow.Camera.RotateX(_keySpeed);
-	            if (this._gameWindow.Keyboard[Key.X])
 	                this._gameWindow.Camera.RotateX(-_keySpeed);
+	            if (this._gameWindow.Keyboard[Key.X])
+	                this._gameWindow.Camera.RotateX(_keySpeed);
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
-				this._gameWindow.Camera.RotateY(-delta.X * _mouseSpeed);
+				this._gameWindow.Camera.RotateY(delta.X * _mouseSpeed);
 				this._gameWindow.Camera.RotateX(-delta.Y * _mouseSpeed);
 				System.Windows.Forms.Cursor.Position = _center;
 			}

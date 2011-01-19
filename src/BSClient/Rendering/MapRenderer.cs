@@ -192,12 +192,12 @@ namespace JollyBit.BS.Rendering
         {
             //Create indicies
             int vertexesStartIndex = vertexes.Count;
-            indices.Add((short)(vertexesStartIndex + 0));
+            indices.Add((short)(vertexesStartIndex + 2));
             indices.Add((short)(vertexesStartIndex + 1));
-            indices.Add((short)(vertexesStartIndex + 2));
-            indices.Add((short)(vertexesStartIndex + 2));
-            indices.Add((short)(vertexesStartIndex + 3));
             indices.Add((short)(vertexesStartIndex + 0));
+            indices.Add((short)(vertexesStartIndex + 0));
+            indices.Add((short)(vertexesStartIndex + 3));
+            indices.Add((short)(vertexesStartIndex + 2));
         }
 
         public void Render()

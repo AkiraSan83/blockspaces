@@ -50,7 +50,7 @@ namespace JollyBit.BS.Rendering
                 graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                 graphics.DrawImage(source, 0, 0, dest.Width, dest.Height);
-                graphics.FillRegion(new SolidBrush(Color.FromArgb(255 / 4, 255, 0, 0)), new Region(new Rectangle(0, 0, dest.Width, dest.Height)));
+                //graphics.FillRegion(new SolidBrush(Color.FromArgb(255 / 4, 255, 0, 0)), new Region(new Rectangle(0, 0, dest.Width, dest.Height)));
             }
             return dest;
         }
