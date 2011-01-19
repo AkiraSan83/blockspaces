@@ -14,6 +14,8 @@ namespace JollyBit.BS.Rendering
 
         private Vector3 _position = new Vector3(0,0,0);
 
+		private Quaternion _rot = Quaternion.Identity;
+		
         private Vector3 _x = Vector3.UnitX;
         private Vector3 _y = Vector3.UnitY;
         private Vector3 _z = Vector3.UnitZ;
@@ -26,7 +28,7 @@ namespace JollyBit.BS.Rendering
                                         new Vector4(_x.Y, _y.Y, _z.Y, 0.0f),
                                         new Vector4(_x.Z, _y.Z, _z.Z, 0.0f),
                                         Vector4.UnitW);
-
+			
             Matrix4 trans = Matrix4.CreateTranslation(-_position);
 			
             Matrix4 m = trans * rot;
@@ -57,19 +59,24 @@ namespace JollyBit.BS.Rendering
         public void RotateX(float angle)
         {
 			if(angle != 0f) {
-	            Matrix4 rot = Matrix4.CreateRotationX(angle);
-	            _z = Vector3.Transform(_z, rot);
-	            _y = Vector3.Transform(_y,rot);
-				GrahmSchmidt();
+				_rot = _rot * Quaternion.FromAxisAngle(Vector3.UnitX,angle);
+				_rot.Normalize();
+				//Console.WriteLine(rot);
+				
+	            _z = Vector3.Transform(Vector3.UnitZ,_rot);
+	            _y = Vector3.Transform(Vector3.UnitY,_rot);
+				//GrahmSchmidt();
 			}
         }
 
         public void RotateY(float angle)
         {
 			if(angle != 0f) {
-	            Matrix4 rot = Matrix4.CreateRotationY(angle);
-	            _z = Vector3.Transform(_z, rot);
-				_x = Vector3.Transform(_x, rot);
+	            _rot = Quaternion.FromAxisAngle(Vector3.UnitY,angle) * _rot;
+				_rot.Normalize();
+				
+	            _z = Vector3.Transform(Vector3.UnitZ,_rot);
+	            _x = Vector3.Transform(Vector3.UnitX,_rot);
 				GrahmSchmidt();
 			}
         }
@@ -77,7 +84,8 @@ namespace JollyBit.BS.Rendering
         public void RotateZ(float angle)
         {
 			if(angle != 0f) {
-	            Matrix4 rot = Matrix4.CreateRotationZ(angle);
+	            Quaternion rot = Quaternion.FromAxisAngle(_z,angle);
+				
 	            _y = Vector3.Transform(_y, rot);
 	            _x = Vector3.Transform(_x, rot);
 				GrahmSchmidt();

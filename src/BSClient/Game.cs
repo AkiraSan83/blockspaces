@@ -43,7 +43,6 @@ namespace JollyBit.BS
 
         public BSClient() : base(800, 600) { }
 
-
         GLTextureObject tex;
 		protected override void OnLoad(EventArgs e)
         {
@@ -153,7 +152,7 @@ namespace JollyBit.BS
         {
             using (BSClient example = new BSClient())
             {
-				example.Run(30.0, 50.0);
+				example.Run(30.0, 90.0);
             }
         }
     }
