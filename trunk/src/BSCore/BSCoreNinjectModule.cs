@@ -6,6 +6,9 @@ using Ninject.Modules;
 using Ninject;
 using JollyBit.BS.World;
 using JollyBit.BS.World.Generation;
+using JollyBit.BS.Utility;
+using System.Xml.Serialization;
+using System.IO;
 
 namespace JollyBit.BS
 {
@@ -17,6 +20,18 @@ namespace JollyBit.BS
             Bind<IMap>().To<Map>();
             Bind<IGenerator>().To<SphereGenerator>();
             Bind<IChunk>().To<Chunk>();
+            Bind<IConfigManager>().ToMethod(
+                (context) =>
+                {
+                    //XmlSerializer
+                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("config.xml");
+                    if (stream != null)
+                    {
+                        XmlSerializer serializer = new XmlSerializer(typeof(ConfigManager));
+                        return serializer.Deserialize(stream) as ConfigManager;
+                    }
+                    else return new ConfigManager();
+                }).InSingletonScope();
 
             //Logging config stuff
             {
