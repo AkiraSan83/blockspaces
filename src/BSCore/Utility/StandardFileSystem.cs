@@ -37,15 +37,15 @@ namespace JollyBit.BS.Utility
 
         public Stream CreateFile(string path)
         {
-            path = _workingDirectory + fixPath(path);
-            if (File.Exists(path))
+            path = fixPath(path);
+            if (File.Exists(_workingDirectory + path))
             {
                 return OpenFile(path);
             }
             else
             {
                 CreateDirectory(path.Substring(0, path.Length - Path.GetFileName(path).Length));
-                return File.Create(path);
+                return File.Create(_workingDirectory + path);
             }
         }
 
