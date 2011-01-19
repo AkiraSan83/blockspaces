@@ -75,14 +75,17 @@ namespace JollyBit.BS.Utility
         public void ReadXml(System.Xml.XmlReader reader)
         {
             reader.MoveToContent();
-            Type configSectionType = Type.GetType(reader.GetAttribute("ConfigSectionType"));
+			Type configSectionType = Type.GetType(reader.GetAttribute("ConfigSectionType"));
             XmlSerializer serializer = new XmlSerializer(configSectionType);
-            ConfigSection = serializer.Deserialize(reader) as IConfigSection;
+			
+ 			string r = reader.ReadContentAsString();
+			
+			ConfigSection = serializer.Deserialize(reader) as IConfigSection;
         }
 
         public void WriteXml(System.Xml.XmlWriter writer)
         {
-            writer.WriteAttributeString("ConfigSectionType", ConfigSection.GetType().FullName);
+            writer.WriteAttributeString("ConfigSectionType", ConfigSection.GetType().AssemblyQualifiedName);
             XmlSerializer serializer = new XmlSerializer(ConfigSection.GetType());
             serializer.Serialize(writer, ConfigSection);
         }

@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 
+using Ninject;
+
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
@@ -9,17 +11,31 @@ using OpenTK.Platform;
 using OpenTK.Input;
 using System.Drawing;
 
+using JollyBit.BS.Utility;
+
 namespace JollyBit.BS {
+	public class InputConfig : IConfigSection {
+		public float KeySpeed = 0.25f;
+        public float MouseSpeed = 0.001f;
+	}
+	
 	public class Input {
-		private float _keySpeed = 0.25f;
-        private float _mouseSpeed = 0.001f;
-		
 		private readonly BSClient _gameWindow;
 		private Point _center;
 		private bool _registered = true;
+		private InputConfig _config;
 		
 		public Input(BSClient client) {
 			this._gameWindow = client;
+			
+			// Get the config
+			IConfigManager configManager = BSCoreConstants.Kernel.Get<IConfigManager>();
+			_config = configManager.GetConfig<InputConfig>();
+			if(_config == null) {
+				Console.WriteLine("New InputConfig.");
+				_config = new InputConfig();
+				configManager.AddConfig(_config);
+			}
 			
 			// Center and hide the cursor
 			this.recenter();
@@ -75,29 +91,29 @@ namespace JollyBit.BS {
 	                this._gameWindow.Exit();
 			
 				if (this._gameWindow.Keyboard[Key.W])
-	                this._gameWindow.Camera.MoveForward(_keySpeed);
+	                this._gameWindow.Camera.MoveForward(_config.KeySpeed);
 	            if (this._gameWindow.Keyboard[Key.S])
-	                this._gameWindow.Camera.MoveForward(-_keySpeed);
+	                this._gameWindow.Camera.MoveForward(-_config.KeySpeed);
 	            if (this._gameWindow.Keyboard[Key.D])
-	                this._gameWindow.Camera.StrafeRight(_keySpeed);
+	                this._gameWindow.Camera.StrafeRight(_config.KeySpeed);
 	            if (this._gameWindow.Keyboard[Key.A])
-	                this._gameWindow.Camera.StrafeRight(-_keySpeed);
+	                this._gameWindow.Camera.StrafeRight(-_config.KeySpeed);
 				if (this._gameWindow.Keyboard[Key.Q])
-					this._gameWindow.Camera.MoveUpward(_keySpeed);
+					this._gameWindow.Camera.MoveUpward(_config.KeySpeed);
 				if (this._gameWindow.Keyboard[Key.E])
-					this._gameWindow.Camera.MoveUpward(-_keySpeed);
+					this._gameWindow.Camera.MoveUpward(-_config.KeySpeed);
 	            if (this._gameWindow.Keyboard[Key.Left])
-	                this._gameWindow.Camera.RotateY(_keySpeed/4);
+	                this._gameWindow.Camera.RotateY(_config.KeySpeed/4);
 	            if (this._gameWindow.Keyboard[Key.Right])
-	                this._gameWindow.Camera.RotateY(-_keySpeed/4);
+	                this._gameWindow.Camera.RotateY(-_config.KeySpeed/4);
 				if (this._gameWindow.Keyboard[Key.Up])
-	                this._gameWindow.Camera.RotateX(-_keySpeed/4);
+	                this._gameWindow.Camera.RotateX(-_config.KeySpeed/4);
 	            if (this._gameWindow.Keyboard[Key.Down])
-	                this._gameWindow.Camera.RotateX(_keySpeed/4);
+	                this._gameWindow.Camera.RotateX(_config.KeySpeed/4);
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
-				this._gameWindow.Camera.RotateY(delta.X * _mouseSpeed);
-				this._gameWindow.Camera.RotateX(-delta.Y * _mouseSpeed);
+				this._gameWindow.Camera.RotateY(delta.X * _config.MouseSpeed);
+				this._gameWindow.Camera.RotateX(-delta.Y * _config.MouseSpeed);
 				System.Windows.Forms.Cursor.Position = _center;
 			}
 		}
