@@ -82,14 +82,18 @@ namespace JollyBit.BS {
 	                this._gameWindow.Camera.StrafeRight(_keySpeed);
 	            if (this._gameWindow.Keyboard[Key.A])
 	                this._gameWindow.Camera.StrafeRight(-_keySpeed);
-	            if (this._gameWindow.Keyboard[Key.Q])
-	                this._gameWindow.Camera.RotateY(-_keySpeed);
-	            if (this._gameWindow.Keyboard[Key.E])
-	                this._gameWindow.Camera.RotateY(_keySpeed);
-				if (this._gameWindow.Keyboard[Key.Z])
-	                this._gameWindow.Camera.RotateX(-_keySpeed);
-	            if (this._gameWindow.Keyboard[Key.X])
-	                this._gameWindow.Camera.RotateX(_keySpeed);
+				if (this._gameWindow.Keyboard[Key.Q])
+					this._gameWindow.Camera.MoveUpward(_keySpeed);
+				if (this._gameWindow.Keyboard[Key.E])
+					this._gameWindow.Camera.MoveUpward(-_keySpeed);
+	            if (this._gameWindow.Keyboard[Key.Left])
+	                this._gameWindow.Camera.RotateY(_keySpeed/4);
+	            if (this._gameWindow.Keyboard[Key.Right])
+	                this._gameWindow.Camera.RotateY(-_keySpeed/4);
+				if (this._gameWindow.Keyboard[Key.Up])
+	                this._gameWindow.Camera.RotateX(-_keySpeed/4);
+	            if (this._gameWindow.Keyboard[Key.Down])
+	                this._gameWindow.Camera.RotateX(_keySpeed/4);
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
 				this._gameWindow.Camera.RotateY(delta.X * _mouseSpeed);

@@ -406,7 +406,10 @@ namespace OpenTK
                 render_watch.Start();
                 while (true)
                 {
-                    ProcessEvents();
+					// Added sleep(5) to lower CPU usage - EMS 1/17/2011
+                    Thread.Sleep(5);
+					
+					ProcessEvents();
                     if (Exists && !IsExiting)
                         DispatchUpdateAndRenderFrame(this, EventArgs.Empty);
                     else
