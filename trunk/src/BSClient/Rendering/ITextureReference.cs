@@ -10,4 +10,25 @@ namespace JollyBit.BS.Rendering
     {
         RectangleF TextureLocation { get; }
     }
+
+    public class TextureReference : ITextureReference
+    {
+        public readonly RectangleF _textureLocation;
+        private readonly Action _renderFunction = null;
+        public TextureReference(RectangleF textureLocation, Action renderFunction)
+        {
+            _textureLocation = textureLocation;
+            _renderFunction = renderFunction;
+        }
+
+        public void Render()
+        {
+            _renderFunction();
+        }
+
+        public RectangleF TextureLocation
+        {
+            get { return _textureLocation; }
+        }
+    }
 }

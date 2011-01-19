@@ -19,12 +19,12 @@ namespace JollyBit.BS.Rendering
     {
         public readonly IMap Map;
         private readonly ICollection<ChunkRenderer> _renderers = new List<ChunkRenderer>();
-        private readonly ITextureManager _textureManager;
+        private readonly ITextureAtlas _textureAtlas;
         [Inject]
-        public MapRenderer(IMap map, IKernel kernel, ITextureManager textureManager)
+        public MapRenderer(IMap map, IKernel kernel, ITextureAtlasFactory textureAtlasFactory)
         {
             Map = map;
-            _textureManager = textureManager;
+            _textureAtlas = textureAtlasFactory.CreateTextureAtlas(1024, 64, 4);
             Map.ChunkChanged += new EventHandler<ItemChangedEventArgs<IChunk>>(Map_ChunkChanged);
             //Create renderers for all chunks that already exist
             foreach (IChunk chunk in Map.Chunks)
@@ -42,14 +42,14 @@ namespace JollyBit.BS.Rendering
             }
             if (e.NewValue != null)
             {
-                ChunkRenderer renderer = new ChunkRenderer(e.NewValue, _textureManager);
+                ChunkRenderer renderer = new ChunkRenderer(e.NewValue, _textureAtlas);
                 _renderers.Add(renderer);
             }
         }
 
         public void Render()
         {
-            _textureManager.RenderCubeTexture();
+            _textureAtlas.Render();
             foreach (ChunkRenderer renderer in _renderers)
             {
                 renderer.Render();
@@ -61,11 +61,11 @@ namespace JollyBit.BS.Rendering
     {
         public readonly IChunk Chunk;
         private Vbo<VertexPositionColorTexture> _vbo;
-        private readonly ITextureManager _textureManger;
-        public ChunkRenderer(IChunk chunk, ITextureManager textureManger)
+        private ITextureAtlas _textureAtlas;
+        public ChunkRenderer(IChunk chunk, ITextureAtlas textureAtlas)
         {
             Chunk = chunk;
-            _textureManger = textureManger;
+            _textureAtlas = textureAtlas;
             Chunk.BlockChanged += new EventHandler<BlockChangedEventArgs>(Chunk_BlockChanged);
             rebuild();
         }
@@ -79,6 +79,7 @@ namespace JollyBit.BS.Rendering
         {
             IList<VertexPositionColorTexture> vertexes = new List<VertexPositionColorTexture>();
             IList<short> indices = new List<short>();
+            ContentManager contentManager = BSCoreConstants.Kernel.Get<ContentManager>();
             for (byte x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
                 for (byte y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
                     for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
@@ -87,22 +88,22 @@ namespace JollyBit.BS.Rendering
                         if (block == null) continue;
                         if (z == 0 || Chunk[x, y, (byte)(z - 1)] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Front,
-                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Front)));
+                                _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Front))));
                         if (z == BSCoreConstants.CHUNK_SIZE_Z - 1 || Chunk[x, y, (byte)(z + 1)] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Back,
-                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Back)));
+                                _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Back))));
                         if (x == 0 || Chunk[(byte)(x - 1), y, z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Left,
-                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Left)));
+                                _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Left))));
                         if (x == BSCoreConstants.CHUNK_SIZE_X - 1 || Chunk[(byte)(x + 1), y, z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Right,
-                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Right)));
+                                _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Right))));
                         if (y == 0 || Chunk[x, (byte)(y - 1), z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Bottom,
-                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Bottom)));
+                                _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Bottom))));
                         if (y == BSCoreConstants.CHUNK_SIZE_Y - 1 || Chunk[x, (byte)(y + 1), z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Top,
-                                _textureManger.AddCubeTexture(block.GetTextureForSide(BlockSides.Top)));
+                                _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Top))));
                     }
             if (_vbo != null) _vbo.Dispose();
             _vbo = new Vbo<VertexPositionColorTexture>(vertexes.ToArray(), indices.ToArray());

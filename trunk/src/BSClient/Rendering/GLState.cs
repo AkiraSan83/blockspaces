@@ -13,7 +13,7 @@ namespace JollyBit.BS.Rendering
     {
         public GLState()
         {
-            ClearColor = Color.Pink;
+            ClearColor = Color.Black;
             GL.Enable(EnableCap.DepthTest);
             GL.CullFace(CullFaceMode.Back);
             GL.Enable(EnableCap.Texture2D);
