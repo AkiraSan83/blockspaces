@@ -77,6 +77,8 @@ namespace JollyBit.BS
 			
 			// Build trident and add to the render list
 			_renderList.Add( new Trident() );
+			
+			GC.Collect();
         }    
 
         protected override void OnResize(EventArgs e)
@@ -144,7 +146,7 @@ namespace JollyBit.BS
         {
             using (BSClient example = new BSClient())
             {
-                example.Run(30.0, 0.0);
+				example.Run(30.0, 50.0);
             }
         }
     }
