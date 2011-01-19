@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -58,10 +58,6 @@
     <Compile Include="World\Map.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JsonNet\Newtonsoft.Json\Newtonsoft.Json.Net35.csproj">
-      <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
-      <Name>Newtonsoft.Json.Net35</Name>
-    </ProjectReference>
     <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">
       <Project>{031C8CFF-F147-44EA-B7E5-0A5644808A7E}</Project>
       <Name>LibNoise</Name>
@@ -85,6 +81,10 @@
     <ProjectReference Include="..\OpenTK\1.0\Source\OpenTK\OpenTK.csproj">
       <Project>{A37A7E14-0000-0000-0000-000000000000}</Project>
       <Name>OpenTK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JsonExSerializer\JsonExSerializer\JsonExSerializer.csproj">
+      <Project>{D0C83979-A672-4C06-99BC-B82D81749405}</Project>
+      <Name>JsonExSerializer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
