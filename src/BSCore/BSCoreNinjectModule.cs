@@ -7,7 +7,6 @@ using Ninject;
 using JollyBit.BS.World;
 using JollyBit.BS.World.Generation;
 using JollyBit.BS.Utility;
-using System.Xml.Serialization;
 using System.IO;
 
 namespace JollyBit.BS
@@ -24,13 +23,17 @@ namespace JollyBit.BS
                 (context) =>
                 {
                     //XmlSerializer
-                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("config.xml");
+                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("config.json");
+                    ConfigManager configManager;
                     if (stream != null)
                     {
-                        XmlSerializer serializer = new XmlSerializer(typeof(ConfigManager));
-                        return serializer.Deserialize(stream) as ConfigManager;
+                        TextReader reader = new StreamReader(stream);
+                        JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(ConfigManager));
+                        configManager = serializer.Deserialize(stream) as ConfigManager;
+                        stream.Close();
                     }
-                    else return new ConfigManager();
+                    else configManager = new ConfigManager();
+                    return configManager;
                 }).InSingletonScope();
 
             //Logging config stuff
