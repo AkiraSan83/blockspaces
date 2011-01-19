@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -59,13 +59,14 @@
     <Compile Include="Game.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Rendering\ContentManager.cs" />
     <Compile Include="Rendering\GLState.cs" />
     <Compile Include="Rendering\GLTextureObject.cs" />
     <Compile Include="Rendering\IRenderable.cs" />
     <Compile Include="Rendering\ITextureReference.cs" />
     <Compile Include="Rendering\MapRenderer.cs" />
+    <Compile Include="Rendering\SkyBox.cs" />
     <Compile Include="Rendering\TextureAtlas.cs" />
-    <Compile Include="Rendering\TextureManager.cs" />
     <Compile Include="Rendering\Trident.cs" />
     <Compile Include="Rendering\Vbo.cs" />
     <Compile Include="Rendering\VertexColorPositionTexture.cs" />

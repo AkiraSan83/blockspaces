@@ -20,7 +20,8 @@ namespace JollyBit.BS
             Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
                 .WithConstructorArgument("workingDirectory", path + "assets/");
             Bind<GLState>().To<GLState>().InSingletonScope();
-            Bind<ITextureManager>().To<TextureManager>();
+            Bind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
+            Bind<ContentManager>().To<ContentManager>().InSingletonScope();
         }
     }
 }
