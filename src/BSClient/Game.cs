@@ -50,14 +50,15 @@ namespace JollyBit.BS
             base.OnLoad(e);
 
             //Setup Ninject
-            IKernel kernel = new StandardKernel();
-            kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
+
+            BSCoreConstants.Kernel = new StandardKernel();
+            BSCoreConstants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
 
 			// Handle mouse and keyboard events
 			new Input(this);
 				
             // Set OpenGL options
-            kernel.Get<GLState>();
+            BSCoreConstants.Kernel.Get<GLState>();
 
             _camera.Position = new Vector3(0, 0, 5);
 
@@ -67,7 +68,7 @@ namespace JollyBit.BS
             //}
 
             // Create World Renderer
-            MapRenderer mapRenderer = kernel.Get<MapRenderer>();
+            MapRenderer mapRenderer = BSCoreConstants.Kernel.Get<MapRenderer>();
             _renderList.Add(mapRenderer);
             _camera.Position = new Vector3(0, 0, 60);
             IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
@@ -136,6 +137,12 @@ namespace JollyBit.BS
 
            
             SwapBuffers();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            BSCoreConstants.Kernel.Get<IConfigManager>().SaveConfig();
+            base.OnClosing(e);
         }
 
         /// <summary>

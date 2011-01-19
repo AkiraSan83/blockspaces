@@ -75,28 +75,5 @@ namespace JollyBit.BS.Rendering
         {
             GL.BindTexture(TextureTarget.Texture2D, _id);
         }
-
-        //public static Bitmap ColorArrayToBitmap(Color[,] colorArray)
-        //{
-        //    Bitmap bitm = new Bitmap(colorArray.GetLength(0), colorArray.GetLength(1), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-        //    BitmapData bitmapdat = bitm.LockBits(new Rectangle(0, 0, bitm.Width, bitm.Height), ImageLockMode.ReadWrite, bitm.PixelFormat);
-        //    int stride = bitmapdat.Stride;
-
-        //    byte[] bytes = new byte[stride * bitm.Height];
-        //    for (int x = 0; x < bitm.Height; x++)
-        //    {
-        //        for (int y = 0; y < bitm.Width; y++)
-        //        {
-        //            bytes[(x * stride) + y * 3 + 0] = colorArray[x, y].G;
-        //            bytes[(x * stride) + y * 3 + 1] = colorArray[x, y].G;
-        //            bytes[(x * stride) + y * 3 + 2] = colorArray[x, y].R;
-        //            bytes[(x * stride) + y * 3 + 3] = colorArray[x, y].A;
-        //        }
-        //    }
-        //    System.Runtime.InteropServices.Marshal.Copy(bytes, 0, bitmapdat.Scan0, stride * bitm.Height);
-        //    bitm.UnlockBits(bitmapdat);
-        //    return bitm;
-        //}
-
     }
 }
