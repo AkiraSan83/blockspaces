@@ -49,10 +49,6 @@ namespace JollyBit.BS
         {
             base.OnLoad(e);
 
-			ConfigHandler cfg = new ConfigHandler();
-			cfg.AddConfig(new BaseConfig());
-			cfg.Serialize();
-			
             //Setup Ninject
             IKernel kernel = new StandardKernel();
             kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
