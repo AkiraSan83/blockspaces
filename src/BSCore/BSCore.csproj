@@ -58,6 +58,10 @@
     <Compile Include="World\Map.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\JsonNet\Newtonsoft.Json\Newtonsoft.Json.Net35.csproj">
+      <Project>{A9AE40FF-1A21-414A-9FE7-3BE13644CC6D}</Project>
+      <Name>Newtonsoft.Json.Net35</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">
       <Project>{031C8CFF-F147-44EA-B7E5-0A5644808A7E}</Project>
       <Name>LibNoise</Name>
