@@ -37,8 +37,8 @@ namespace JollyBit.BS.Utility
 
         public Stream CreateFile(string path)
         {
-            path = fixPath(path);
-            if (File.Exists(_workingDirectory + path))
+            path = _workingDirectory + fixPath(path);
+            if (File.Exists(path))
             {
                 return OpenFile(path);
             }
