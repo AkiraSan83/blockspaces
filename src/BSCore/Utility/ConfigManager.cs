@@ -14,7 +14,6 @@ namespace JollyBit.BS.Utility
     public interface IConfigManager
     {
         T GetConfig<T>() where T : class, IConfigSection;
-        void AddConfig(IConfigSection config);
         void SaveConfig();
     }
 
@@ -37,12 +36,13 @@ namespace JollyBit.BS.Utility
 
         public T GetConfig<T>() where T : class, IConfigSection
         {
-            return _configSections.FirstOrDefault(section => section.GetType() == typeof(T)) as T;
-        }
-
-        public void AddConfig(IConfigSection config)
-        {
-            _configSections.Add(config);
+            T configSection = _configSections.FirstOrDefault(section => section.GetType() == typeof(T)) as T;
+            if (configSection == null)
+            {
+                configSection = BSCoreConstants.Kernel.Get<T>();
+                _configSections.Add(configSection);
+            }
+            return configSection;
         }
 
         public void SaveConfig()

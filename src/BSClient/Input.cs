@@ -31,11 +31,6 @@ namespace JollyBit.BS {
 			// Get the config
 			IConfigManager configManager = BSCoreConstants.Kernel.Get<IConfigManager>();
 			_config = configManager.GetConfig<InputConfig>();
-			if(_config == null) {
-				Console.WriteLine("New InputConfig.");
-				_config = new InputConfig();
-				configManager.AddConfig(_config);
-			}
 			
 			// Center and hide the cursor
 			this.recenter();
