@@ -20,7 +20,7 @@ namespace JollyBit.BS.Rendering
         private Vector3 _y = Vector3.UnitY;
         private Vector3 _z = Vector3.UnitZ;
 
-        public void Render()
+        public void RenderRotation()
         {
             GL.MatrixMode(MatrixMode.Modelview);
 			
@@ -29,10 +29,16 @@ namespace JollyBit.BS.Rendering
                                         new Vector4(_x.Z, _y.Z, _z.Z, 0.0f),
                                         Vector4.UnitW);
 			
-            Matrix4 trans = Matrix4.CreateTranslation(-_position);
+            //Matrix4 trans = Matrix4.CreateTranslation(-_position);
 			
-            Matrix4 m = trans * rot;
-            GL.LoadMatrix(ref m);
+            //Matrix4 m = trans * rot;
+            GL.LoadMatrix(ref rot);
+        }
+
+        public void RenderTranslation()
+        {
+            Matrix4 trans = Matrix4.CreateTranslation(-_position);
+            GL.MultMatrix(ref trans);
         }
 
         //public void LookAt(ref Vector3 target)

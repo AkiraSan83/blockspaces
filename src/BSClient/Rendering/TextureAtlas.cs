@@ -13,7 +13,7 @@ namespace JollyBit.BS.Rendering
         ITextureAtlas CreateTextureAtlas(int atlasSize, int subImageSize, int numMipmapLevels);
     }
 
-    public interface ITextureAtlas : IRenderable, IDisposable
+    public interface ITextureAtlas : IRenderable
     {
         /// <summary>
         /// Adds a sub image to the texture atlas. If the sub image has already been added it is
@@ -44,7 +44,7 @@ namespace JollyBit.BS.Rendering
         public TextureAtlas(int atlasSize, int subImageSize, int numMipmapLevels)
         {
             BorderSize = numMipmapLevels;
-            SubImageSize = subImageSize;
+            SubImageSize = subImageSize - numMipmapLevels * 2;
             NumberOfSubImages = atlasSize / subImageSize;
             NumMipmapLevels = numMipmapLevels;
             //Create empty white bitmap to hold atlas
@@ -101,14 +101,6 @@ namespace JollyBit.BS.Rendering
                 _textureObject = new GLTextureObject(Texture, NumMipmapLevels);
             }
             _textureObject.Render();
-        }
-        public void Dispose()
-        {
-            if (_textureObject != null)
-            {
-                _textureObject.Dispose();
-            }
-            GC.SuppressFinalize(this);
         }
     }
 }
