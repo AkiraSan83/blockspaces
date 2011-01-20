@@ -73,11 +73,7 @@ namespace JollyBit.BS.Rendering
                     return _bitmap;
                 }
             }
-
-            public string UniqueId
-            {
-                get { return _filePath; }
-            }
+            public string UniqueId { get { return _filePath; } }
         }
     }
 }

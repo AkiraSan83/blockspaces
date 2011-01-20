@@ -10,6 +10,8 @@ namespace JollyBit.BS.Rendering
 {
     public class Vbo<TVertex> : IDisposable, IRenderable where TVertex : struct
     {
+        public BeginMode PrimitiveMode = BeginMode.Triangles;
+
         private int _vboId, _eboId, _numElements, _stride;
 
         public int VboId
@@ -78,9 +80,9 @@ namespace JollyBit.BS.Rendering
             GL.VertexPointer(3, VertexPointerType.Float, _stride, new IntPtr(0));
             GL.ColorPointer(4, ColorPointerType.UnsignedByte, _stride, new IntPtr(12));
             GL.TexCoordPointer(2, TexCoordPointerType.Float, _stride, new IntPtr(16));
-            
 
-            GL.DrawElements(BeginMode.Triangles, _numElements, DrawElementsType.UnsignedShort, IntPtr.Zero);
+
+            GL.DrawElements(PrimitiveMode, _numElements, DrawElementsType.UnsignedShort, IntPtr.Zero);
         }
 
         // Dispose(bool disposing) executes in two distinct scenarios.

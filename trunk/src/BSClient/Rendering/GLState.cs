@@ -22,6 +22,8 @@ namespace JollyBit.BS.Rendering
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
 
+        public readonly float FarClippingPlane = 64;
+
         private Color _clearColor = Color.DarkSlateGray;
         public Color ClearColor
         {

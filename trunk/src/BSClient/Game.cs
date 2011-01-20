@@ -44,12 +44,12 @@ namespace JollyBit.BS
         public BSClient() : base(800, 600) { }
 
         GLTextureObject tex;
+        SkyBox skyBox;
 		protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
 
             //Setup Ninject
-
             BSCoreConstants.Kernel = new StandardKernel();
             BSCoreConstants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
 
@@ -61,10 +61,16 @@ namespace JollyBit.BS
 
             _camera.Position = new Vector3(0, 0, 5);
 
-            //using (System.IO.Stream stream = kenel.Get<IFileSystem>().OpenFile("smile.png"))
-            //{
-            //    tex = new GLTextureObject(new Bitmap(stream));
-            //}
+            //Add skybox
+            ContentManager contentManager = BSCoreConstants.Kernel.Get<ContentManager>();
+            skyBox = new SkyBox(
+                contentManager.LoadBitmap(new FileReference("skybox/neg_x.png")),
+                contentManager.LoadBitmap(new FileReference("skybox/pos_x.png")),
+                contentManager.LoadBitmap(new FileReference("skybox/neg_y.png")),
+                contentManager.LoadBitmap(new FileReference("skybox/pos_y.png")),
+                contentManager.LoadBitmap(new FileReference("skybox/neg_z.png")),
+                contentManager.LoadBitmap(new FileReference("skybox/pos_z.png")));
+            //_renderList.Add(skyBox);
 
             // Create World Renderer
             MapRenderer mapRenderer = BSCoreConstants.Kernel.Get<MapRenderer>();
@@ -88,9 +94,10 @@ namespace JollyBit.BS
             GL.Viewport(0, 0, Width, Height);
 
             float aspect_ratio = Width / (float)Height;
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
+            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, BSCoreConstants.Kernel.Get<GLState>().FarClippingPlane);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perpective);
+            GL.MatrixMode(MatrixMode.Modelview);
         }
 
 		private double _fps = 0; // render frequency adder
@@ -104,16 +111,18 @@ namespace JollyBit.BS
 			_fps += this.RenderFrequency;
 			_fpsCount += 1;
 			if(_fpsCount == _maxFpsCount) {
-				this.Title = string.Format("BlockSpaces - {0:0d}FPS",_fps/_fpsCount);
+                this.Title = string.Format("BlockSpaces - {0:0d}FPS", _fps / _fpsCount);
 				_fps = 0;
 				_fpsCount = 0;
 			}
 
 			// Remove previous rendering
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.LoadIdentity();
 
-			// Render the camera
-            _camera.Render();
+            _camera.RenderRotation();
+            skyBox.Render();
+            _camera.RenderTranslation();
 
             ////Render a texture
             //tex.Render();
@@ -133,7 +142,6 @@ namespace JollyBit.BS
 			foreach(var renderable in _renderList) {
 				renderable.Render();
 			}
-
            
             SwapBuffers();
         }
