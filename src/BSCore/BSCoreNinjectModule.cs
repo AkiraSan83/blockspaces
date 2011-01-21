@@ -17,7 +17,7 @@ namespace JollyBit.BS
         {
             Bind<IKernel>().ToConstant(this.Kernel);
             Bind<IMap>().To<Map>();
-            Bind<IGenerator>().To<SphereGenerator>();
+            Bind<IGenerator>().To<SimpleTerrainGenerator>();
             Bind<IChunk>().To<Chunk>();
             Bind<IConfigManager>().ToMethod(
                 (context) =>
