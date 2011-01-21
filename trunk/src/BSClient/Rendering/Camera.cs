@@ -20,6 +20,12 @@ namespace JollyBit.BS.Rendering
         private Vector3 _y = Vector3.UnitY;
         private Vector3 _z = Vector3.UnitZ;
 
+		public void Render()
+		{
+			RenderRotation();
+			RenderTranslation();
+		}
+		
         public void RenderRotation()
         {
             GL.MatrixMode(MatrixMode.Modelview);

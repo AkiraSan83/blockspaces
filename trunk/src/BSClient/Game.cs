@@ -29,6 +29,7 @@ using JollyBit.BS.Utility;
 namespace JollyBit.BS
 {
 	public class ClientConfig : IConfigSection {
+		public int DebugSleepTime = 0;
 		//public double MaxFPS = 60.0;
 		//public bool VSync = true;
 	}
@@ -37,7 +38,6 @@ namespace JollyBit.BS
     {
 		private IList<IRenderable> _renderList = new List<IRenderable>();
 		private Camera _camera = new Camera();
-        
 		
 		public IList<IRenderable> RenderList {
 			get { return _renderList; }
@@ -120,7 +120,7 @@ namespace JollyBit.BS
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-			
+
 			// Put FPS in title bar
 			_fps += this.RenderFrequency;
 			_fpsCount += 1;
@@ -158,6 +158,9 @@ namespace JollyBit.BS
 			}
            
             SwapBuffers();
+			
+			if(_config.DebugSleepTime != 0)
+				Thread.Sleep(_config.DebugSleepTime);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
