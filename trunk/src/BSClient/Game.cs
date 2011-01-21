@@ -75,7 +75,8 @@ namespace JollyBit.BS
             // Create World Renderer
             MapRenderer mapRenderer = BSCoreConstants.Kernel.Get<MapRenderer>();
             _renderList.Add(mapRenderer);
-            _camera.Position = new Vector3(0, 0, 60);
+            _camera.Position = new Vector3(0, 50, 0);
+            _camera.RotateX(-MathHelper.PiOver2);
             IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
             c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
             c = mapRenderer.Map[new Utility.Point3L(-1, 0, -1)];
