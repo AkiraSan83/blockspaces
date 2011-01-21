@@ -17,6 +17,8 @@ namespace JollyBit.BS {
 	public class InputConfig : IConfigSection {
 		public float KeySpeed = 0.25f;
         public float MouseSpeed = 0.001f;
+		public bool InvertMouse = false;
+		public float ShiftKeyMultiplier = 8f;
 	}
 	
 	public class Input {
@@ -84,18 +86,23 @@ namespace JollyBit.BS {
 				if (this._gameWindow.Keyboard[Key.Escape])
 	                this._gameWindow.Exit();
 			
+				float speedMultiplier = 1f;
+				if (this._gameWindow.Keyboard[Key.ShiftLeft] || this._gameWindow.Keyboard[Key.ShiftRight])
+					speedMultiplier = _config.ShiftKeyMultiplier;
+				
 				if (this._gameWindow.Keyboard[Key.W])
-	                this._gameWindow.Camera.MoveForward(_config.KeySpeed);
+	                this._gameWindow.Camera.MoveForward(_config.KeySpeed * speedMultiplier);
 	            if (this._gameWindow.Keyboard[Key.S])
-	                this._gameWindow.Camera.MoveForward(-_config.KeySpeed);
+	                this._gameWindow.Camera.MoveForward(-_config.KeySpeed * speedMultiplier);
 	            if (this._gameWindow.Keyboard[Key.D])
-	                this._gameWindow.Camera.StrafeRight(_config.KeySpeed);
+	                this._gameWindow.Camera.StrafeRight(_config.KeySpeed * speedMultiplier);
 	            if (this._gameWindow.Keyboard[Key.A])
-	                this._gameWindow.Camera.StrafeRight(-_config.KeySpeed);
+	                this._gameWindow.Camera.StrafeRight(-_config.KeySpeed * speedMultiplier);
 				if (this._gameWindow.Keyboard[Key.Q])
-					this._gameWindow.Camera.MoveUpward(_config.KeySpeed);
+					this._gameWindow.Camera.MoveUpward(_config.KeySpeed * speedMultiplier);
 				if (this._gameWindow.Keyboard[Key.E])
-					this._gameWindow.Camera.MoveUpward(-_config.KeySpeed);
+					this._gameWindow.Camera.MoveUpward(-_config.KeySpeed * speedMultiplier);
+				
 	            if (this._gameWindow.Keyboard[Key.Left])
 	                this._gameWindow.Camera.RotateY(_config.KeySpeed/4);
 	            if (this._gameWindow.Keyboard[Key.Right])
@@ -107,7 +114,7 @@ namespace JollyBit.BS {
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
 				this._gameWindow.Camera.RotateY(delta.X * _config.MouseSpeed);
-				this._gameWindow.Camera.RotateX(-delta.Y * _config.MouseSpeed);
+				this._gameWindow.Camera.RotateX(delta.Y * (_config.InvertMouse ? -1 : 1) * _config.MouseSpeed);
 				System.Windows.Forms.Cursor.Position = _center;
 			}
 		}
