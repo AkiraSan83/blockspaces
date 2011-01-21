@@ -67,11 +67,7 @@ namespace JollyBit.BS.Rendering
 			if(angle != 0f) {
 				_rot = _rot * Quaternion.FromAxisAngle(Vector3.UnitX,angle);
 				_rot.Normalize();
-				//Console.WriteLine(rot);
-				
-	            _z = Vector3.Transform(Vector3.UnitZ,_rot);
-	            _y = Vector3.Transform(Vector3.UnitY,_rot);
-				//GrahmSchmidt();
+				recomputeBasis();
 			}
         }
 
@@ -80,37 +76,39 @@ namespace JollyBit.BS.Rendering
 			if(angle != 0f) {
 	            _rot = Quaternion.FromAxisAngle(Vector3.UnitY,angle) * _rot;
 				_rot.Normalize();
-				
-	            _z = Vector3.Transform(Vector3.UnitZ,_rot);
-	            _x = Vector3.Transform(Vector3.UnitX,_rot);
-				GrahmSchmidt();
+				recomputeBasis();
 			}
         }
 
         public void RotateZ(float angle)
         {
 			if(angle != 0f) {
-	            Quaternion rot = Quaternion.FromAxisAngle(_z,angle);
-				
-	            _y = Vector3.Transform(_y, rot);
-	            _x = Vector3.Transform(_x, rot);
-				GrahmSchmidt();
+				_rot = _rot * Quaternion.FromAxisAngle(Vector3.UnitZ,angle);
+				_rot.Normalize();
+				recomputeBasis();
 			}
         }
 		
-		private void GrahmSchmidt() {
-			_y = _y - projection(_y,_x);
-			_z = _z - projection(_z,_x);
-			_z = _z - projection(_z,_y);
-			_x.Normalize();
-			_y.Normalize();
-			_z.Normalize();
+		// Recompute _x, _y, and _z using _rot.
+		private void recomputeBasis() {
+			_x = Vector3.Transform(Vector3.UnitX,_rot);
+			_y = Vector3.Transform(Vector3.UnitY,_rot);
+			_z = Vector3.Transform(Vector3.UnitZ,_rot);
 		}
 		
-		private Vector3 projection(Vector3 x, Vector3 y) {
-			return (Vector3.Dot(x,y) / y.LengthSquared) * y;
-		}
-
+//		private void GrahmSchmidt() {
+//			_y = _y - projection(_y,_x);
+//			_z = _z - projection(_z,_x);
+//			_z = _z - projection(_z,_y);
+//			_x.Normalize();
+//			_y.Normalize();
+//			_z.Normalize();
+//		}
+//		
+//		private Vector3 projection(Vector3 x, Vector3 y) {
+//			return (Vector3.Dot(x,y) / y.LengthSquared) * y;
+//		}
+		
         public Vector3 Position
         {
             get { return _position; }

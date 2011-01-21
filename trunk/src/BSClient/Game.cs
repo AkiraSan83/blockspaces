@@ -28,6 +28,11 @@ using JollyBit.BS.Utility;
 
 namespace JollyBit.BS
 {
+	public class ClientConfig : IConfigSection {
+		//public double MaxFPS = 60.0;
+		//public bool VSync = true;
+	}
+	
 	public class BSClient : GameWindow
     {
 		private IList<IRenderable> _renderList = new List<IRenderable>();
@@ -40,11 +45,12 @@ namespace JollyBit.BS
 		public Camera Camera {
 			get { return _camera; }
 		}
-
-        public BSClient() : base(800, 600) { }
+		
+		public BSClient() : base(800, 600) { }
 
         GLTextureObject tex;
         SkyBox skyBox;
+		private ClientConfig _config;
 		protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
@@ -55,7 +61,14 @@ namespace JollyBit.BS
 
 			// Handle mouse and keyboard events
 			new Input(this);
-				
+			
+			// Get client config
+			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<ClientConfig>();
+			//this.TargetRenderFrequency = _config.MaxFPS;
+			//Console.WriteLine(this.TargetRenderFrequency);
+			
+			//this.VSync = _config.VSync ? VSyncMode.On : VSyncMode.Off;
+			
             // Set OpenGL options
             BSCoreConstants.Kernel.Get<GLState>();
 
@@ -107,7 +120,7 @@ namespace JollyBit.BS
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
-
+			
 			// Put FPS in title bar
 			_fps += this.RenderFrequency;
 			_fpsCount += 1;
@@ -161,7 +174,7 @@ namespace JollyBit.BS
         {
             using (BSClient example = new BSClient())
             {
-				example.Run(30.0, 0.00);
+				example.Run(30.0);
             }
         }
     }
