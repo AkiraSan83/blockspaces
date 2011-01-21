@@ -407,7 +407,7 @@ namespace OpenTK
                 while (true)
                 {
 					// Added sleep(5) to lower CPU usage - EMS 1/17/2011
-                    Thread.Sleep(5);
+                    //Thread.Sleep(5);
 					
 					ProcessEvents();
                     if (Exists && !IsExiting)

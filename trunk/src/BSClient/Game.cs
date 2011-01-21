@@ -160,7 +160,7 @@ namespace JollyBit.BS
         {
             using (BSClient example = new BSClient())
             {
-				example.Run(30.0, 90.0);
+				example.Run(30.0, 0.00);
             }
         }
     }

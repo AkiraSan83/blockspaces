@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -50,6 +50,7 @@
     <Compile Include="World\Chunk.cs" />
     <Compile Include="World\Generation\IGenerator.cs" />
     <Compile Include="World\Generation\SphereGenerator.cs" />
+    <Compile Include="World\Generation\SimpleTerrainGenerator.cs" />
     <Compile Include="World\IBlock.cs" />
     <Compile Include="World\IBlockManager.cs" />
     <Compile Include="World\IMap.cs" />
