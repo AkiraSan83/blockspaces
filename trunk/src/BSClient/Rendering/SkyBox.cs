@@ -9,6 +9,9 @@ using Ninject;
 using Vertex = JollyBit.BS.Rendering.VertexPositionColorTexture;
 using OpenTK.Graphics.OpenGL;
 
+using JollyBit.BS.Client.Rendering;
+using JollyBit.BS.Utility;
+
 namespace JollyBit.BS.Rendering
 {
     public class SkyBox : IRenderable
@@ -21,10 +24,13 @@ namespace JollyBit.BS.Rendering
         private readonly ITextureReference _pos_y;
         private readonly ITextureReference _pos_z;
         private readonly ITextureReference _neg_z;
+		private RenderConfig _config;
         public SkyBox(IBitmap neg_x, IBitmap pos_x, IBitmap neg_y, IBitmap pos_y, IBitmap neg_z, IBitmap pos_z)
         {
+			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+			
             ITextureAtlasFactory atlasFactory = BSCoreConstants.Kernel.Get<ITextureAtlasFactory>();
-            _atlas = atlasFactory.CreateTextureAtlas(1024, 1024 / 4, 1);
+            _atlas = atlasFactory.CreateTextureAtlas(_config.MaxTextureSize, _config.MaxTextureSize / 4, 1);
             _neg_x = _atlas.AddSubImage(neg_x);
             _pos_x = _atlas.AddSubImage(pos_x);
             _pos_y = _atlas.AddSubImage(pos_y);

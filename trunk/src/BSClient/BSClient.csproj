@@ -71,6 +71,7 @@
     <Compile Include="Rendering\Vbo.cs" />
     <Compile Include="Rendering\VertexColorPositionTexture.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="Rendering\RenderConfig.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BSCore\BSCore.csproj">
@@ -88,6 +89,10 @@
     <ProjectReference Include="..\OpenTK\1.0\Source\OpenTK\OpenTK.csproj">
       <Project>{A37A7E14-0000-0000-0000-000000000000}</Project>
       <Name>OpenTK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JsonExSerializer\JsonExSerializer\JsonExSerializer.csproj">
+      <Project>{D0C83979-A672-4C06-99BC-B82D81749405}</Project>
+      <Name>JsonExSerializer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

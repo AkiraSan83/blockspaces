@@ -13,6 +13,8 @@ using JollyBit.BS.Utility;
 using Ninject;
 using Ninject.Parameters;
 
+using JollyBit.BS.Client.Rendering;
+
 namespace JollyBit.BS.Rendering
 {
     public class MapRenderer : IRenderable
@@ -20,11 +22,14 @@ namespace JollyBit.BS.Rendering
         public readonly IMap Map;
         private readonly ICollection<ChunkRenderer> _renderers = new List<ChunkRenderer>();
         private readonly ITextureAtlas _textureAtlas;
-        [Inject]
+        private RenderConfig _config;
+		[Inject]
         public MapRenderer(IMap map, IKernel kernel, ITextureAtlasFactory textureAtlasFactory)
         {
+			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+			
             Map = map;
-            _textureAtlas = textureAtlasFactory.CreateTextureAtlas(1024, 64, 4);
+            _textureAtlas = textureAtlasFactory.CreateTextureAtlas(_config.MaxTextureSize, _config.MaxTextureSize/16, 4);
             Map.ChunkChanged += new EventHandler<ItemChangedEventArgs<IChunk>>(Map_ChunkChanged);
             //Create renderers for all chunks that already exist
             foreach (IChunk chunk in Map.Chunks)
