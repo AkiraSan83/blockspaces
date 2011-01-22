@@ -10,7 +10,7 @@ namespace JollyBit.BS.Client.Rendering
 {
     public interface ITextureAtlasFactory
     {
-        ITextureAtlas CreateTextureAtlas(int atlasSize, int subImageSize, int numMipmapLevels);
+        ITextureAtlas CreateTextureAtlas(int atlasWidth, Size subImageSize, int numMipmapLevels);
     }
 
     public interface ITextureAtlas : IRenderable
@@ -26,29 +26,30 @@ namespace JollyBit.BS.Client.Rendering
 
     public class TextureAtlasFactory : ITextureAtlasFactory
     {
-        public ITextureAtlas CreateTextureAtlas(int atlasSize, int subImageSize, int numMipmapLevels)
+        public ITextureAtlas CreateTextureAtlas(int atlasWidth, Size subImageSize, int numMipmapLevels)
         {
-            return new TextureAtlas(atlasSize, subImageSize, numMipmapLevels);
+            return new TextureAtlas(atlasWidth, subImageSize, numMipmapLevels);
         }
     }
 
     public class TextureAtlas : ITextureAtlas
     {
-        public readonly int SubImageSize;
+        public readonly Size SubImageSize;
         public readonly int NumberOfSubImages;
         public readonly Bitmap Texture;
         public readonly int NumMipmapLevels;
         private int _currentSubImage = 0;
         public readonly int BorderSize;
         private readonly Dictionary<string, ITextureReference> _refCache = new Dictionary<string, ITextureReference>();
-        public TextureAtlas(int atlasSize, int subImageSize, int numMipmapLevels)
+        public TextureAtlas(int atlasWidth, Size subImageSize, int numMipmapLevels)
         {
             BorderSize = numMipmapLevels;
-            SubImageSize = subImageSize - numMipmapLevels * 2;
-            NumberOfSubImages = atlasSize / subImageSize;
+            SubImageSize.Width = subImageSize.Width - numMipmapLevels * 2;
+			SubImageSize.Height = subImageSize.Height - numMipmapLevels * 2;
+            NumberOfSubImages = atlasWidth / subImageSize.Width;
             NumMipmapLevels = numMipmapLevels;
             //Create empty white bitmap to hold atlas
-            Texture = new Bitmap(atlasSize, atlasSize);
+            Texture = new Bitmap(atlasWidth, atlasWidth);
             using (Graphics graphics = Graphics.FromImage(Texture))
             {
                 graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(0, 0, Texture.Width, Texture.Height));
@@ -128,10 +129,10 @@ namespace JollyBit.BS.Client.Rendering
 
             //Add sub image
             Rectangle rect = new Rectangle(
-                (_currentSubImage % NumberOfSubImages) * (SubImageSize + BorderSize * 2) + BorderSize, // X
-                (_currentSubImage / NumberOfSubImages) * (SubImageSize + BorderSize * 2) + BorderSize, // Y
-                SubImageSize - 2 * BorderSize, // Width
-                SubImageSize - 2 * BorderSize); // Height
+                (_currentSubImage % NumberOfSubImages) * (SubImageSize.Width + BorderSize * 2) + BorderSize, // X
+                (_currentSubImage / NumberOfSubImages) * (SubImageSize.Height + BorderSize * 2) + BorderSize, // Y
+                SubImageSize.Width - 2 * BorderSize, // Width
+                SubImageSize.Height - 2 * BorderSize); // Height
 
             using (Graphics g = Graphics.FromImage(Texture))
             {

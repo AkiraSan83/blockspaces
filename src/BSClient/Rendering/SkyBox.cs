@@ -31,7 +31,7 @@ namespace JollyBit.BS.Client.Rendering
 			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
 			
             ITextureAtlasFactory atlasFactory = Constants.Kernel.Get<ITextureAtlasFactory>();
-            _atlas = atlasFactory.CreateTextureAtlas(_config.MaxTextureSize, _config.MaxTextureSize / 4, 1);
+            _atlas = atlasFactory.CreateTextureAtlas(_config.MaxTextureSize, new Size(_config.MaxTextureSize / 4, _config.MaxTextureSize / 4), 1);
             _neg_x = _atlas.AddSubImage(neg_x);
             _pos_x = _atlas.AddSubImage(pos_x);
             _pos_y = _atlas.AddSubImage(pos_y);
