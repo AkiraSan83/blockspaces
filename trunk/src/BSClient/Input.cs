@@ -56,11 +56,13 @@ namespace JollyBit.BS {
 		
 		protected void register() {
 			this._registered = true;
+			this._gameWindow.TitleSuffix = "";
 			this.recenter();
 		}
 		
 		protected void unregister() {
 			this._registered = false;
+			this._gameWindow.TitleSuffix = " (Input Disconnected)";
 			System.Windows.Forms.Cursor.Show();	// Unhide the cursor
 		}
 		

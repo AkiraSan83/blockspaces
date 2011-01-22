@@ -72,6 +72,7 @@ namespace JollyBit.BS
             // Set OpenGL options
             BSCoreConstants.Kernel.Get<GLState>();
 
+			// Move the camera to (0,0,5)
             _camera.Position = new Vector3(0, 0, 5);
 
             //Add skybox
@@ -117,6 +118,7 @@ namespace JollyBit.BS
 		private double _fps = 0; // render frequency adder
 		private int _fpsCount = 0; // Frames since last FPS update
 		private readonly int _maxFpsCount = 60; // Max number of frames between FPS updates
+		public string TitleSuffix = "";
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
@@ -125,7 +127,7 @@ namespace JollyBit.BS
 			_fps += this.RenderFrequency;
 			_fpsCount += 1;
 			if(_fpsCount == _maxFpsCount) {
-                this.Title = string.Format("BlockSpaces - {0:0d}FPS", _fps / _fpsCount);
+                this.Title = string.Format("BlockSpaces - {0:0d}FPS{1}", _fps / _fpsCount, TitleSuffix);
 				_fps = 0;
 				_fpsCount = 0;
 			}
@@ -134,6 +136,7 @@ namespace JollyBit.BS
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.LoadIdentity();
 
+			// Render camera and skybox
             _camera.RenderRotation();
             skyBox.Render();
             _camera.RenderTranslation();
