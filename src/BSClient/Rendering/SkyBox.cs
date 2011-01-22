@@ -40,7 +40,7 @@ namespace JollyBit.BS.Rendering
                 _vbo.Dispose();
                 _vbo = null;
             }
-            float v = BSCoreConstants.Kernel.Get<GLState>().FarClippingPlane - 30;
+            float v = BSCoreConstants.Kernel.Get<GLState>().FarClippingPlane / 2;
             Vertex[] vertexes = new Vertex[]
             {
                 //_pos_z
