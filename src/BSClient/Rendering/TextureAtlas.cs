@@ -107,7 +107,7 @@ namespace JollyBit.BS.Rendering
 			Texture.UnlockBits(currentData);
 			
 			// To save texture maps, uncomment
-			Texture.Save(string.Format("/tmp/texture-{0}.bmp",System.DateTime.Now.Millisecond));
+			//Texture.Save(string.Format("/tmp/texture-{0}.bmp",System.DateTime.Now.Millisecond));
 		}
 		
         public ITextureReference AddSubImage(IBitmap bitmap)
