@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public class GLTextureObject : IDisposable, IRenderable
     {

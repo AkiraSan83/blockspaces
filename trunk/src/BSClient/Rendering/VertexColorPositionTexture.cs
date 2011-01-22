@@ -9,7 +9,7 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using System.Drawing;
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct VertexPositionColorTexture

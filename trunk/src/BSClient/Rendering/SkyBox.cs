@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JollyBit.BS.Rendering;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Client.Rendering;
+using JollyBit.BS.Core.Utility;
 using System.Drawing;
 using Ninject;
-using Vertex = JollyBit.BS.Rendering.VertexPositionColorTexture;
+using Vertex = JollyBit.BS.Client.Rendering.VertexPositionColorTexture;
 using OpenTK.Graphics.OpenGL;
 
 using JollyBit.BS.Client.Rendering;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Core;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public class SkyBox : IRenderable
     {
@@ -27,9 +28,9 @@ namespace JollyBit.BS.Rendering
 		private RenderConfig _config;
         public SkyBox(IBitmap neg_x, IBitmap pos_x, IBitmap neg_y, IBitmap pos_y, IBitmap neg_z, IBitmap pos_z)
         {
-			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
 			
-            ITextureAtlasFactory atlasFactory = BSCoreConstants.Kernel.Get<ITextureAtlasFactory>();
+            ITextureAtlasFactory atlasFactory = Constants.Kernel.Get<ITextureAtlasFactory>();
             _atlas = atlasFactory.CreateTextureAtlas(_config.MaxTextureSize, _config.MaxTextureSize / 4, 1);
             _neg_x = _atlas.AddSubImage(neg_x);
             _pos_x = _atlas.AddSubImage(pos_x);
@@ -46,7 +47,7 @@ namespace JollyBit.BS.Rendering
                 _vbo.Dispose();
                 _vbo = null;
             }
-            float v = BSCoreConstants.Kernel.Get<GLState>().FarClippingPlane / 2;
+            float v = Constants.Kernel.Get<GLState>().FarClippingPlane / 2;
             Vertex[] vertexes = new Vertex[]
             {
                 //_pos_z

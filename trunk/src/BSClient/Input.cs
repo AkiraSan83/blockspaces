@@ -10,10 +10,11 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using OpenTK.Input;
 using System.Drawing;
+using JollyBit.BS.Core;
 
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS {
+namespace JollyBit.BS.Client {
 	public class InputConfig : IConfigSection {
 		public float KeySpeed = 0.25f;
         public float MouseSpeed = 0.001f;
@@ -31,7 +32,7 @@ namespace JollyBit.BS {
 			this._gameWindow = client;
 			
 			// Get the config
-			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<InputConfig>();
+			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<InputConfig>();
 			
 			// Center and hide the cursor
 			this.recenter();

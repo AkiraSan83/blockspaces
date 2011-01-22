@@ -20,13 +20,13 @@ using System.Linq;
 using Ninject;
 using Ninject.Modules;
 
-using JollyBit.BS.Rendering;
-using JollyBit.BS.World;
-using JollyBit.BS.Utility;
-
+using JollyBit.BS.Client.Rendering;
+using JollyBit.BS.Core.World;
+using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Core;
 #endregion
 
-namespace JollyBit.BS
+namespace JollyBit.BS.Client
 {
 	public class ClientConfig : IConfigSection {
 		public int DebugSleepTime = 0;
@@ -56,27 +56,27 @@ namespace JollyBit.BS
             base.OnLoad(e);
 
             //Setup Ninject
-            BSCoreConstants.Kernel = new StandardKernel();
-            BSCoreConstants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
+            Constants.Kernel = new StandardKernel();
+            Constants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
 
 			// Handle mouse and keyboard events
 			new Input(this);
 			
 			// Get client config
-			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<ClientConfig>();
+			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<ClientConfig>();
 			//this.TargetRenderFrequency = _config.MaxFPS;
 			//Console.WriteLine(this.TargetRenderFrequency);
 			
 			//this.VSync = _config.VSync ? VSyncMode.On : VSyncMode.Off;
 			
             // Set OpenGL options
-            BSCoreConstants.Kernel.Get<GLState>();
+            Constants.Kernel.Get<GLState>();
 
 			// Move the camera to (0,0,5)
             _camera.Position = new Vector3(0, 0, 5);
 
             //Add skybox
-            ContentManager contentManager = BSCoreConstants.Kernel.Get<ContentManager>();
+            ContentManager contentManager = Constants.Kernel.Get<ContentManager>();
             skyBox = new SkyBox(
                 contentManager.LoadBitmap(new FileReference("skybox/neg_x.png")),
                 contentManager.LoadBitmap(new FileReference("skybox/pos_x.png")),
@@ -87,14 +87,14 @@ namespace JollyBit.BS
             //_renderList.Add(skyBox);
 
             // Create World Renderer
-            MapRenderer mapRenderer = BSCoreConstants.Kernel.Get<MapRenderer>();
+            MapRenderer mapRenderer = Constants.Kernel.Get<MapRenderer>();
             _renderList.Add(mapRenderer);
             _camera.Position = new Vector3(0, 50, 0);
             _camera.RotateX(-MathHelper.PiOver2);
-            IChunk c = mapRenderer.Map[new Utility.Point3L(0, 0, 0)];
-            c = mapRenderer.Map[new Utility.Point3L(-1, 0, 0)];
-            c = mapRenderer.Map[new Utility.Point3L(-1, 0, -1)];
-            c = mapRenderer.Map[new Utility.Point3L(0, 0, -1)];
+            IChunk c = mapRenderer.Map[new Point3L(0, 0, 0)];
+            c = mapRenderer.Map[new Point3L(-1, 0, 0)];
+            c = mapRenderer.Map[new Point3L(-1, 0, -1)];
+            c = mapRenderer.Map[new Point3L(0, 0, -1)];
 			
 			// Build trident and add to the render list
 			_renderList.Add( new Trident() );
@@ -109,7 +109,7 @@ namespace JollyBit.BS
             GL.Viewport(0, 0, Width, Height);
 
             float aspect_ratio = Width / (float)Height;
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, BSCoreConstants.Kernel.Get<GLState>().FarClippingPlane);
+            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, Constants.Kernel.Get<GLState>().FarClippingPlane);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perpective);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -168,7 +168,7 @@ namespace JollyBit.BS
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            BSCoreConstants.Kernel.Get<IConfigManager>().SaveConfig();
+            Constants.Kernel.Get<IConfigManager>().SaveConfig();
             base.OnClosing(e);
         }
 

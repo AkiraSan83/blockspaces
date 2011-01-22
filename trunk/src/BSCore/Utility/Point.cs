@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 
-namespace JollyBit.BS.Utility
+namespace JollyBit.BS.Core.Utility
 {
     public struct Point3L
     {

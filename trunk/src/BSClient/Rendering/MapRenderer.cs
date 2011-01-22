@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JollyBit.BS.Rendering;
-using JollyBit.BS.World;
+using JollyBit.BS.Client.Rendering;
+using JollyBit.BS.Core.World;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using System.Drawing;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 using Ninject;
 using Ninject.Parameters;
-
+using JollyBit.BS.Core;
 using JollyBit.BS.Client.Rendering;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public class MapRenderer : IRenderable
     {
@@ -26,7 +26,7 @@ namespace JollyBit.BS.Rendering
 		[Inject]
         public MapRenderer(IMap map, IKernel kernel, ITextureAtlasFactory textureAtlasFactory)
         {
-			_config = BSCoreConstants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
 			
             Map = map;
             _textureAtlas = textureAtlasFactory.CreateTextureAtlas(_config.MaxTextureSize, _config.MaxTextureSize/16, 4);
@@ -84,29 +84,29 @@ namespace JollyBit.BS.Rendering
         {
             IList<VertexPositionColorTexture> vertexes = new List<VertexPositionColorTexture>();
             IList<short> indices = new List<short>();
-            ContentManager contentManager = BSCoreConstants.Kernel.Get<ContentManager>();
-            for (byte x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
-                for (byte y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
-                    for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
+            ContentManager contentManager = Constants.Kernel.Get<ContentManager>();
+            for (byte x = 0; x < Constants.CHUNK_SIZE_X; x++)
+                for (byte y = 0; y < Constants.CHUNK_SIZE_Y; y++)
+                    for (byte z = 0; z < Constants.CHUNK_SIZE_Z; z++)
                     {
                         IBlock block = Chunk[x, y, z];
                         if (block == null) continue;
                         if (z == 0 || Chunk[x, y, (byte)(z - 1)] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Front,
                                 _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Front))));
-                        if (z == BSCoreConstants.CHUNK_SIZE_Z - 1 || Chunk[x, y, (byte)(z + 1)] == null)
+                        if (z == Constants.CHUNK_SIZE_Z - 1 || Chunk[x, y, (byte)(z + 1)] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Back,
                                 _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Back))));
                         if (x == 0 || Chunk[(byte)(x - 1), y, z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Left,
                                 _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Left))));
-                        if (x == BSCoreConstants.CHUNK_SIZE_X - 1 || Chunk[(byte)(x + 1), y, z] == null)
+                        if (x == Constants.CHUNK_SIZE_X - 1 || Chunk[(byte)(x + 1), y, z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Right,
                                 _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Right))));
                         if (y == 0 || Chunk[x, (byte)(y - 1), z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Bottom,
                                 _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Bottom))));
-                        if (y == BSCoreConstants.CHUNK_SIZE_Y - 1 || Chunk[x, (byte)(y + 1), z] == null)
+                        if (y == Constants.CHUNK_SIZE_Y - 1 || Chunk[x, (byte)(y + 1), z] == null)
                             createCubeSide(ref vertexes, ref indices, (Vector3)Chunk.Location + new Vector3(x, y, z), BlockSides.Top,
                                 _textureAtlas.AddSubImage(contentManager.LoadBitmap(block.GetTextureForSide(BlockSides.Top))));
                     }

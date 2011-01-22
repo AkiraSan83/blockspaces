@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS.World
+namespace JollyBit.BS.Core.World
 {
     public class Chunk : IChunk
     {
         public Point3L Location { get; set; }
         public IMap Map { get; set; }
 				
-        private IBlock[, ,] _blocks = new IBlock[BSCoreConstants.CHUNK_SIZE_X, BSCoreConstants.CHUNK_SIZE_Y, BSCoreConstants.CHUNK_SIZE_Z];
+        private IBlock[, ,] _blocks = new IBlock[Constants.CHUNK_SIZE_X, Constants.CHUNK_SIZE_Y, Constants.CHUNK_SIZE_Z];
         public IBlock this[byte x, byte y, byte z]
         {
             get

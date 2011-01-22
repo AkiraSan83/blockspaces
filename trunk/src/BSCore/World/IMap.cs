@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JollyBit.BS.Utility;
-using JollyBit.BS.World.Generation;
+using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Core.World.Generation;
 
-namespace JollyBit.BS.World
+namespace JollyBit.BS.Core.World
 {
     public class BlockChangedEventArgs : EventArgs
     {
@@ -40,9 +40,9 @@ namespace JollyBit.BS.World
         public static IBlock GetBlock(this IMap self, Point3L blockLocation)
         {
             throw new System.NotImplementedException("Does not currently work for negative numbers");
-            return self[blockLocation][(byte)(blockLocation.X % (long)BSCoreConstants.CHUNK_SIZE_X),
-                (byte)(blockLocation.Y % (long)BSCoreConstants.CHUNK_SIZE_Y),
-                (byte)(blockLocation.Z % (long)BSCoreConstants.CHUNK_SIZE_Z)];
+            return self[blockLocation][(byte)(blockLocation.X % (long)Constants.CHUNK_SIZE_X),
+                (byte)(blockLocation.Y % (long)Constants.CHUNK_SIZE_Y),
+                (byte)(blockLocation.Z % (long)Constants.CHUNK_SIZE_Z)];
         }
     }
 }

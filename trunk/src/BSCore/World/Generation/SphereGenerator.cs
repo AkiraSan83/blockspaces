@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace JollyBit.BS.World.Generation
+namespace JollyBit.BS.Core.World.Generation
 {
     public class SphereGenerator : IGenerator
     {
-        private long _radiusSquared = BSCoreConstants.CHUNK_SIZE_X * BSCoreConstants.CHUNK_SIZE_X / 2;
+        private long _radiusSquared = Constants.CHUNK_SIZE_X * Constants.CHUNK_SIZE_X / 2;
         public long Radius
         {
             get { return (long)Math.Sqrt(_radiusSquared); }

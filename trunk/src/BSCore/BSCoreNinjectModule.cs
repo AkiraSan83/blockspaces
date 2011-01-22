@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using Ninject.Modules;
 using Ninject;
-using JollyBit.BS.World;
-using JollyBit.BS.World.Generation;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.World;
+using JollyBit.BS.Core.World.Generation;
+using JollyBit.BS.Core.Utility;
 using System.IO;
 
-namespace JollyBit.BS
+namespace JollyBit.BS.Core
 {
     public class BSCoreNinjectModule : NinjectModule
     {

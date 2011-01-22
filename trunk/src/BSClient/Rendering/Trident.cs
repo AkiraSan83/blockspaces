@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using System.Drawing;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public class Trident : IRenderable
     {

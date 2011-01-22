@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace JollyBit.BS.Utility
+namespace JollyBit.BS.Core.Utility
 {
     /// <summary>
     /// Provides basic file operations to allow files to be accessed transparently
