@@ -23,7 +23,16 @@ namespace JollyBit.BS.Rendering
         }
 
         public readonly float FarClippingPlane = 128;
-
+		
+		private int _maxSize = -1;
+		public int MaxSize {
+			get { 
+				if(_maxSize == -1)
+					GL.GetInteger(GetPName.MaxTextureSize, out _maxSize);
+				return _maxSize;
+			}
+		}
+		
         private Color _clearColor = Color.DarkSlateGray;
         public Color ClearColor
         {
