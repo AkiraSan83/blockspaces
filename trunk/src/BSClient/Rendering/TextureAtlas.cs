@@ -55,6 +55,61 @@ namespace JollyBit.BS.Rendering
             }
         }
 
+		private unsafe void addBorder(ref Rectangle rect) {
+			Rectangle editing = new Rectangle(
+				rect.X - BorderSize,
+			    rect.Y - BorderSize,
+			    rect.Width + 2 * BorderSize,
+			    rect.Height + 2 * BorderSize
+			);
+			
+			BitmapData currentData = Texture.LockBits(editing, ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			uint* scan0 = (uint *)(currentData.Scan0);
+			
+			// Handle top
+			uint *fromPtr = scan0 + editing.Width * BorderSize + BorderSize;
+			for(uint i = 0; i < BorderSize; i++) {
+				uint *toPtr = scan0 + BorderSize + i * editing.Width;
+				for(uint j = 0; j < rect.Width; j++) {
+					*(toPtr + j) = *(fromPtr + j);
+				}
+			}
+			
+			// Handle bottom
+			fromPtr = scan0 + editing.Width * (rect.Height + BorderSize - 1) + BorderSize;
+			for(uint i = 0; i < BorderSize; i++) {
+				uint *toPtr = scan0 + editing.Width * (rect.Height + BorderSize) + BorderSize + i * editing.Width;
+				for(uint j = 0; j < rect.Width; j++) {
+					*(toPtr + j) = *(fromPtr + j);
+				}
+			}
+			
+			// Handle left
+			for(uint i = 0; i < rect.Height; i++) {
+				fromPtr = scan0 + editing.Width * (BorderSize + i) + BorderSize;
+				uint *toPtr = scan0 + editing.Width * (BorderSize + i);
+				for(uint j = 0; j < BorderSize; j++) {
+					*(toPtr + j) = *(fromPtr);
+				}
+			}
+			
+			// Handle right
+			for(uint i = 0; i < rect.Height; i++) {
+				fromPtr = scan0 + editing.Width * (BorderSize + i + 1) - BorderSize - 1;
+				uint *toPtr = scan0 + editing.Width * (BorderSize + i) + rect.Width + BorderSize;
+				for(uint j = 0; j < BorderSize; j++) {
+					*(toPtr + j) = *(fromPtr);
+				}
+			}
+			
+			/// Ignored corners because there were no visable rendering artifacts		
+			
+			Texture.UnlockBits(currentData);
+			
+			// To save texture maps, uncomment
+			//Texture.Save("/tmp/texture.bmp")
+		}
+		
         public ITextureReference AddSubImage(IBitmap bitmap)
         {
             //Check if already added
@@ -73,10 +128,10 @@ namespace JollyBit.BS.Rendering
 
             //Add sub image
             Rectangle rect = new Rectangle(
-                (_currentSubImage % NumberOfSubImages) * (SubImageSize + BorderSize * 2) + BorderSize,
-                (_currentSubImage / NumberOfSubImages) * (SubImageSize + BorderSize * 2) + BorderSize,
-                SubImageSize - 2 * BorderSize,
-                SubImageSize - 2 * BorderSize);
+                (_currentSubImage % NumberOfSubImages) * (SubImageSize + BorderSize * 2) + BorderSize, // X
+                (_currentSubImage / NumberOfSubImages) * (SubImageSize + BorderSize * 2) + BorderSize, // Y
+                SubImageSize - 2 * BorderSize, // Width
+                SubImageSize - 2 * BorderSize); // Height
 
             using (Graphics g = Graphics.FromImage(Texture))
             {
@@ -84,6 +139,10 @@ namespace JollyBit.BS.Rendering
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
                 g.DrawImage(bitmap.Bitmap, rect); 
             }
+			
+			// Extend the last pixel out past the border
+			addBorder(ref rect);
+			
             _currentSubImage++;
             //Create ITextureReference
             RectangleF location = new RectangleF(rect.X / (float)Texture.Width, rect.Y / (float)Texture.Height,
