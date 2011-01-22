@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using LibNoise;
 
-namespace JollyBit.BS.World.Generation
+namespace JollyBit.BS.Core.World.Generation
 {
     public class SimpleTerrainGenerator : IGenerator
     {

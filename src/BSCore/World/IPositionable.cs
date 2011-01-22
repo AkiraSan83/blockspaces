@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 
-namespace JollyBit.BS.World
+namespace JollyBit.BS.Core.World
 {
     public interface IPositionable
     {

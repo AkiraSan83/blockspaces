@@ -1,7 +1,7 @@
 using System;
-using JollyBit.BS.Utility;
-using JollyBit.BS.Rendering;
-
+using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Client.Rendering;
+using JollyBit.BS.Core;
 using JsonExSerializer;
 
 using Ninject;
@@ -16,8 +16,8 @@ namespace JollyBit.BS.Client.Rendering
 		
 		public RenderConfig()
 		{ 
-			_glState = BSCoreConstants.Kernel.Get<GLState>();
-			_logger = BSCoreConstants.Kernel.Get<ILoggerFactory>().GetLogger(typeof(RenderConfig)); 
+			_glState = Constants.Kernel.Get<GLState>();
+            _logger = Constants.Kernel.Get<ILoggerFactory>().GetLogger(typeof(RenderConfig)); 
 		}
 		
 		public int MaxTextureSizePower = 11;

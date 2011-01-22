@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public interface ITextureReference : IRenderable
     {

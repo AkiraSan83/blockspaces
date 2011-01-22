@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Ninject.Modules;
 using Ninject;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 using Ninject.Parameters;
 using System.IO;
 using System.Windows.Forms;
-using JollyBit.BS.Rendering;
+using JollyBit.BS.Client.Rendering;
 
-namespace JollyBit.BS
+namespace JollyBit.BS.Client
 {
     public class BSClientNinjectModule : NinjectModule
     {

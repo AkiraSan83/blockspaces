@@ -5,9 +5,9 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
-using JollyBit.BS.World;
+using JollyBit.BS.Core.World;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public class Camera : IPositionable
     {

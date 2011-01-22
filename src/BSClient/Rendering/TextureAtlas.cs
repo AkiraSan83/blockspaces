@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public interface ITextureAtlasFactory
     {

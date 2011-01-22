@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 using Lidgren.Network;
 
 namespace JollyBit.BS.Core.Networking

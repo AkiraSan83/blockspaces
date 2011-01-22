@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 using Ninject;
 
-namespace JollyBit.BS
+namespace JollyBit.BS.Core
 {
-    public class BSCoreConstants
+    public class Constants
     {
         public const byte CHUNK_SIZE_X = 50;
         public const byte CHUNK_SIZE_Y = 50;

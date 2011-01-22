@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Ninject;
-using JollyBit.BS.World.Generation;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.World.Generation;
+using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS.World
+namespace JollyBit.BS.Core.World
 {
     public class Map : IMap
     {
@@ -39,18 +39,18 @@ namespace JollyBit.BS.World
 
         private Point3L calcChunkLocation(Point3L blockLocation) {
             return new Point3L(
-                blockLocation.X / BSCoreConstants.CHUNK_SIZE_X * BSCoreConstants.CHUNK_SIZE_X - (blockLocation.X < 0 ? BSCoreConstants.CHUNK_SIZE_X : (byte)0),
-                blockLocation.Y / BSCoreConstants.CHUNK_SIZE_Y * BSCoreConstants.CHUNK_SIZE_Y - (blockLocation.Y < 0 ? BSCoreConstants.CHUNK_SIZE_Y : (byte)0),
-                blockLocation.Z / BSCoreConstants.CHUNK_SIZE_Z * BSCoreConstants.CHUNK_SIZE_Z - (blockLocation.Z < 0 ? BSCoreConstants.CHUNK_SIZE_Z : (byte)0)
+                blockLocation.X / Constants.CHUNK_SIZE_X * Constants.CHUNK_SIZE_X - (blockLocation.X < 0 ? Constants.CHUNK_SIZE_X : (byte)0),
+                blockLocation.Y / Constants.CHUNK_SIZE_Y * Constants.CHUNK_SIZE_Y - (blockLocation.Y < 0 ? Constants.CHUNK_SIZE_Y : (byte)0),
+                blockLocation.Z / Constants.CHUNK_SIZE_Z * Constants.CHUNK_SIZE_Z - (blockLocation.Z < 0 ? Constants.CHUNK_SIZE_Z : (byte)0)
             );
         }
 
         private IChunk createChunk(Point3L chunkLocation)
         {
             IChunk chunk = _kernel.Get<IChunk>();
-            for (byte x = 0; x < BSCoreConstants.CHUNK_SIZE_X; x++)
-                for (byte y = 0; y < BSCoreConstants.CHUNK_SIZE_Y; y++)
-                    for (byte z = 0; z < BSCoreConstants.CHUNK_SIZE_Z; z++)
+            for (byte x = 0; x < Constants.CHUNK_SIZE_X; x++)
+                for (byte y = 0; y < Constants.CHUNK_SIZE_Y; y++)
+                    for (byte z = 0; z < Constants.CHUNK_SIZE_Z; z++)
                     {
                         chunk[x, y, z] = _generator.GenerateBlock(chunkLocation + new Point3L(x, y, z));
                     }

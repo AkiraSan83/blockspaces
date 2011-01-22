@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace JollyBit.BS.Utility
+namespace JollyBit.BS.Core.Utility
 {
     public class ItemChangedEventArgs<T> : EventArgs
     {

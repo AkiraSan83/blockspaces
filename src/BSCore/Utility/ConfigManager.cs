@@ -6,7 +6,7 @@ using Ninject;
 using System.IO;
 
 
-namespace JollyBit.BS.Utility
+namespace JollyBit.BS.Core.Utility
 {
 
     public interface IConfigSection { }
@@ -31,7 +31,7 @@ namespace JollyBit.BS.Utility
             T configSection = _configSections.FirstOrDefault(section => section.GetType() == typeof(T)) as T;
             if (configSection == null)
             {
-                configSection = BSCoreConstants.Kernel.Get<T>();
+                configSection = Constants.Kernel.Get<T>();
                 _configSections.Add(configSection);
             }
             return configSection;
@@ -39,7 +39,7 @@ namespace JollyBit.BS.Utility
 
         public void SaveConfig()
         {
-            IFileSystem fileSystem = BSCoreConstants.Kernel.Get<IFileSystem>();
+            IFileSystem fileSystem = Constants.Kernel.Get<IFileSystem>();
             fileSystem.DeleteFile("config.json");
             using (Stream stream = fileSystem.CreateFile("config.json"))
             {

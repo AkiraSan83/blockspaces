@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using JollyBit.BS.Utility;
+using JollyBit.BS.Core.Utility;
 using System.IO;
 using Ninject;
+using JollyBit.BS.Core;
 
-namespace JollyBit.BS.Rendering
+namespace JollyBit.BS.Client.Rendering
 {
     public interface IUniquelyIdentifiable
     {
@@ -64,7 +65,7 @@ namespace JollyBit.BS.Rendering
                 {
                     if (_bitmap == null)
                     {
-                        using (Stream stream = BSCoreConstants.Kernel.Get<IFileSystem>().OpenFile(_filePath))
+                        using (Stream stream = Constants.Kernel.Get<IFileSystem>().OpenFile(_filePath))
                         {
                             _bitmap = new Bitmap(stream); 
                         }

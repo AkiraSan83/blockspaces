@@ -8,7 +8,7 @@
     <ProjectGuid>{6781D227-7561-4D66-B1DB-BC072393B4F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JollyBit.BS</RootNamespace>
+    <RootNamespace>JollyBit.BS.Core</RootNamespace>
     <AssemblyName>BSCore</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -36,7 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
-    <Compile Include="BSCoreConstants.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Networking\NetworkConfig.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />
     <Compile Include="Utility\ConfigManager.cs" />

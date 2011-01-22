@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Ninject;
 
-namespace JollyBit.BS.Utility
+namespace JollyBit.BS.Core.Utility
 {
     public class StandardFileSystem : IFileSystem
     {
