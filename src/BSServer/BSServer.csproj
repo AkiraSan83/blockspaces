@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CB5903E1-6E50-4813-B16B-5B7C8009F38D}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BSServer</RootNamespace>
+    <RootNamespace>JollyBit.BS.Server</RootNamespace>
     <AssemblyName>BSServer</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="NetServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BSCore\BSCore.csproj">
@@ -46,6 +47,10 @@
     <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">
       <Project>{031C8CFF-F147-44EA-B7E5-0A5644808A7E}</Project>
       <Name>LibNoise</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lidgren\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
+      <Name>Lidgren.Network</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ninject.Extensions.Logging\Ninject.Extensions.Logging.csproj">
       <Project>{1C0E875E-B2D2-4DDA-874B-D8A9E45A3888}</Project>
@@ -59,6 +64,13 @@
       <Project>{A37A7E14-0000-0000-0000-000000000000}</Project>
       <Name>OpenTK</Name>
     </ProjectReference>
+    <ProjectReference Include="..\protobuf-net\protobuf-net.csproj">
+      <Project>{8374E4D7-2A91-48F1-9360-09B09CF27C3F}</Project>
+      <Name>protobuf-net</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Networking\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

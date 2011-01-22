@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
     <Compile Include="BSCoreConstants.cs" />
+    <Compile Include="Networking\NetworkConfig.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />
     <Compile Include="Utility\ConfigManager.cs" />
     <Compile Include="Utility\IFileReference.cs" />
@@ -92,9 +93,7 @@
       <Name>protobuf-net</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Networking\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
