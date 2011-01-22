@@ -33,4 +33,24 @@ namespace JollyBit.BS.Core.World
             return new FileReference("dirt.png");
         }
     }
+	   
+	public class AnnoyingStoneBlock : IBlock
+    {
+        public IFileReference GetTextureForSide(BlockSides side)
+        {
+//            if(side == BlockSides.Top)
+//                return new FileReference("stone_top.png");
+//			if(side == BlockSides.Bottom)
+//                return new FileReference("stone_bottom.png");
+//			if(side == BlockSides.Left)
+//                return new FileReference("stone_left.png");
+//			if(side == BlockSides.Right)
+//                return new FileReference("stone_right.png");
+//			if(side == BlockSides.Front)
+//                return new FileReference("stone_front.png");
+//			if(side == BlockSides.Back)
+//                return new FileReference("stone_back.png");
+            return new FileReference("stone.png");
+        }
+    }
 }

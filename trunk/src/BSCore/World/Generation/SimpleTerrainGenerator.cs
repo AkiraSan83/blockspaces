@@ -10,6 +10,7 @@ namespace JollyBit.BS.Core.World.Generation
     {
         private LibNoise.Perlin _perlinNoise = new Perlin();
         private IBlock _block = new Block();
+		private IBlock _stoneBlock = new AnnoyingStoneBlock();
         private int maxHeight = 30;
         public SimpleTerrainGenerator()
         {
@@ -25,7 +26,10 @@ namespace JollyBit.BS.Core.World.Generation
             double value = ((_perlinNoise.GetValue(location.X, location.Z, 10) + 1.0) / 2.0);
             if (((double)(maxHeight - location.Y)) / (double)(maxHeight) > value)
             {
-                return _block;
+				if(value < .25)
+					return _stoneBlock;
+				else
+                	return _block;
             }
             else
             {

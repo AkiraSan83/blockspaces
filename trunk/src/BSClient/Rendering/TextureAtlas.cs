@@ -107,7 +107,7 @@ namespace JollyBit.BS.Client.Rendering
 			
 			Texture.UnlockBits(currentData);
 			
-			// To save texture maps, uncomment
+			// To save texture atlas to file after add, uncomment the following line.
 			//Texture.Save(string.Format("/tmp/texture-{0}.bmp",System.DateTime.Now.Millisecond));
 		}
 		
@@ -129,8 +129,8 @@ namespace JollyBit.BS.Client.Rendering
 
             //Add sub image
             Rectangle rect = new Rectangle(
-                (_currentSubImage % NumberOfSubImages) * (SubImageSize.Width + BorderSize * 2) + BorderSize, // X
-                (_currentSubImage / NumberOfSubImages) * (SubImageSize.Height + BorderSize * 2) + BorderSize, // Y
+                (_currentSubImage % NumberOfSubImages) * (SubImageSize.Width) + BorderSize, // X
+                (_currentSubImage / NumberOfSubImages) * (SubImageSize.Height) + BorderSize, // Y
                 SubImageSize.Width - 2 * BorderSize, // Width
                 SubImageSize.Height - 2 * BorderSize); // Height
 
@@ -138,6 +138,7 @@ namespace JollyBit.BS.Client.Rendering
             {
                 g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+				//Console.WriteLine("Writing subimage {0} (sized {1}) to area {2}.",_currentSubImage,SubImageSize,rect);
                 g.DrawImage(bitmap.Bitmap, rect); 
             }
 			
