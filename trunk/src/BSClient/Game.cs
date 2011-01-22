@@ -48,7 +48,7 @@ namespace JollyBit.BS
 		
 		public BSClient() : base(800, 600) { }
 
-        GLTextureObject tex;
+        //GLTextureObject tex;
         SkyBox skyBox;
 		private ClientConfig _config;
 		protected override void OnLoad(EventArgs e)
