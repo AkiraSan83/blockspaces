@@ -126,10 +126,10 @@ Left--> | ______________________ | |  | | |   |
             {
                 rebuild();
             }
-            GL.DepthMask(false);
+            //GL.DepthMask(false);
             _atlas.Render();
             _vbo.Render();
-            GL.DepthMask(true);
+            //GL.DepthMask(true);
         }
     }
 }
