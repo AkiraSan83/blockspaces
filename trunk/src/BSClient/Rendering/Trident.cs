@@ -8,13 +8,32 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Platform;
 using System.Drawing;
 
+using JollyBit.BS.Core.World;
+
 namespace JollyBit.BS.Client.Rendering
 {
-    public class Trident : IRenderable
+    public class Trident : IRenderable, IPositionable
     {
-        public void Render()
-        {
-            GL.Begin(BeginMode.Lines);
+		public Vector3 Position { get; set; }
+		
+		public Trident(Vector3 position) {
+			Position = position;
+		}
+		
+		public Trident() {
+			Position = new Vector3(0f,0f,0f);
+		}
+		
+        public void Render() {
+			Matrix4 camMatrix;
+           	GL.GetFloat(GetPName.ModelviewMatrix, out camMatrix);
+			
+			GL.PushMatrix();
+			GL.LoadIdentity();
+			GL.Translate(Position);
+			GL.MultMatrix(ref camMatrix);
+			
+			GL.Begin(BeginMode.Lines);
                 GL.Color3(Color.Red);
                 GL.Vertex3(0f, 0f, 0f);
                 GL.Vertex3(1f, 0f, 0f);
@@ -25,6 +44,8 @@ namespace JollyBit.BS.Client.Rendering
                 GL.Vertex3(0f, 0f, 0f);
                 GL.Vertex3(0f, 0f, 1f);
             GL.End();
-        }
-    }
+			
+			GL.PopMatrix();
+		}
+	}
 }

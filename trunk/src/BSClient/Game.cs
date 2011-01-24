@@ -30,6 +30,7 @@ namespace JollyBit.BS.Client
 {
 	public class ClientConfig : IConfigSection {
 		public int DebugSleepTime = 0;
+		public bool EnableTrident = false;
 		//public double MaxFPS = 60.0;
 		//public bool VSync = true;
 	}
@@ -73,7 +74,7 @@ namespace JollyBit.BS.Client
             Constants.Kernel.Get<GLState>();
 
 			// Move the camera to (0,0,5)
-            _camera.Position = new Vector3(0, 0, 5);
+            //_camera.Position = new Vector3(0, 0, 5);
 
             //Add skybox
             ContentManager contentManager = Constants.Kernel.Get<ContentManager>();
@@ -91,13 +92,18 @@ namespace JollyBit.BS.Client
             _renderList.Add(mapRenderer);
             _camera.Position = new Vector3(0, 50, 0);
             _camera.RotateX(-MathHelper.PiOver2);
-            IChunk c = mapRenderer.Map[new Point3L(0, 0, 0)];
-            c = mapRenderer.Map[new Point3L(-1, 0, 0)];
-            c = mapRenderer.Map[new Point3L(-1, 0, -1)];
-            c = mapRenderer.Map[new Point3L(0, 0, -1)];
-			
+            IChunk c;// = mapRenderer.Map[new Point3L(0, 0, 0)];
+//            c = mapRenderer.Map[new Point3L(-1, 0, 0)];
+//            c = mapRenderer.Map[new Point3L(-1, 0, -1)];
+//            c = mapRenderer.Map[new Point3L(0, 0, -1)];
+			for(int i = -10; i < 10; i++) {
+				for(int j = -10; j < 10; j++) {
+					c = mapRenderer.Map[new Point3L(i*Constants.CHUNK_SIZE_X, 0, j*Constants.CHUNK_SIZE_Z)];
+					Console.WriteLine("Generating chunk {0}-{1}",i,j);
+				}
+			}
 			// Build trident and add to the render list
-			_renderList.Add( new Trident() );
+			//_renderList.Add( new Trident() );
 			
 			GC.Collect();
         }    
@@ -119,6 +125,7 @@ namespace JollyBit.BS.Client
 		private int _fpsCount = 0; // Frames since last FPS update
 		private readonly int _maxFpsCount = 60; // Max number of frames between FPS updates
 		public string TitleSuffix = "";
+		private Trident _trident = new Trident( new Vector3(3.8f,-3.5f,-10) );
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
@@ -137,9 +144,11 @@ namespace JollyBit.BS.Client
             GL.LoadIdentity();
 
 			// Render camera and skybox
-            _camera.RenderRotation();
+			_camera.RenderRotation();
             skyBox.Render();
-            _camera.RenderTranslation();
+			if(_config.EnableTrident)
+            	_trident.Render();
+			_camera.RenderTranslation();
 
             ////Render a texture
             //tex.Render();
