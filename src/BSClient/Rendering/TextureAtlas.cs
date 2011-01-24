@@ -55,7 +55,11 @@ namespace JollyBit.BS.Client.Rendering
                 graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(0, 0, Texture.Width, Texture.Height));
             }
         }
-
+		
+		private unsafe uint* _findPixel(BitmapData currentData, long x, long y) {
+			return (uint *)(currentData.Scan0) + (uint)y * (uint)(currentData.Stride/4) + (uint)x; 	
+		}
+		
 		private unsafe void addBorder(ref Rectangle rect) {
 			Rectangle editing = new Rectangle(
 				rect.X - BorderSize,
@@ -65,50 +69,47 @@ namespace JollyBit.BS.Client.Rendering
 			);
 			
 			BitmapData currentData = Texture.LockBits(editing, ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			
+			if(currentData.Stride < 0)
+				throw new System.NotImplementedException("Stride is negative. FIXME!");
+			
 			uint* scan0 = (uint *)(currentData.Scan0);
 			
 			// Handle top
-			uint *fromPtr = scan0 + editing.Width * BorderSize + BorderSize;
-			for(uint i = 0; i < BorderSize; i++) {
-				uint *toPtr = scan0 + BorderSize + i * editing.Width;
-				for(uint j = 0; j < rect.Width; j++) {
-					*(toPtr + j) = *(fromPtr + j);
+			for(uint y = 0; y < BorderSize; y++) { // per-line
+				for(uint x = 0; x < rect.Width; x++) { // per-column
+					*( _findPixel(currentData, BorderSize + x, y) ) = *(_findPixel(currentData, BorderSize + x, BorderSize));
 				}
 			}
 			
 			// Handle bottom
-			fromPtr = scan0 + editing.Width * (rect.Height + BorderSize - 1) + BorderSize;
-			for(uint i = 0; i < BorderSize; i++) {
-				uint *toPtr = scan0 + editing.Width * (rect.Height + BorderSize) + BorderSize + i * editing.Width;
-				for(uint j = 0; j < rect.Width; j++) {
-					*(toPtr + j) = *(fromPtr + j);
+			for(uint y = 0; y < BorderSize; y++) { // per-line
+				for(uint x = 0; x < rect.Width; x++) { // per-column
+					*(_findPixel(currentData, BorderSize + x, BorderSize + rect.Height + y)) = *(_findPixel(currentData, BorderSize + x, BorderSize + rect.Height - 1));
 				}
 			}
 			
 			// Handle left
-			for(uint i = 0; i < rect.Height; i++) {
-				fromPtr = scan0 + editing.Width * (BorderSize + i) + BorderSize;
-				uint *toPtr = scan0 + editing.Width * (BorderSize + i);
-				for(uint j = 0; j < BorderSize; j++) {
-					*(toPtr + j) = *(fromPtr);
+			for(uint y = 0; y < rect.Height; y++) {
+				for(uint x = 0; x < BorderSize; x++) {
+					*(_findPixel(currentData, x, BorderSize + y)) = *(_findPixel(currentData, BorderSize, BorderSize + y));
 				}
 			}
 			
 			// Handle right
-			for(uint i = 0; i < rect.Height; i++) {
-				fromPtr = scan0 + editing.Width * (BorderSize + i + 1) - BorderSize - 1;
-				uint *toPtr = scan0 + editing.Width * (BorderSize + i) + rect.Width + BorderSize;
-				for(uint j = 0; j < BorderSize; j++) {
-					*(toPtr + j) = *(fromPtr);
+			for(uint y = 0; y < rect.Height; y++) {
+				for(uint x = 0; x < BorderSize; x++) {
+					*(_findPixel(currentData, rect.Width + BorderSize + x, BorderSize + y)) = *(_findPixel(currentData, rect.Width + BorderSize - 1, BorderSize + y));
 				}
-			}
+			}			
+			
 			
 			/// Ignored corners because there were no visable rendering artifacts		
 			
 			Texture.UnlockBits(currentData);
 			
 			// To save texture atlas to file after add, uncomment the following line.
-			//Texture.Save(string.Format("/tmp/texture-{0}.bmp",System.DateTime.Now.Millisecond));
+			Texture.Save(string.Format("C:\\temp\\texture-{0}.bmp",System.DateTime.Now.Millisecond));
 		}
 		
         public ITextureReference AddSubImage(IBitmap bitmap)
@@ -136,8 +137,13 @@ namespace JollyBit.BS.Client.Rendering
 
             using (Graphics g = Graphics.FromImage(Texture))
             {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+				// HighQualityBicubic uses a averaging step at the end that caused a gray line to be introduced in the outermost pixel of the texture
+				// This was then propagated into the border, causing fuzzy white lines to appear between textures. If we need the effect of HQB, we can
+				// re-paste the image over the top of this after calculating the border.
+				
+                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
+				g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 				//Console.WriteLine("Writing subimage {0} (sized {1}) to area {2}.",_currentSubImage,SubImageSize,rect);
                 g.DrawImage(bitmap.Bitmap, rect); 
             }
