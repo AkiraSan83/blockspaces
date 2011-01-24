@@ -28,3 +28,5 @@ Blockspaces uses the OpenGL coordinate system, where +X goes from left to right,
                   ---------------------->
                         +X axis
 }}}
+
+http://blockspaces.googlecode.com/svn/trunk/bin/debug/assets/dirt.png
