@@ -55,7 +55,7 @@ namespace JollyBit.BS.Client
 		protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-
+			
             //Setup Ninject
             Constants.Kernel = new StandardKernel();
             Constants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
@@ -92,18 +92,26 @@ namespace JollyBit.BS.Client
             _renderList.Add(mapRenderer);
             _camera.Position = new Vector3(0, 50, 0);
             _camera.RotateX(-MathHelper.PiOver2);
-            IChunk c;// = mapRenderer.Map[new Point3L(0, 0, 0)];
+            IChunk c;
+//            c = mapRenderer.Map[new Point3L(0, 0, 0)];
 //            c = mapRenderer.Map[new Point3L(-1, 0, 0)];
 //            c = mapRenderer.Map[new Point3L(-1, 0, -1)];
 //            c = mapRenderer.Map[new Point3L(0, 0, -1)];
-			for(int i = -2; i < 3; i++) {
-				for(int j = -2; j < 3; j++) {
+			for(int i = 0; i < 2; i++) {
+				for(int j = 0; j < 2; j++) {
 					c = mapRenderer.Map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
-					Console.WriteLine("Generating chunk {0}-{1}",i,j);
+					Console.WriteLine("Generating chunk {0}x{1}",i,j);
 				}
 			}
 			// Build trident and add to the render list
 			//_renderList.Add( new Trident() );
+			
+			GL.Enable(EnableCap.DepthTest); //enable the depth testing
+			GL.Enable(EnableCap.Fog);
+			GL.Fog(FogParameter.FogMode,(int)FogMode.Exp2); //glFogi (GL_FOG_MODE, GL_EXP2); //set the fog mode to GL_EXP2
+			GL.Fog(FogParameter.FogColor,new float[]{0.25f,0.25f,0.25f}); 
+			GL.Fog(FogParameter.FogDensity,0.02f);
+			GL.Hint(HintTarget.FogHint,HintMode.Nicest);
 			
 			GC.Collect();
         }    
