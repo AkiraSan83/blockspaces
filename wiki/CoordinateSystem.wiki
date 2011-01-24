@@ -3,7 +3,7 @@
 Blockspaces uses the OpenGL coordinate system, where +X goes from left to right, +Y goes from bottom to top, and +Z comes out of the screen.
 
 {{{
-                         _________________________ (1,1,1)
+                         _________________________ (1,1,0)
                         / _________Top_________  /|
                        / / ___________________/ / |   
                       / / /| |               / /  |  /|\
@@ -24,7 +24,7 @@ Blockspaces uses the OpenGL coordinate system, where +X goes from left to right,
                 | | |/_/_______________| |  /     /
                 | |____________________| | /     /
                 |________Front___________|/    \/
-             (0,0,0)
+             (0,0,1)
                   ---------------------->
                         +X axis
 }}}
