@@ -29,7 +29,7 @@ namespace JollyBit.BS.Client.Rendering
 			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
 			
             Map = map;
-            _textureAtlas = textureAtlasFactory.CreateTextureAtlas(_config.MaxTextureSize, new Size(_config.MaxTextureSize/16,_config.MaxTextureSize/16), 4);
+            _textureAtlas = textureAtlasFactory.CreateTextureAtlas(new Size(_config.MaxTextureSize,_config.MaxTextureSize), new Size(_config.MaxTextureSize/16,_config.MaxTextureSize/16), 4);
             Map.ChunkChanged += new EventHandler<ItemChangedEventArgs<IChunk>>(Map_ChunkChanged);
             //Create renderers for all chunks that already exist
             foreach (IChunk chunk in Map.Chunks)

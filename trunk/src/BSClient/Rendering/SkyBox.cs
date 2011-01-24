@@ -9,8 +9,8 @@ using Ninject;
 using Vertex = JollyBit.BS.Client.Rendering.VertexPositionColorTexture;
 using OpenTK.Graphics.OpenGL;
 
-using JollyBit.BS.Client.Rendering;
-using JollyBit.BS.Core.Utility;
+//using JollyBit.BS.Client.Rendering;
+//using JollyBit.BS.Core.Utility;
 using JollyBit.BS.Core;
 
 namespace JollyBit.BS.Client.Rendering
@@ -31,7 +31,7 @@ namespace JollyBit.BS.Client.Rendering
 			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
 			
             ITextureAtlasFactory atlasFactory = Constants.Kernel.Get<ITextureAtlasFactory>();
-            _atlas = atlasFactory.CreateTextureAtlas(_config.MaxTextureSize, new Size(_config.MaxTextureSize / 4, _config.MaxTextureSize / 4), 1);
+            _atlas = atlasFactory.CreateTextureAtlas(new Size(_config.MaxTextureSize,_config.MaxTextureSize/2), new Size(_config.MaxTextureSize / 4, _config.MaxTextureSize / 4), 1);
             _neg_x = _atlas.AddSubImage(neg_x);
             _pos_x = _atlas.AddSubImage(pos_x);
             _pos_y = _atlas.AddSubImage(pos_y);
