@@ -10,7 +10,7 @@ namespace JollyBit.BS.Client.Rendering
 {
     public interface ITextureAtlasFactory
     {
-        ITextureAtlas CreateTextureAtlas(int atlasWidth, Size subImageSize, int numMipmapLevels);
+        ITextureAtlas CreateTextureAtlas(Size atlasSize, Size subImageSize, int numMipmapLevels);
     }
 
     public interface ITextureAtlas : IRenderable
@@ -26,9 +26,9 @@ namespace JollyBit.BS.Client.Rendering
 
     public class TextureAtlasFactory : ITextureAtlasFactory
     {
-        public ITextureAtlas CreateTextureAtlas(int atlasWidth, Size subImageSize, int numMipmapLevels)
+        public ITextureAtlas CreateTextureAtlas(Size atlasSize, Size subImageSize, int numMipmapLevels)
         {
-            return new TextureAtlas(atlasWidth, subImageSize, numMipmapLevels);
+            return new TextureAtlas(atlasSize, subImageSize, numMipmapLevels);
         }
     }
 
@@ -41,15 +41,21 @@ namespace JollyBit.BS.Client.Rendering
         private int _currentSubImage = 0;
         public readonly int BorderSize;
         private readonly Dictionary<string, ITextureReference> _refCache = new Dictionary<string, ITextureReference>();
-        public TextureAtlas(int atlasWidth, Size subImageSize, int numMipmapLevels)
+        public TextureAtlas(Size atlasSize, Size subImageSize, int numMipmapLevels)
         {
+			System.Diagnostics.Debug.Assert(atlasSize.Width < 0, "Texture atlas WIDTH and height must be positive.");
+			System.Diagnostics.Debug.Assert(atlasSize.Height < 0, "Texture atlas width and HEIGHT must be positive.");
+			System.Diagnostics.Debug.Assert((atlasSize.Width & (atlasSize.Width - 1)) != 0, "Texture atlas WIDTH and height must be powers of two.");
+			System.Diagnostics.Debug.Assert((atlasSize.Height & (atlasSize.Height - 1)) != 0, "Texture atlas width and HEIGHT must be powers of two.");
+			
             BorderSize = numMipmapLevels;
             SubImageSize.Width = subImageSize.Width - numMipmapLevels * 2;
 			SubImageSize.Height = subImageSize.Height - numMipmapLevels * 2;
-            NumberOfSubImages = atlasWidth / subImageSize.Width;
+            NumberOfSubImages = atlasSize.Width / subImageSize.Width;
             NumMipmapLevels = numMipmapLevels;
+			
             //Create empty white bitmap to hold atlas
-            Texture = new Bitmap(atlasWidth, atlasWidth);
+            Texture = new Bitmap(atlasSize.Width, atlasSize.Height);
             using (Graphics graphics = Graphics.FromImage(Texture))
             {
                 graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(0, 0, Texture.Width, Texture.Height));
@@ -74,42 +80,43 @@ namespace JollyBit.BS.Client.Rendering
 				throw new System.NotImplementedException("Stride is negative. FIXME!");
 			
 			uint* scan0 = (uint *)(currentData.Scan0);
+			uint strideInInts = (uint)(currentData.Stride/4); // Stride in bytes divided by 4 (8 bits -> 32 bits)
+			Func<long,long,uint> findPixel = (x,y) => (uint)y * strideInInts + (uint)x;
 			
 			// Handle top
 			for(uint y = 0; y < BorderSize; y++) { // per-line
 				for(uint x = 0; x < rect.Width; x++) { // per-column
-					*( _findPixel(currentData, BorderSize + x, y) ) = *(_findPixel(currentData, BorderSize + x, BorderSize));
+					*(scan0 + findPixel(BorderSize + x, y)) = *(scan0 + findPixel(BorderSize + x, BorderSize));
 				}
 			}
 			
 			// Handle bottom
 			for(uint y = 0; y < BorderSize; y++) { // per-line
 				for(uint x = 0; x < rect.Width; x++) { // per-column
-					*(_findPixel(currentData, BorderSize + x, BorderSize + rect.Height + y)) = *(_findPixel(currentData, BorderSize + x, BorderSize + rect.Height - 1));
+					*(scan0 + findPixel(BorderSize + x, BorderSize + rect.Height + y)) = *(scan0 + findPixel(BorderSize + x, BorderSize + rect.Height - 1));
 				}
 			}
 			
 			// Handle left
 			for(uint y = 0; y < rect.Height; y++) {
 				for(uint x = 0; x < BorderSize; x++) {
-					*(_findPixel(currentData, x, BorderSize + y)) = *(_findPixel(currentData, BorderSize, BorderSize + y));
+					*(scan0 + findPixel(x, BorderSize + y)) = *(scan0 + findPixel(BorderSize, BorderSize + y));
 				}
 			}
 			
 			// Handle right
 			for(uint y = 0; y < rect.Height; y++) {
 				for(uint x = 0; x < BorderSize; x++) {
-					*(_findPixel(currentData, rect.Width + BorderSize + x, BorderSize + y)) = *(_findPixel(currentData, rect.Width + BorderSize - 1, BorderSize + y));
+					*(scan0 + findPixel(rect.Width + BorderSize + x, BorderSize + y)) = *(scan0 + findPixel(rect.Width + BorderSize - 1, BorderSize + y));
 				}
 			}			
-			
 			
 			/// Ignored corners because there were no visable rendering artifacts		
 			
 			Texture.UnlockBits(currentData);
 			
 			// To save texture atlas to file after add, uncomment the following line.
-			Texture.Save(string.Format("C:\\temp\\texture-{0}.bmp",System.DateTime.Now.Millisecond));
+			//Texture.Save(string.Format("/tmp/texture-{0}.bmp",System.DateTime.Now.Millisecond));
 		}
 		
         public ITextureReference AddSubImage(IBitmap bitmap)
