@@ -33,7 +33,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
@@ -55,7 +54,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="World\IPositionable.cs" />
     <Compile Include="World\Map.cs" />
-    <Compile Include="Utility\Cache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">
