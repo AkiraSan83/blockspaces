@@ -43,10 +43,10 @@ namespace JollyBit.BS.Client.Rendering
         private readonly Dictionary<string, ITextureReference> _refCache = new Dictionary<string, ITextureReference>();
         public TextureAtlas(Size atlasSize, Size subImageSize, int numMipmapLevels)
         {
-			System.Diagnostics.Debug.Assert(atlasSize.Width < 0, "Texture atlas WIDTH and height must be positive.");
-			System.Diagnostics.Debug.Assert(atlasSize.Height < 0, "Texture atlas width and HEIGHT must be positive.");
-			System.Diagnostics.Debug.Assert((atlasSize.Width & (atlasSize.Width - 1)) != 0, "Texture atlas WIDTH and height must be powers of two.");
-			System.Diagnostics.Debug.Assert((atlasSize.Height & (atlasSize.Height - 1)) != 0, "Texture atlas width and HEIGHT must be powers of two.");
+			System.Diagnostics.Debug.Assert(atlasSize.Width > 0, "Texture atlas WIDTH and height must be positive.");
+			System.Diagnostics.Debug.Assert(atlasSize.Height > 0, "Texture atlas width and HEIGHT must be positive.");
+			System.Diagnostics.Debug.Assert((atlasSize.Width & (atlasSize.Width - 1)) == 0, "Texture atlas WIDTH and height must be powers of two.");
+			System.Diagnostics.Debug.Assert((atlasSize.Height & (atlasSize.Height - 1)) == 0, "Texture atlas width and HEIGHT must be powers of two.");
 			
             BorderSize = numMipmapLevels;
             SubImageSize.Width = subImageSize.Width - numMipmapLevels * 2;
