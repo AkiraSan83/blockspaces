@@ -24,19 +24,19 @@ namespace JollyBit.BS.Core.World.Generation
             _perlinNoise.Persistence = .3;
         }
 		
-		IDictionary<Point3L,double> _dict = new Dictionary<Point3L,double>();
-		private double _getNoise(Point3L location) {
-			double val;
-			if(!_dict.TryGetValue(location, out val)) {
-				val = ((_perlinNoise.GetValue(location.X, location.Z, 10) + 1.0) / 2.0);
-				_dict.Add(location,val);
-			}
-			return val;
-		}
+//		IDictionary<Point3L,double> _dict = new Dictionary<Point3L,double>();
+//		private double _getNoise(Point3L location) {
+//			//double val;
+//			//if(!_dict.TryGetValue(location, out val)) {
+//				val = ((_perlinNoise.GetValue(location.X, location.Z, 10) + 1.0) / 2.0);
+//				_dict.Add(location,val);
+//			}
+//			return val;
+//		}
 		
         public IBlock GenerateBlock(Utility.Point3L location)
         {
-            double value = _getNoise(location);//((_perlinNoise.GetValue(location.X, location.Z, 10) + 1.0) / 2.0);
+            double value = ((_perlinNoise.GetValue(location.X, location.Z, 10) + 1.0) / 2.0);
             if (((double)(maxHeight - location.Y)) / (double)(maxHeight) > value)
             {
 				if(value < .25)

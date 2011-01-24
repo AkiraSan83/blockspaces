@@ -86,7 +86,7 @@ namespace JollyBit.BS.Client
                 contentManager.LoadBitmap(new FileReference("skybox/neg_z.png")),
                 contentManager.LoadBitmap(new FileReference("skybox/pos_z.png")));
             //_renderList.Add(skyBox);
-
+			
             // Create World Renderer
             MapRenderer mapRenderer = Constants.Kernel.Get<MapRenderer>();
             _renderList.Add(mapRenderer);
@@ -96,9 +96,9 @@ namespace JollyBit.BS.Client
 //            c = mapRenderer.Map[new Point3L(-1, 0, 0)];
 //            c = mapRenderer.Map[new Point3L(-1, 0, -1)];
 //            c = mapRenderer.Map[new Point3L(0, 0, -1)];
-			for(int i = -10; i < 10; i++) {
-				for(int j = -10; j < 10; j++) {
-					c = mapRenderer.Map[new Point3L(i*Constants.CHUNK_SIZE_X, 0, j*Constants.CHUNK_SIZE_Z)];
+			for(int i = -2; i < 3; i++) {
+				for(int j = -2; j < 3; j++) {
+					c = mapRenderer.Map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
 					Console.WriteLine("Generating chunk {0}-{1}",i,j);
 				}
 			}
