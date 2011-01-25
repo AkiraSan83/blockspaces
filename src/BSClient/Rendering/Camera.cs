@@ -7,6 +7,10 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using JollyBit.BS.Core.World;
 
+using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Core;
+using Ninject;
+
 namespace JollyBit.BS.Client.Rendering
 {
     public class Camera : IPositionable
@@ -41,6 +45,23 @@ namespace JollyBit.BS.Client.Rendering
             GL.LoadMatrix(ref rot);
         }
 
+		// Hook this method to GameWindow.OnResize
+		// It will update the projection matrix
+		public void HookResize(Object sender, EventArgs args) {
+			
+			GameWindow gw = (GameWindow)sender;
+			
+			GL.Viewport(0, 0, gw.Width, gw.Height);
+			
+			float farClippingPlane = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>().FarClippingPlane;
+			
+            float aspect_ratio = gw.Width / (float)gw.Height;
+            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, farClippingPlane);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref perpective);
+            GL.MatrixMode(MatrixMode.Modelview);
+		}
+		
         public void RenderTranslation()
         {
             Matrix4 trans = Matrix4.CreateTranslation(-_position);

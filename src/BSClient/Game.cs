@@ -73,6 +73,9 @@ namespace JollyBit.BS.Client
             // Set OpenGL options
             Constants.Kernel.Get<GLState>();
 
+			// Hook camera to WindowResize operation
+			this.Resize += new EventHandler<EventArgs>(_camera.HookResize);
+			
 			// Move the camera to (0,0,5)
             //_camera.Position = new Vector3(0, 0, 5);
 
@@ -106,28 +109,23 @@ namespace JollyBit.BS.Client
 			// Build trident and add to the render list
 			//_renderList.Add( new Trident() );
 			
-			GL.Enable(EnableCap.DepthTest); //enable the depth testing
-			GL.Enable(EnableCap.Fog);
-			GL.Fog(FogParameter.FogMode,(int)FogMode.Exp2); //glFogi (GL_FOG_MODE, GL_EXP2); //set the fog mode to GL_EXP2
-			GL.Fog(FogParameter.FogColor,new float[]{0.25f,0.25f,0.25f}); 
-			GL.Fog(FogParameter.FogDensity,0.02f);
-			GL.Hint(HintTarget.FogHint,HintMode.Nicest);
+			// Disabled fog... I'm not sure how to make it do what I want
+//			GL.Enable(EnableCap.DepthTest); //enable the depth testing
+//			GL.Enable(EnableCap.Fog);
+//			GL.Fog(FogParameter.FogMode,(int)FogMode.Exp2); //glFogi (GL_FOG_MODE, GL_EXP2); //set the fog mode to GL_EXP2
+//			GL.Fog(FogParameter.FogColor,new float[]{0.5f,0.5f,0.5f,1.0f}); 
+//			GL.Fog(FogParameter.FogDensity,0.03f);
+//			GL.Fog(FogParameter.FogStart,1.0f);//3*glState.FarClippingPlane/4);
+//			GL.Fog(FogParameter.FogEnd,5.0f);//glState.FarClippingPlane+1);
+//			GL.Hint(HintTarget.FogHint,HintMode.Nicest);
 			
 			GC.Collect();
         }    
 
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-			
-            GL.Viewport(0, 0, Width, Height);
-
-            float aspect_ratio = Width / (float)Height;
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, Constants.Kernel.Get<GLState>().FarClippingPlane);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perpective);
-            GL.MatrixMode(MatrixMode.Modelview);
-        }
+//        protected override void OnResize(EventArgs e)
+//        {
+//            base.OnResize(e);
+//        }
 
 		private double _fps = 0; // render frequency adder
 		private int _fpsCount = 0; // Frames since last FPS update
