@@ -14,6 +14,8 @@ namespace JollyBit.BS.Client.Rendering
 		private GLState _glState;
 		private ILogger _logger;
 		
+		public float FarClippingPlane = 128;
+		
 		public RenderConfig()
 		{ 
 			_glState = Constants.Kernel.Get<GLState>();

@@ -10,7 +10,7 @@ using OpenTK.Graphics.OpenGL;
 namespace JollyBit.BS.Client.Rendering
 {
     public class GLState
-    {
+    {		
         public GLState()
         {
             ClearColor = Color.Black;
@@ -21,8 +21,6 @@ namespace JollyBit.BS.Client.Rendering
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
         }
-
-        public readonly float FarClippingPlane = 128;
 		
 		private int _maxSize = -1;
 		public int MaxSize {

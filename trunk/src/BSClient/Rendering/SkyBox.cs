@@ -4,14 +4,11 @@ using System.Linq;
 using System.Text;
 using JollyBit.BS.Client.Rendering;
 using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Core;
 using System.Drawing;
 using Ninject;
 using Vertex = JollyBit.BS.Client.Rendering.VertexPositionColorTexture;
 using OpenTK.Graphics.OpenGL;
-
-//using JollyBit.BS.Client.Rendering;
-//using JollyBit.BS.Core.Utility;
-using JollyBit.BS.Core;
 
 namespace JollyBit.BS.Client.Rendering
 {
@@ -47,7 +44,7 @@ namespace JollyBit.BS.Client.Rendering
                 _vbo.Dispose();
                 _vbo = null;
             }
-            float v = Constants.Kernel.Get<GLState>().FarClippingPlane / 2;
+            float v = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>().FarClippingPlane / 2;
             Vertex[] vertexes = new Vertex[]
             {
                 //_pos_z
