@@ -131,7 +131,7 @@ namespace JollyBit.BS.Client
 		private int _fpsCount = 0; // Frames since last FPS update
 		private readonly int _maxFpsCount = 60; // Max number of frames between FPS updates
 		public string TitleSuffix = "";
-		private Trident _trident = new Trident( new Vector3(3.8f,-3.5f,-10) );
+		private Trident _trident = new Trident( );
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             base.OnRenderFrame(e);
