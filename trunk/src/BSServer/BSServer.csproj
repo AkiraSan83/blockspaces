@@ -37,6 +37,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Networking\IConnectionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BSCore\BSCore.csproj">
@@ -68,8 +69,6 @@
       <Name>protobuf-net</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Networking\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
