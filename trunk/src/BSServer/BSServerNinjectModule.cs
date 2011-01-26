@@ -2,32 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Ninject.Modules;
 using Ninject;
+using Ninject.Modules;
+using JollyBit.BS.Server.Networking;
 using JollyBit.BS.Core.Utility;
-using Ninject.Parameters;
+using JsonExSerializer;
 using System.IO;
-using System.Windows.Forms;
-using JollyBit.BS.Client.Rendering;
-using JollyBit.BS.Core.Networking;
-using JollyBit.BS.Client.Networking;
 
-namespace JollyBit.BS.Client
+namespace JollyBit.BS.Server
 {
-    public class BSClientNinjectModule : NinjectModule
+    public class BSServerNinjectModule : NinjectModule
     {
         public override void Load()
         {
-            Bind<GLState>().To<GLState>().InSingletonScope();
-            Bind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
-            Bind<ContentManager>().To<ContentManager>().InSingletonScope();
-            Bind<IClientConnection<object>>().To<Connection<object>>().InSingletonScope();
-            Bind<IConnection<object>>().To<IClientConnection<object>>();
+            Bind<IConnectionManager<object>>().To<ConnectionManager<object>>().InSingletonScope();
             Bind<IConfigManager>().ToMethod(
                 (context) =>
                 {
                     //XmlSerializer
-                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("ClientConfig.json");
+                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("ServerConfig.json");
                     ConfigManager configManager;
                     if (stream != null)
                     {

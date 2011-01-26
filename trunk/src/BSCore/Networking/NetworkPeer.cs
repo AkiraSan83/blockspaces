@@ -24,6 +24,8 @@ namespace JollyBit.BS.Core.Networking
         void TerminateConnection(object connection);
         void Start();
         void Stop();
+        void Connect(string host, int port);
+        void Disconnect();
     }
 
     public class NetworkPeerConnectionEventArgs : EventArgs
@@ -141,7 +143,34 @@ namespace JollyBit.BS.Core.Networking
 
         public void Stop()
         {
-            this.Stop();
+            base.Shutdown(null);
+        }
+
+        public void Start()
+        {
+            this.Configuration.AcceptIncomingConnections = true;
+            base.Start();
+        }
+
+        public new void Connect(string host, int port)
+        {
+            this.Configuration.AcceptIncomingConnections = false;
+            this.Start();
+            if (Connections.Count > 0)
+            {
+                throw new System.Exception("Already connected to a server!");
+            }
+            base.Connect(host, port, null);
+            int g = 1;
+        }
+
+        public void Disconnect()
+        {
+            if (Connections.Count == 0)
+            {
+                throw new System.Exception("Can not disconnect! Client is not connected.");
+            }
+            Connections[0].Disconnect(null);
         }
     }
 }

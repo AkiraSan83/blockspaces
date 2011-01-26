@@ -24,6 +24,7 @@ using JollyBit.BS.Client.Rendering;
 using JollyBit.BS.Core.World;
 using JollyBit.BS.Core.Utility;
 using JollyBit.BS.Core;
+using JollyBit.BS.Client.Networking;
 #endregion
 
 namespace JollyBit.BS.Client
@@ -118,6 +119,9 @@ namespace JollyBit.BS.Client
 //			GL.Fog(FogParameter.FogStart,1.0f);//3*glState.FarClippingPlane/4);
 //			GL.Fog(FogParameter.FogEnd,5.0f);//glState.FarClippingPlane+1);
 //			GL.Hint(HintTarget.FogHint,HintMode.Nicest);
+
+
+            Constants.Kernel.Get<IClientConnection<object>>().Connect("localhost", 12421);
 			
 			GC.Collect();
         }    
@@ -155,20 +159,6 @@ namespace JollyBit.BS.Client
 			if(_config.EnableTrident)
             	_trident.Render();
 			_camera.RenderTranslation();
-
-            ////Render a texture
-            //tex.Render();
-            //GL.Color3(Color.White);
-            //GL.Begin(BeginMode.Quads);
-            ////GL.Color3(Color.Pink); 
-            //GL.Vertex2(-0.6f, 0.4f); GL.TexCoord2(0.0f, 0.0f);
-            ////GL.Color3(Color.Blue);
-            //GL.Vertex2(0.6f, 0.4f); GL.TexCoord2(1.0f, 0.0f);
-            ////GL.Color3(Color.Green);
-            //GL.Vertex2(0.6f, -0.4f); GL.TexCoord2(1.0f, 1.0f);
-            ////GL.Color3(Color.Red);
-            //GL.Vertex2(-0.6f, -0.4f); GL.TexCoord2(0.0f, 1.0f);
-            //GL.End();
 
 			// Render each item in the render list
 			foreach(var renderable in _renderList) {
