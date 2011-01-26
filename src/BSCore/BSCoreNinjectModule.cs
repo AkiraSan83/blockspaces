@@ -8,6 +8,10 @@ using JollyBit.BS.Core.World;
 using JollyBit.BS.Core.World.Generation;
 using JollyBit.BS.Core.Utility;
 using System.IO;
+using JollyBit.BS.Core.Networking;
+using Lidgren.Network;
+using System.Windows.Forms;
+using JollyBit.BS.Core.Networking.Messages;
 
 namespace JollyBit.BS.Core
 {
@@ -19,21 +23,15 @@ namespace JollyBit.BS.Core
             Bind<IMap>().To<Map>();
             Bind<IGenerator>().To<SimpleTerrainGenerator>();
             Bind<IChunk>().To<Chunk>();
-            Bind<IConfigManager>().ToMethod(
+            Bind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
+            Bind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
+            string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
+            Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
+                .WithConstructorArgument("workingDirectory", path + "assets/");
+            Bind<NetPeerConfiguration>().ToMethod(
                 (context) =>
                 {
-                    //XmlSerializer
-                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("config.json");
-                    ConfigManager configManager;
-                    if (stream != null)
-                    {
-                        TextReader reader = new StreamReader(stream);
-                        JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(ConfigManager));
-                        configManager = serializer.Deserialize(stream) as ConfigManager;
-                        stream.Close();
-                    }
-                    else configManager = new ConfigManager();
-                    return configManager;
+                    return Kernel.Get<IConfigManager>().GetConfig<NetworkConfig>().CreateNetPeerConfig();
                 }).InSingletonScope();
 
             //Logging config stuff

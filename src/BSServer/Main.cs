@@ -1,12 +1,21 @@
 using System;
+using Ninject;
+using JollyBit.BS.Core;
+using Ninject.Modules;
+using JollyBit.BS.Server.Networking;
+using JollyBit.BS.Core.Networking;
 
-namespace BSServer
+namespace JollyBit.BS.Server
 {
 	class MainClass
 	{
 		public static void Main (string[] args)
 		{
-			Console.WriteLine ("Hello World!");
+            Constants.Kernel = new StandardKernel();
+            Constants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSServerNinjectModule() });
+            IConnectionManager<object> connectionManager = Constants.Kernel.Get<IConnectionManager<object>>();
+            connectionManager.StartListeningForConnections();
+            Console.ReadLine();
 		}
 	}
 }

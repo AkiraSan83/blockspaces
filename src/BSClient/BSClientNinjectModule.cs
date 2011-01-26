@@ -16,12 +16,25 @@ namespace JollyBit.BS.Client
     {
         public override void Load()
         {
-            string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
-            Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
-                .WithConstructorArgument("workingDirectory", path + "assets/");
             Bind<GLState>().To<GLState>().InSingletonScope();
             Bind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
             Bind<ContentManager>().To<ContentManager>().InSingletonScope();
+            Bind<IConfigManager>().ToMethod(
+                (context) =>
+                {
+                    //XmlSerializer
+                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("ClientConfig.json");
+                    ConfigManager configManager;
+                    if (stream != null)
+                    {
+                        TextReader reader = new StreamReader(stream);
+                        JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(ConfigManager));
+                        configManager = serializer.Deserialize(stream) as ConfigManager;
+                        stream.Close();
+                    }
+                    else configManager = new ConfigManager();
+                    return configManager;
+                }).InSingletonScope();
         }
     }
 }

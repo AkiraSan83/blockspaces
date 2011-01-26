@@ -16,15 +16,14 @@ namespace JollyBit.BS.Core.Networking
     /// </summary>
     public interface INetworkPeer
     {
-        /// <summary>
-        /// This event is fired when a client connects.
-        /// </summary>
         event EventHandler<NetworkPeerConnectionEventArgs> ConnectionEstablished;
         event EventHandler<NetworkPeerConnectionEventArgs> ConnectionTerminated;
         event EventHandler<NetworkPeerConnectionEventArgs> ConnectionTerminating;
         event EventHandler<NetworkPeerConnectionEventArgs> MessageReceived;
         void SendMessage<T>(T message, object connection);
         void TerminateConnection(object connection);
+        void Start();
+        void Stop();
     }
 
     public class NetworkPeerConnectionEventArgs : EventArgs
@@ -42,10 +41,10 @@ namespace JollyBit.BS.Core.Networking
     {
         private readonly ILogger _logger;
         private readonly IMessageTypeManager _messageTypeManager;
-        public NetworkPeer(ILogger logger, NetPeerConfiguration config, IMessageTypeManager messageTypeManager)
+        public NetworkPeer(ILoggerFactory loggerFactory, NetPeerConfiguration config, IMessageTypeManager messageTypeManager)
             : base(config)
         {
-            _logger = logger;
+            _logger = loggerFactory.GetLogger(typeof(NetworkPeer));
             _messageTypeManager = messageTypeManager;
         }
 
@@ -137,6 +136,12 @@ namespace JollyBit.BS.Core.Networking
         public void TerminateConnection(object connection)
         {
             (connection as NetConnection).Disconnect(null);
+        }
+
+
+        public void Stop()
+        {
+            this.Stop();
         }
     }
 }
