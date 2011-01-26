@@ -38,7 +38,6 @@
   <ItemGroup>
     <Compile Include="BSCoreNinjectModule.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="FunctionalProgramming.cs" />
     <Compile Include="Networking\IConnection.cs" />
     <Compile Include="Networking\Messages\IMessageTypeManager.cs" />
     <Compile Include="Networking\Messages\MessageAttribute.cs" />
@@ -50,7 +49,6 @@
     <Compile Include="Utility\EventArgs.cs" />
     <Compile Include="Utility\IFileReference.cs" />
     <Compile Include="Utility\IFileSystem.cs" />
-    <Compile Include="Utility\IUpdateable.cs" />
     <Compile Include="Utility\Point.cs" />
     <Compile Include="Utility\StandardFileSystem.cs" />
     <Compile Include="World\Chunk.cs" />
