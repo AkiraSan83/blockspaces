@@ -15,7 +15,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>..\..\bin\debug\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -35,6 +35,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BSServerNinjectModule.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Networking\IConnectionManager.cs" />
@@ -44,6 +45,10 @@
       <Project>{6781D227-7561-4D66-B1DB-BC072393B4F9}</Project>
       <Name>BSCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JsonExSerializer\JsonExSerializer\JsonExSerializer.csproj">
+      <Project>{D0C83979-A672-4C06-99BC-B82D81749405}</Project>
+      <Name>JsonExSerializer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LibNoise\LibNoise\LibNoise.csproj">
       <Project>{031C8CFF-F147-44EA-B7E5-0A5644808A7E}</Project>
       <Name>LibNoise</Name>
@@ -51,6 +56,10 @@
     <ProjectReference Include="..\Lidgren\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{AE483C29-042E-4226-BA52-D247CE7676DA}</Project>
       <Name>Lidgren.Network</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ninject.Extensions.Logging.NLog\Ninject.Extensions.Logging.NLog.csproj">
+      <Project>{3BDACDF8-ADCB-42FD-AB5F-E7E54A674D93}</Project>
+      <Name>Ninject.Extensions.Logging.NLog</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ninject.Extensions.Logging\Ninject.Extensions.Logging.csproj">
       <Project>{1C0E875E-B2D2-4DDA-874B-D8A9E45A3888}</Project>

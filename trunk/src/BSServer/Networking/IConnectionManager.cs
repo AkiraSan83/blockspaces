@@ -10,7 +10,7 @@ using Lidgren.Network;
 using System.IO;
 using JollyBit.BS.Core;
 
-namespace JollyBit.BS.Core.Networking
+namespace JollyBit.BS.Server.Networking
 {
     public interface IConnectionManager<TCLIENT>
     {
@@ -43,6 +43,9 @@ namespace JollyBit.BS.Core.Networking
         /// this event is fired
         /// </summary>
         event EventHandler<EventArgs<IConnection<TCLIENT>>> ConnectionEstablished;
+
+        void StartListeningForConnections();
+        void StopListeningForConnections();
     }
 
     /// <summary>
@@ -185,6 +188,17 @@ namespace JollyBit.BS.Core.Networking
                 get { return _client; }
                 set { _client = value; }
             }
+        }
+
+
+        public void StartListeningForConnections()
+        {
+            _network.Start();
+        }
+
+        public void StopListeningForConnections()
+        {
+            _network.Stop();
         }
     }
 }
