@@ -83,6 +83,7 @@ namespace JollyBit.BS.Core.Networking
                         switch (status)
 	                    {
                             case NetConnectionStatus.Connected:
+                                _logger.Error("Client connected");
                                 if (ConnectionEstablished != null) ConnectionEstablished(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnected:
@@ -155,12 +156,14 @@ namespace JollyBit.BS.Core.Networking
         public new void Connect(string host, int port)
         {
             this.Configuration.AcceptIncomingConnections = false;
+            this.Configuration.Port = 0;
             this.Start();
             if (Connections.Count > 0)
             {
                 throw new System.Exception("Already connected to a server!");
             }
             base.Connect(host, port, null);
+            this.CheckMessages();
             int g = 1;
         }
 
