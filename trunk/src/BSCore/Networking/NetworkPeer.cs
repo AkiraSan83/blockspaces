@@ -83,25 +83,34 @@ namespace JollyBit.BS.Core.Networking
                         switch (status)
 	                    {
                             case NetConnectionStatus.Connected:
-                                _logger.Error("Client connected");
+                                _logger.Info("Client connected. IP = {0} Port = {1}", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionEstablished != null) ConnectionEstablished(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnected:
+                                _logger.Info("Client disconnected. IP = {0} Port = {1}", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionTerminated != null) ConnectionEstablished(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnecting:
+                                _logger.Info("Client disconnecting. IP = {0} Port = {1}", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionTerminating != null) ConnectionTerminating(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.InitiatedConnect:
                             case NetConnectionStatus.RespondedConnect:
                             case NetConnectionStatus.None:
                             default:
+                                throw new System.NotImplementedException();
                                 break;
 	                    }
                         break;
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
+#if DEBUG
+                        _logger.Debug("Recived message with type {0}. Message = '{1}'", message.MessageType.ToString(), message.ReadString());
+#endif 
+                        break;
                     case NetIncomingMessageType.WarningMessage:
+                        _logger.Warn("Recived message with type {0}. Message = '{1}'", message.MessageType.ToString(), message.ReadString());
+                        break;
                     case NetIncomingMessageType.ErrorMessage:
                     case NetIncomingMessageType.Error:
                         _logger.Error("Recived message with type {0}. Message = '{1}'", message.MessageType.ToString(), message.ReadString());
@@ -163,8 +172,6 @@ namespace JollyBit.BS.Core.Networking
                 throw new System.Exception("Already connected to a server!");
             }
             base.Connect(host, port, null);
-            this.CheckMessages();
-            int g = 1;
         }
 
         public void Disconnect()

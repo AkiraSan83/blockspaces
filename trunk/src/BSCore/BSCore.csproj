@@ -50,6 +50,7 @@
     <Compile Include="Utility\EventArgs.cs" />
     <Compile Include="Utility\IFileReference.cs" />
     <Compile Include="Utility\IFileSystem.cs" />
+    <Compile Include="Utility\ITimeService.cs" />
     <Compile Include="Utility\Point.cs" />
     <Compile Include="Utility\StandardFileSystem.cs" />
     <Compile Include="World\Chunk.cs" />
