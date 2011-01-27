@@ -171,6 +171,7 @@ namespace JollyBit.BS.Client
 				Thread.Sleep(_config.DebugSleepTime);
         }
 
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             Constants.Kernel.Get<IConfigManager>().SaveConfig();
