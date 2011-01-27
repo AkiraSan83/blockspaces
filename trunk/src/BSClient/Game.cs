@@ -36,7 +36,7 @@ namespace JollyBit.BS.Client
 		//public bool VSync = true;
 	}
 	
-	public class BSClient : GameWindow
+	public class BSClient : GameWindow, ITimeService
     {
 		private IList<IRenderable> _renderList = new List<IRenderable>();
 		private Camera _camera = new Camera();
@@ -60,7 +60,7 @@ namespace JollyBit.BS.Client
             //Setup Ninject
             Constants.Kernel = new StandardKernel();
             Constants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
-
+            Constants.Kernel.Bind<ITimeService>().ToConstant(this);
 			// Handle mouse and keyboard events
 			new Input(this);
 			
@@ -188,6 +188,28 @@ namespace JollyBit.BS.Client
             {
 				example.Run(30.0);
             }
+        }
+
+        private double _currentTime = 0;
+        private double _elapsedTime = 0;
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            base.OnUpdateFrame(e);
+            _currentTime += e.Time;
+            _elapsedTime = e.Time;
+            if (Tick != null) Tick(this, new TimeTickEventArgs(this.ElapsedTime, this.CurrentTime));
+        }
+
+        public event EventHandler<TimeTickEventArgs> Tick;
+
+        public double CurrentTime
+        {
+            get { return _currentTime; }
+        }
+
+        public double ElapsedTime
+        {
+            get { return _elapsedTime; }
         }
     }
 }

@@ -43,11 +43,19 @@ namespace JollyBit.BS.Core.Networking
     {
         private readonly ILogger _logger;
         private readonly IMessageTypeManager _messageTypeManager;
-        public NetworkPeer(ILoggerFactory loggerFactory, NetPeerConfiguration config, IMessageTypeManager messageTypeManager)
+        private readonly ITimeService _timeService;
+        public NetworkPeer(ILoggerFactory loggerFactory, NetPeerConfiguration config, IMessageTypeManager messageTypeManager, ITimeService timeService)
             : base(config)
         {
             _logger = loggerFactory.GetLogger(typeof(NetworkPeer));
             _messageTypeManager = messageTypeManager;
+            _timeService = timeService;
+            _timeService.Tick += new EventHandler<TimeTickEventArgs>(_timeService_Tick);
+        }
+
+        void _timeService_Tick(object sender, TimeTickEventArgs e)
+        {
+            CheckMessages();
         }
 
         public event EventHandler<NetworkPeerConnectionEventArgs> ConnectionEstablished;
@@ -98,7 +106,6 @@ namespace JollyBit.BS.Core.Networking
                             case NetConnectionStatus.RespondedConnect:
                             case NetConnectionStatus.None:
                             default:
-                                throw new System.NotImplementedException();
                                 break;
 	                    }
                         break;
