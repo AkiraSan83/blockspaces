@@ -40,8 +40,8 @@ namespace JollyBit.BS.Core.Utility
         public void SaveConfig()
         {
             IFileSystem fileSystem = Constants.Kernel.Get<IFileSystem>();
-            fileSystem.DeleteFile("config.json");
-            using (Stream stream = fileSystem.CreateFile("config.json"))
+            fileSystem.DeleteFile("ClientConfig.json");
+            using (Stream stream = fileSystem.CreateFile("ClientConfig.json"))
             {
                 JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(ConfigManager));
                 serializer.Serialize(this, stream);

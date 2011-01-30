@@ -39,7 +39,7 @@ namespace JollyBit.BS.Client
 	public class BSClient : GameWindow, ITimeService
     {
 		private IList<IRenderable> _renderList = new List<IRenderable>();
-		private Camera _camera = new Camera();
+		private Camera _camera;
 		
 		public IList<IRenderable> RenderList {
 			get { return _renderList; }
@@ -56,6 +56,8 @@ namespace JollyBit.BS.Client
 		protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
+            //Console.WriteLine(System.Diagnostics.Stopwatch.Frequency);
 			
             //Setup Ninject
             Constants.Kernel = new StandardKernel();
@@ -63,6 +65,9 @@ namespace JollyBit.BS.Client
             Constants.Kernel.Bind<ITimeService>().ToConstant(this);
 			// Handle mouse and keyboard events
 			new Input(this);
+
+            // Create camera
+            _camera = new Camera();
 			
 			// Get client config
 			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<ClientConfig>();
@@ -75,7 +80,7 @@ namespace JollyBit.BS.Client
             Constants.Kernel.Get<GLState>();
 
 			// Hook camera to WindowResize operation
-			this.Resize += new EventHandler<EventArgs>(_camera.HookResize);
+			this.Resize += new EventHandler<EventArgs>( (Object sender, EventArgs eargs) => { _camera.RecalculateProjection(this.Width,this.Height); } );
 			
 			// Move the camera to (0,0,5)
             //_camera.Position = new Vector3(0, 0, 5);
@@ -93,6 +98,9 @@ namespace JollyBit.BS.Client
 			
             // Create World Renderer
             MapRenderer mapRenderer = Constants.Kernel.Get<MapRenderer>();
+
+            mapRenderer.camera = _camera;
+
             _renderList.Add(mapRenderer);
             _camera.Position = new Vector3(0, 50, 0);
             _camera.RotateX(-MathHelper.PiOver2);
@@ -104,12 +112,12 @@ namespace JollyBit.BS.Client
 			for(int i = 0; i < 2; i++) {
 				for(int j = 0; j < 2; j++) {
 					c = mapRenderer.Map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
-					Console.WriteLine("Generating chunk {0}x{1}",i,j);
+					//Console.WriteLine("Generating chunk {0}x{1}",i,j);
 				}
 			}
 			// Build trident and add to the render list
 			//_renderList.Add( new Trident() );
-			
+
 			// Disabled fog... I'm not sure how to make it do what I want
 //			GL.Enable(EnableCap.DepthTest); //enable the depth testing
 //			GL.Enable(EnableCap.Fog);
@@ -120,16 +128,10 @@ namespace JollyBit.BS.Client
 //			GL.Fog(FogParameter.FogEnd,5.0f);//glState.FarClippingPlane+1);
 //			GL.Hint(HintTarget.FogHint,HintMode.Nicest);
 
-
             Constants.Kernel.Get<IClientConnection<object>>().Connect("127.0.0.1", 12421);
 			
 			GC.Collect();
         }    
-
-//        protected override void OnResize(EventArgs e)
-//        {
-//            base.OnResize(e);
-//        }
 
 		private double _fps = 0; // render frequency adder
 		private int _fpsCount = 0; // Frames since last FPS update

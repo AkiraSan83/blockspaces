@@ -12,8 +12,9 @@ using System.Drawing;
 using JollyBit.BS.Core.Utility;
 using Ninject;
 using Ninject.Parameters;
+using Ninject.Extensions.Logging;
 using JollyBit.BS.Core;
-using JollyBit.BS.Client.Rendering;
+//using JollyBit.BS.Client.Rendering;
 
 namespace JollyBit.BS.Client.Rendering
 {
@@ -23,6 +24,9 @@ namespace JollyBit.BS.Client.Rendering
         private readonly ICollection<ChunkRenderer> _renderers = new List<ChunkRenderer>();
         private readonly ITextureAtlas _textureAtlas;
         private RenderConfig _config;
+
+        public Camera camera;
+
 		[Inject]
         public MapRenderer(IMap map, IKernel kernel, ITextureAtlasFactory textureAtlasFactory)
         {
@@ -55,10 +59,25 @@ namespace JollyBit.BS.Client.Rendering
         public void Render()
         {
             _textureAtlas.Render();
-            foreach (ChunkRenderer renderer in _renderers)
-            {
+
+//            Vector4[] planes = Frustum.CalculatePlanes(camera.ModelView, camera.Projection);
+//            float radius = Math.Max( Math.Max(Constants.CHUNK_SIZE_X, Constants.CHUNK_SIZE_Y), Constants.CHUNK_SIZE_Z ) / 2;
+
+//            ILogger logger = Constants.Kernel.Get<ILoggerFactory>().GetLogger(this.GetType());
+
+            foreach (ChunkRenderer renderer in _renderers) {
+//                Vector3 center = new Vector3();
+//                center.X = renderer.Chunk.Location.X + Constants.CHUNK_SIZE_X/2;
+//                center.Y = renderer.Chunk.Location.Y + Constants.CHUNK_SIZE_Y/2;
+//                center.Z = renderer.Chunk.Location.Z + Constants.CHUNK_SIZE_Z/2;
+
+    //            logger.Debug(string.Format("Chunk centered at {0} (r: {1}) returns: {2}",center,radius,Frustum.InsideFrustum(planes,center,radius)));
+
+                //if(Frustum.InsideFrustum(planes,center,radius))
                 renderer.Render();
             }
+
+            //int a = 0;
         }
     }
 
