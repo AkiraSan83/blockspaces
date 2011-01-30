@@ -125,24 +125,17 @@ namespace JollyBit.BS.Client.Rendering
 			_y = Vector3.Transform(Vector3.UnitY,_rot);
 			_z = Vector3.Transform(Vector3.UnitZ,_rot);
 		}
-		
-//		private void GrahmSchmidt() {
-//			_y = _y - projection(_y,_x);
-//			_z = _z - projection(_z,_x);
-//			_z = _z - projection(_z,_y);
-//			_x.Normalize();
-//			_y.Normalize();
-//			_z.Normalize();
-//		}
-//		
-//		private Vector3 projection(Vector3 x, Vector3 y) {
-//			return (Vector3.Dot(x,y) / y.LengthSquared) * y;
-//		}
-		
+
         public Vector3 Position
         {
             get { return _position; }
             set { _position = value; }
+        }
+
+        public Quaternion Rotation
+        {
+            get { throw new NotImplementedException("Rotation not implemented."); }
+            set { throw new NotImplementedException("Rotation not implemented."); }
         }
 
         

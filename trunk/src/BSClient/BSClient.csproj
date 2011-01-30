@@ -75,6 +75,8 @@
     <Compile Include="Input.cs" />
     <Compile Include="Rendering\RenderConfig.cs" />
     <Compile Include="Rendering\Frustum.cs" />
+    <Compile Include="World\BlockManager.cs" />
+    <Compile Include="World\Block.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BSCore\BSCore.csproj">
@@ -117,4 +119,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="World\" />
+  </ItemGroup>
 </Project>
