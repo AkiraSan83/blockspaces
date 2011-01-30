@@ -6,6 +6,7 @@ using System.Text;
 using Ninject;
 
 using JollyBit.BS.Core.Utility;
+using JollyBit.BS.Core.Networking.Messages;
 
 namespace JollyBit.BS.Core.World
 {
@@ -19,7 +20,7 @@ namespace JollyBit.BS.Core.World
         public Point3L Location { get; set; }
         public IMap Map { get; set; }
 				
-        private short[, ,] _blocks = new short[Constants.CHUNK_SIZE_X, Constants.CHUNK_SIZE_Y, Constants.CHUNK_SIZE_Z];
+        private ushort[, ,] _blocks = new ushort[Constants.CHUNK_SIZE_X, Constants.CHUNK_SIZE_Y, Constants.CHUNK_SIZE_Z];
         public IBlock this[byte x, byte y, byte z]
         {
             get
@@ -28,8 +29,8 @@ namespace JollyBit.BS.Core.World
             }
             set
             {
-                short currentID = _blocks[x, y, z];
-                short newID = _blockManager.getShortFromBlock(value);
+                ushort currentID = _blocks[x, y, z];
+                ushort newID = _blockManager.getShortFromBlock(value);
 
                 if(newID != currentID)
                 {
@@ -40,6 +41,13 @@ namespace JollyBit.BS.Core.World
                     }
                 }
             }
+        }
+
+        public ChunkMessage GetMessage() {
+            ChunkMessage cm = new ChunkMessage();
+            cm.Location = this.Location;
+            cm.Chunk = _blocks;
+            return cm;
         }
 
         public event EventHandler<BlockChangedEventArgs> BlockChanged;

@@ -16,6 +16,7 @@ namespace JollyBit.BS.Server
         public override void Load()
         {
             Bind<IConnectionManager<object>>().To<ConnectionManager<object>>().InSingletonScope();
+            Bind<JollyBit.BS.Core.World.IBlockManager>().To<JollyBit.BS.Server.World.BlockManager>().InSingletonScope();
             Bind<IConfigManager>().ToMethod(
                 (context) =>
                 {

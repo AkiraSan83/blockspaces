@@ -19,6 +19,7 @@ namespace JollyBit.BS.Client
         public override void Load()
         {
             Bind<GLState>().To<GLState>().InSingletonScope();
+            Bind<JollyBit.BS.Core.World.IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
             Bind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
             Bind<ContentManager>().To<ContentManager>().InSingletonScope();
             Bind<IClientConnection<object>>().To<Connection<object>>().InSingletonScope();

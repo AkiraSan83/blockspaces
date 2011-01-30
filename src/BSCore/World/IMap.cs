@@ -19,19 +19,7 @@ namespace JollyBit.BS.Core.World
             NewValue = newValue;
         }
     }
-
-    public interface IBlock
-    {
-        IFileReference GetTextureForSide(BlockSides side);
-    }
-
-    public interface IBlockManager
-    {
-        short getShortFromBlock(IBlock block);
-        IBlock getBlockFromShort(short id);
-    }
-
-
+    
     public interface IChunk
     {
         IBlock this[byte x, byte y, byte z] { get; set; }
