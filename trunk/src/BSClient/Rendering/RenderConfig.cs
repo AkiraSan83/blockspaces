@@ -15,6 +15,7 @@ namespace JollyBit.BS.Client.Rendering
 		private ILogger _logger;
 		
 		public float FarClippingPlane = 128;
+        public int FieldOfView = 120;
 		
 		public RenderConfig()
 		{ 

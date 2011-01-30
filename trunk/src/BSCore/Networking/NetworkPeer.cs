@@ -167,6 +167,8 @@ namespace JollyBit.BS.Core.Networking
         {
             this.Configuration.AcceptIncomingConnections = true;
             base.Start();
+            //while(true)
+            //    CheckMessages();
         }
 
         public new void Connect(string host, int port)

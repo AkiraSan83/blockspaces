@@ -18,10 +18,7 @@ namespace JollyBit.BS.Core.World
         Top = 0x10,
         Bottom = 0x20
     }
-    public interface IBlock
-    {
-        IFileReference GetTextureForSide(BlockSides side);
-    }
+    
     public class Block : IBlock
     {
         public IFileReference GetTextureForSide(BlockSides side)

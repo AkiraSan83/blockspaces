@@ -15,7 +15,6 @@ namespace JollyBit.BS.Client.Rendering
 {
     public class Camera : IPositionable
     {
-
         private Vector3 _position = new Vector3(0,0,0);
 
 		private Quaternion _rot = Quaternion.Identity;
@@ -24,41 +23,51 @@ namespace JollyBit.BS.Client.Rendering
         private Vector3 _y = Vector3.UnitY;
         private Vector3 _z = Vector3.UnitZ;
 
+        private RenderConfig _config;
+        public Camera() {
+            _config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+        }
+
+        private Matrix4 _modelView;
+        private Matrix4 _projection;
+        public Matrix4 ModelView {
+            get { return _modelView; }
+        }
+        public Matrix4 Projection {
+            get { return _projection; }
+        }
+
 		public void Render()
 		{
 			RenderRotation();
 			RenderTranslation();
 		}
-		
+
         public void RenderRotation()
         {
-            GL.MatrixMode(MatrixMode.Modelview);
+            //GL.MatrixMode(MatrixMode.Modelview);
 			
-            Matrix4 rot = new Matrix4(new Vector4(_x.X, _y.X, _z.X, 0.0f),
-                                        new Vector4(_x.Y, _y.Y, _z.Y, 0.0f),
-                                        new Vector4(_x.Z, _y.Z, _z.Z, 0.0f),
-                                        Vector4.UnitW);
-			
-            //Matrix4 trans = Matrix4.CreateTranslation(-_position);
-			
-            //Matrix4 m = trans * rot;
-            GL.LoadMatrix(ref rot);
+            _modelView = new Matrix4(new Vector4(_x.X, _y.X, _z.X, 0.0f),
+                                     new Vector4(_x.Y, _y.Y, _z.Y, 0.0f),
+                                     new Vector4(_x.Z, _y.Z, _z.Z, 0.0f),
+                                     Vector4.UnitW);
+
+            GL.LoadMatrix(ref _modelView);
         }
 
-		// Hook this method to GameWindow.OnResize
-		// It will update the projection matrix
-		public void HookResize(Object sender, EventArgs args) {
-			
-			GameWindow gw = (GameWindow)sender;
-			
-			GL.Viewport(0, 0, gw.Width, gw.Height);
-			
-			float farClippingPlane = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>().FarClippingPlane;
-			
-            float aspect_ratio = gw.Width / (float)gw.Height;
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, farClippingPlane);
+		public void RecalculateProjection(int width, int height) {
+			GL.Viewport(0, 0, width, height);
+
+			float farClippingPlane = _config.FarClippingPlane;
+
+            float fieldOfView = MathHelper.DegreesToRadians(_config.FieldOfView);
+
+            float aspect_ratio = width / (float)height;
+
+            _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45.0f), aspect_ratio, 1, farClippingPlane);
+
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perpective);
+            GL.LoadMatrix(ref _projection);
             GL.MatrixMode(MatrixMode.Modelview);
 		}
 		
@@ -67,12 +76,6 @@ namespace JollyBit.BS.Client.Rendering
             Matrix4 trans = Matrix4.CreateTranslation(-_position);
             GL.MultMatrix(ref trans);
         }
-
-        //public void LookAt(ref Vector3 target)
-        //{
-        //    _locX = target;
-        //    Vector3.Normalize(ref _locX, out _locX);
-        //}
 
         public void MoveForward(float distance)
         {

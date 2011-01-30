@@ -114,6 +114,10 @@ namespace JollyBit.BS.Client {
 	                this._gameWindow.Camera.RotateX(-_config.KeySpeed/4);
 	            if (this._gameWindow.Keyboard[Key.Down])
 	                this._gameWindow.Camera.RotateX(_config.KeySpeed/4);
+                if (this._gameWindow.Keyboard[Key.Period])
+                    this._gameWindow.Camera.RotateZ(_config.KeySpeed/4);
+                if (this._gameWindow.Keyboard[Key.Slash])
+                    this._gameWindow.Camera.RotateZ(-_config.KeySpeed/4);
 	
 				Point delta = new Point(_center.X - System.Windows.Forms.Cursor.Position.X, _center.Y - System.Windows.Forms.Cursor.Position.Y );
 				this._gameWindow.Camera.RotateY(delta.X * _config.MouseSpeed);
