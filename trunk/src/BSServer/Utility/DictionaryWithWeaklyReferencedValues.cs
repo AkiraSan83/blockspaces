@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace JollyBit.BS.Core.Utility
+namespace JollyBit.BS.Server.Utility
 {
     public class DictionaryWithWeaklyReferencedValues<TKEY, TVALUE> : DictionaryBase<TKEY, TVALUE>
     {
