@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -41,6 +41,10 @@
     <Compile Include="Networking\IConnectionManager.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="World\BlockManager.cs" />
+    <Compile Include="Utility\DictionaryBase.cs" />
+    <Compile Include="Utility\DictionaryWithWeaklyReferencedKey.cs" />
+    <Compile Include="Utility\DictionaryWithWeaklyReferencedValues.cs" />
+    <Compile Include="Utility\ObjectDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BSCore\BSCore.csproj">
