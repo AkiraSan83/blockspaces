@@ -106,6 +106,8 @@ namespace JollyBit.BS.Server.Utility
                 {
                     JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(T));
                     value = serializer.Deserialize((string)table.Rows[0]["Data"]);
+                    _guidToObj.Add(uniqueId, value);
+                    _objToGuid.Add(value, uniqueId);
                 }
             }
             //Return DatabaseRecord
