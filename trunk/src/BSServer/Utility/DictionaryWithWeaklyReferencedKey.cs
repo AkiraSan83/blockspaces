@@ -5,158 +5,104 @@ using System.Text;
 
 namespace JollyBit.BS.Core.Utility
 {
-    public class DictionaryWithWeaklyReferencedKey<TKEY,TVALUE> : IDictionary<TKEY, TVALUE>
+    public class DictionaryWithWeaklyReferencedKey<TKEY,TVALUE> : DictionaryBase<TKEY, TVALUE>
     {
-        private Dictionary<int, ICollection<KeyValuePair<WeakReference, TVALUE>>> _dict = new Dictionary<int, ICollection<KeyValuePair<WeakReference, TVALUE>>>();
-        public void Add(TKEY key, TVALUE value)
+        private IDictionary<int, ICollection<KeyValuePair<WeakReference, TVALUE>>> _dict = new Dictionary<int, ICollection<KeyValuePair<WeakReference, TVALUE>>>();
+        public override void Add(TKEY key, TVALUE value)
         {
-            ICollection<KeyValuePair<WeakReference, TVALUE>> refs;
-            KeyValuePair<WeakReference, TVALUE> pair;
-            TVALUE v;
-            if (tryGetValue(key, out refs, out pair, out v))
+            KeyValuePair<WeakReference, TVALUE> reference;
+            ICollection<KeyValuePair<WeakReference, TVALUE>> collection;
+            TVALUE oldValue;
+            if (tryGetValue(key, out oldValue, out reference, out collection))
             {
-                throw new ArgumentException("An element with the same key already exists in the Dictionary<TKey, TValue>.");
+                throw new ArgumentException();
             }
-            if(refs == null)
+            if (collection == null)
             {
-                refs = new List<KeyValuePair<WeakReference, TVALUE>>();
-                _dict.Add(key.GetHashCode(), refs);
+                collection = new List<KeyValuePair<WeakReference,TVALUE>>();
+                _dict.Add(key.GetHashCode(), collection);
             }
-            refs.Add(new KeyValuePair<WeakReference, TVALUE>(new WeakReference(key), value));
+            collection.Add(new KeyValuePair<WeakReference, TVALUE>(new WeakReference(key), value));
         }
 
-        public bool ContainsKey(TKEY key)
+        public override bool Remove(TKEY key)
         {
+            KeyValuePair<WeakReference, TVALUE> reference;
+            ICollection<KeyValuePair<WeakReference, TVALUE>> collection;
             TVALUE value;
-            return TryGetValue(key, out value);
-        }
-
-        public ICollection<TKEY> Keys
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool Remove(TKEY key)
-        {
-            ICollection<KeyValuePair<WeakReference, TVALUE>> refs;
-            KeyValuePair<WeakReference, TVALUE> pair;
-            TVALUE value;
-            if (tryGetValue(key, out refs, out pair, out value))
+            if (tryGetValue(key, out value, out reference, out collection))
             {
-                refs.Remove(pair);
+                collection.Remove(reference);
                 return true;
             }
             return false;
         }
 
-        private bool tryGetValue(TKEY key, out ICollection<KeyValuePair<WeakReference, TVALUE>> collection, out KeyValuePair<WeakReference, TVALUE> pair, out TVALUE value)
+        private bool tryGetValue(TKEY key, out TVALUE value, out KeyValuePair<WeakReference, TVALUE> reference, out ICollection<KeyValuePair<WeakReference, TVALUE>> collection)
         {
-            ICollection<KeyValuePair<WeakReference, TVALUE>> refs;
-            if (_dict.TryGetValue(key.GetHashCode(), out refs))
+            if (_dict.TryGetValue(key.GetHashCode(), out collection))
             {
-                foreach (var reference in refs)
+                reference = collection.FirstOrDefault(r => Object.ReferenceEquals(r, key));
+                if (reference.Key != null)
                 {
-                    if (!reference.Key.IsAlive) //Remove dead weak refs
+                    object target = reference.Key.Target;
+                    if (reference.Key.IsAlive)
                     {
-                        refs.Remove(reference);
-                    }
-                    else if (Object.Equals(reference.Key.Target, key))
-                    {
-                        value = (TVALUE)reference.Key.Target;
-                        collection = refs;
-                        pair = reference;
+                        value = (TVALUE)target;
                         return true;
                     }
-                }
-                if (refs.Count == 0)
-                {
-                    _dict.Remove(key.GetHashCode()); //Remove empty collections
+                    else //Remove dead weak ref
+                    {
+                        collection.Remove(reference);
+                        if (collection.Count == 0) 
+                            _dict.Remove(key.GetHashCode()); //Remove dead collection of weak refs
+                    }
                 }
             }
-            collection = refs;
-            pair = default(KeyValuePair<WeakReference, TVALUE>);
+            reference = default(KeyValuePair<WeakReference, TVALUE>);
             value = default(TVALUE);
             return false;
         }
 
-        public bool TryGetValue(TKEY key, out TVALUE value)
+        public override bool TryGetValue(TKEY key, out TVALUE value)
         {
-            ICollection<KeyValuePair<WeakReference, TVALUE>> refs;
-            KeyValuePair<WeakReference, TVALUE> pair;
-            return tryGetValue(key, out refs, out pair, out value);
-        }
-
-        public ICollection<TVALUE> Values
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public TVALUE this[TKEY key]
-        {
-            get
+            KeyValuePair<WeakReference, TVALUE> reference;
+            ICollection<KeyValuePair<WeakReference, TVALUE>> collection;
+            if (tryGetValue(key, out value, out reference, out collection))
             {
-                TVALUE value;
-                if (TryGetValue(key, out value)) return value;
-                throw new KeyNotFoundException();
-            }
-            set
-            {
-                ICollection<KeyValuePair<WeakReference, TVALUE>> refs;
-                KeyValuePair<WeakReference, TVALUE> pair;
-                TVALUE v;
-                if (!tryGetValue(key, out refs, out pair, out v))
-                    throw new KeyNotFoundException();
-                refs.Remove(pair);
-                refs.Add(new KeyValuePair<WeakReference, TVALUE>(pair.Key, value));
-            }
-        }
-
-        public void Add(KeyValuePair<TKEY, TVALUE> item)
-        {
-            Add(item.Key, item.Value);
-        }
-
-        public void Clear()
-        {
-            _dict.Clear();
-        }
-
-        public bool Contains(KeyValuePair<TKEY, TVALUE> item)
-        {
-            TVALUE value;
-            if (TryGetValue(item.Key, out value))
-            {
-                return value.Equals(item.Value);
+                value = reference.Value;
+                return true;
             }
             return false;
         }
 
-        public void CopyTo(KeyValuePair<TKEY, TVALUE>[] array, int arrayIndex)
+        protected override void setValue(TKEY key, TVALUE value)
         {
-            throw new NotImplementedException();
+            KeyValuePair<WeakReference, TVALUE> reference;
+            ICollection<KeyValuePair<WeakReference, TVALUE>> collection;
+            if (!tryGetValue(key, out value, out reference, out collection))
+            {
+                collection.Remove(reference); //If reference already exists remove it
+            }
+            if (collection == null) //If collection does not exist create it
+            {
+                collection = new List<KeyValuePair<WeakReference, TVALUE>>();
+                _dict.Add(key.GetHashCode(), collection);
+            }
+            collection.Add(new KeyValuePair<WeakReference, TVALUE>(new WeakReference(key), value));
         }
 
-        public int Count
+        public override void Clear()
+        {
+            _dict.Clear();
+        }
+
+        public override int Count
         {
             get { throw new NotImplementedException(); }
         }
 
-        public bool IsReadOnly
-        {
-            get { return false; }
-        }
-
-        public bool Remove(KeyValuePair<TKEY, TVALUE> item)
-        {
-            return Remove(item.Key);
-        }
-
-        public IEnumerator<KeyValuePair<TKEY, TVALUE>> GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        public override IEnumerator<KeyValuePair<TKEY, TVALUE>> GetEnumerator()
         {
             throw new NotImplementedException();
         }
