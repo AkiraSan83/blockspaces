@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using System.Data.SQLite;
 using System.Data;
 
-namespace JollyBit.BS.Core.Utility
+namespace JollyBit.BS.Server.Utility
 {
     public interface IUniquelyIdentifiable
     {
@@ -35,20 +35,6 @@ namespace JollyBit.BS.Core.Utility
     public class ObjectDatabase : IObjectDatabase, IDisposable
     {
         private SQLiteConnection _conn;
-        private int executeNonQuery(string queryTxt)
-        {
-            SQLiteCommand command = _conn.CreateCommand();
-            command.CommandText = queryTxt;
-            return command.ExecuteNonQuery();
-        }
-        private DataTable executeQuery(string queryTxt)
-        {
-            SQLiteCommand command = _conn.CreateCommand();
-            SQLiteDataAdapter da = new SQLiteDataAdapter(queryTxt, _conn);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            return ds.Tables[0];
-        }
         public ObjectDatabase(string pathToDatabaseFile, bool isNewDatabase)
         {
             //Connect
@@ -57,14 +43,15 @@ namespace JollyBit.BS.Core.Utility
             //Ensure 'Objects' table exists. Create it if it does not
             if (_conn.GetSchema("Tables").Select("Table_Name = 'Objects'").Length == 0)
             {
-                executeNonQuery(
+                _conn.CreateCommand(
                     @"-- Original table schema
                         CREATE TABLE [Objects] (
                             [Id] guid PRIMARY KEY NOT NULL,
                             [Type] VARCHAR(300) NOT NULL,
                             [Data] blob NOT NULL
                         );
-                        CREATE INDEX [IX_Type] ON [Objects] ([Type]);");
+                        CREATE INDEX [IX_Type] ON [Objects] ([Type]);")
+                .ExecuteNonQuery();
             }
         }
         private DictionaryWithWeaklyReferencedKey<object, Guid> _objToGuid = new DictionaryWithWeaklyReferencedKey<object, Guid>();
@@ -73,15 +60,19 @@ namespace JollyBit.BS.Core.Utility
         {
             JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(T));
             string query = string.Format("SELECT Id, Data FROM Objects WHERE Type = {0}", typeof(T).FullName);
-            DataTable table = executeQuery(query);
+            DataTable table = _conn.CreateCommand("SELECT Id, Data FROM Objects WHERE Type = @Type")
+                .AddParm("@Type", typeof(T).FullName)
+                .ExecuteQuery().Tables[0];
             foreach (DataRow item in table.Rows)
             {
                 Guid id = new Guid((string)item["Id"]);
                 object value;
                 if (!_guidToObj.TryGetValue(id, out value))
                 {
-                    //Object is not in memory and deserialized... deserialize it
+                    //Object is not in memory and deserialized... deserialize it and add it to dicts
                     value = serializer.Deserialize((string)item["Data"]);
+                    _guidToObj.Add(id, value);
+                    _objToGuid.Add(value, id);
                 }
                 if (value is IDatabaseObject<T>)
                 {
@@ -107,8 +98,10 @@ namespace JollyBit.BS.Core.Utility
             if (!_guidToObj.TryGetValue(uniqueId, out value))
             {
                 //not already loaded... check database
-                string query = string.Format("SELECT Id, Data FROM Objects WHERE Type = {0} AND Id = '{1}'", typeof(T).FullName, uniqueId.ToString());
-                DataTable table = executeQuery(query);
+                DataTable table = _conn.CreateCommand("SELECT Id, Data FROM Objects WHERE Type = @Type AND Id = @Id")
+                    .AddParm("@Type", typeof(T).FullName)
+                    .AddParm("@Id", uniqueId)
+                    .ExecuteQuery().Tables[0];
                 if (table.Rows.Count == 1)
                 {
                     JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(T));
@@ -127,7 +120,33 @@ namespace JollyBit.BS.Core.Utility
         }
         public IDatabaseRecord<T> Save<T>(T obj)
         {
-            throw new NotImplementedException();
+            if (obj == null) throw new ArgumentException("", "obj");
+            Guid uniqueId;
+            //Check if already loaded
+            if (!_objToGuid.TryGetValue(obj, out uniqueId))
+            {
+                //Not loaded create new id and add to dicts
+                uniqueId = new Guid();
+                _objToGuid.Add(obj, uniqueId);
+                _guidToObj.Add(uniqueId, obj);
+            }
+            //Serialize
+            JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(T));
+            string data = serializer.Serialize(obj);
+            //Save it
+            _conn.CreateCommand("REPLACE INTO Objects (Id, Type, Data) VALUES (@Id, @Type, @Data)")
+                .AddParm("@Id", uniqueId.ToString())
+                .AddParm("@Type", typeof(T).FullName)
+                .AddParm("@Data", System.Text.Encoding.UTF8.GetBytes(data))
+                .ExecuteNonQuery();
+            //Return new record
+            if (obj is IDatabaseObject<T>)
+            {
+                IDatabaseObject<T> dataObj = obj as IDatabaseObject<T>;
+                dataObj.UniqueId = uniqueId;
+                return dataObj;
+            }
+            else return new DatabaseRecord<T>(uniqueId, (T)obj);
         }
         public IEnumerable<IDatabaseRecord<T>> SaveAll<T>(IEnumerable<T> obj)
         {
