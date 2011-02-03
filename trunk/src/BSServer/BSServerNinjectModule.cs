@@ -8,6 +8,7 @@ using JollyBit.BS.Server.Networking;
 using JollyBit.BS.Core.Utility;
 using JsonExSerializer;
 using System.IO;
+using JollyBit.BS.Core.World;
 
 namespace JollyBit.BS.Server
 {
@@ -16,9 +17,9 @@ namespace JollyBit.BS.Server
         public override void Load()
         {
             Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
-            Bind<IConnectionManager<object>>().To<ConnectionManager<object>>().InSingletonScope();
-            Bind<JollyBit.BS.Core.World.IBlockManager>().To<JollyBit.BS.Server.World.BlockManager>().InSingletonScope();
-            Bind<IConfigManager>().ToMethod(
+            Rebind<IConnectionManager>().To<ConnectionManager>().InSingletonScope();
+            Rebind<IBlockManager>().To<JollyBit.BS.Server.World.BlockManager>().InSingletonScope();
+            Rebind<IConfigManager>().ToMethod(
                 (context) =>
                 {
                     //XmlSerializer

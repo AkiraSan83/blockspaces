@@ -6,7 +6,7 @@ using JollyBit.BS.Core.Networking;
 
 namespace JollyBit.BS.Client.Networking
 {
-    public interface IClientConnection<TCLIENT> : IConnection<TCLIENT>
+    public interface IClientConnection : IConnection
     {
         void Connect(string host, int port);
         void Disconnect();

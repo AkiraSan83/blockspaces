@@ -19,17 +19,20 @@ namespace JollyBit.BS.Core
     {
         public override void Load()
         {
-            //Create Bindings
-            Bind<IKernel>().ToConstant(this.Kernel);
-            Bind<IMap>().To<Map>().InSingletonScope();
-            Bind<IGenerator>().To<SimpleTerrainGenerator>();
-            Bind<IChunk>().To<Chunk>();
-            Bind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
-            Bind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
+            //Register services
+            Bind<IService>().To<IBlockManager>();
+
+            //Create bindings
+            Rebind<IKernel>().ToConstant(this.Kernel);
+            Rebind<IMap>().To<Map>().InSingletonScope();
+            Rebind<IGenerator>().To<SimpleTerrainGenerator>();
+            Rebind<IChunk>().To<Chunk>();
+            Rebind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
+            Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
             string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
-            Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
+            Rebind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
                 .WithConstructorArgument("workingDirectory", path + "assets/");
-            Bind<NetPeerConfiguration>().ToMethod(
+            Rebind<NetPeerConfiguration>().ToMethod(
                 (context) =>
                 {
                     return Kernel.Get<IConfigManager>().GetConfig<NetworkConfig>().CreateNetPeerConfig();

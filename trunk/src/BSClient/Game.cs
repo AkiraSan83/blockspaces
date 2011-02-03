@@ -129,7 +129,7 @@ namespace JollyBit.BS.Client
 //			GL.Fog(FogParameter.FogEnd,5.0f);//glState.FarClippingPlane+1);
 //			GL.Hint(HintTarget.FogHint,HintMode.Nicest);
 
-            Constants.Kernel.Get<IClientConnection<object>>().Connect("127.0.0.1", 12421);
+            Constants.Kernel.Get<IClientConnection>().Connect("127.0.0.1", 12421);
 			
 			GC.Collect();
         }    

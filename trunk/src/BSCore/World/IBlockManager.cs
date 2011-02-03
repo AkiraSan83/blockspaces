@@ -7,7 +7,7 @@ using JollyBit.BS.Core.Networking.Messages;
 
 namespace JollyBit.BS.Core.World
 {
-    public interface IBlockManager
+    public interface IBlockManager : BS.Core.Utility.IService
     {
         ushort getShortFromBlock(IBlock block);
         IBlock getBlockFromShort(ushort id);
