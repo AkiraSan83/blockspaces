@@ -18,6 +18,7 @@ namespace JollyBit.BS.Client
     {
         public override void Load()
         {
+            Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
             Bind<GLState>().To<GLState>().InSingletonScope();
             Bind<JollyBit.BS.Core.World.IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
             Bind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();

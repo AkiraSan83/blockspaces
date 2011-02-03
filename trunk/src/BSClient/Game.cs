@@ -61,7 +61,7 @@ namespace JollyBit.BS.Client
 			
             //Setup Ninject
             Constants.Kernel = new StandardKernel();
-            Constants.Kernel.Load(new INinjectModule[] { new BSCoreNinjectModule(), new BSClientNinjectModule() });
+            Constants.Kernel.Load(new BSClientNinjectModule());
             Constants.Kernel.Bind<ITimeService>().ToConstant(this);
 			// Handle mouse and keyboard events
 			new Input(this);
