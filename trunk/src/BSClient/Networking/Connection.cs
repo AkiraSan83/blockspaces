@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JollyBit.BS.Core.Networking;
+using Ninject;
 
 namespace JollyBit.BS.Client.Networking
 {
@@ -10,6 +11,7 @@ namespace JollyBit.BS.Client.Networking
     {
         INetworkPeer _network;
         object _networkPeerConnection;
+        [Inject]
         public Connection(INetworkPeer network)
         {
             _network = network;
