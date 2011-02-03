@@ -17,6 +17,7 @@ namespace JollyBit.BS.Server
             Constants.Kernel.Load(new BSServerNinjectModule());
             Server server = new Server();
             Constants.Kernel.Bind<ITimeService>().ToConstant(server);
+            Constants.Kernel.GetAll<IService>(); //Start all the services
             IConnectionManager<object> connectionManager = Constants.Kernel.Get<IConnectionManager<object>>();
             connectionManager.StartListeningForConnections();
             server.Start();

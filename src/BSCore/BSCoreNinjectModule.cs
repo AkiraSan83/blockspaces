@@ -19,12 +19,12 @@ namespace JollyBit.BS.Core
     {
         public override void Load()
         {
+            //Create Bindings
             Bind<IKernel>().ToConstant(this.Kernel);
             Bind<IMap>().To<Map>().InSingletonScope();
             Bind<IGenerator>().To<SimpleTerrainGenerator>();
             Bind<IChunk>().To<Chunk>();
             Bind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
-            //Bind<IBlockManager>().To<BlockManager>().InSingletonScope();
             Bind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
             string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
             Bind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
