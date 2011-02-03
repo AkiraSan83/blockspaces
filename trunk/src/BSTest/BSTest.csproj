@@ -55,6 +55,10 @@
       <Project>{CB5903E1-6E50-4813-B16B-5B7C8009F38D}</Project>
       <Name>BSServer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ninject\Ninject.csproj">
+      <Project>{ADF369E2-6B9E-4D56-9B82-D273AE41EC2D}</Project>
+      <Name>Ninject</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NUnit\src\NUnitFramework\framework\nunit.framework.dll.csproj">
       <Project>{83DD7E12-A705-4DBA-9D71-09C8973D9382}</Project>
       <Name>nunit.framework.dll</Name>
