@@ -18,11 +18,11 @@ namespace JollyBit.BS.Server.World
         private ushort counter = 1;
 
         [Inject]
-        public BlockManager(IConnectionManager<object> icm) {
+        public BlockManager(IConnectionManager icm) {
             icm.ConnectionEstablished += this.clientConnected;
         }
 
-        private void clientConnected(object sender, EventArgs<IConnection<object>> eargs) {
+        private void clientConnected(object sender, EventArgs<IConnection> eargs) {
             BlockMessage message = new BlockMessage();
 
             foreach(var x in _blocks) {

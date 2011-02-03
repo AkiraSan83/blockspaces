@@ -17,7 +17,7 @@ namespace JollyBit.BS.Client.World
         private ushort counter = 1;
 
         [Inject]
-        public BlockManager(IConnection<object> connection) {
+        public BlockManager(IConnection connection) {
             connection.MessageReceived += handleMessage;
         }
 

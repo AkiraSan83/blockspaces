@@ -6,7 +6,11 @@ using JollyBit.BS.Core.Utility;
 
 namespace JollyBit.BS.Core.Networking
 {
-    public interface IConnection<TCLIENT>
+    public interface IClient
+    {
+    }
+
+    public interface IConnection
     {
         /// <summary>
         /// This function sends a message to the client.
@@ -30,6 +34,6 @@ namespace JollyBit.BS.Core.Networking
         /// <summary>
         /// The client associated with the connection.
         /// </summary>
-        TCLIENT Client { get; set; }
+        IClient Client { get; set; }
     }
 }

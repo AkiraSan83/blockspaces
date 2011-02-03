@@ -12,7 +12,7 @@ using JollyBit.BS.Core;
 
 namespace JollyBit.BS.Server.Networking
 {
-    public interface IConnectionManager<TCLIENT>
+    public interface IConnectionManager
     {
         /// <summary>
         /// This function sends a via the specified connection.
@@ -20,29 +20,29 @@ namespace JollyBit.BS.Server.Networking
         /// <typeparam name="T">The type of message to send</typeparam>
         /// <param name="connection">The connection to use in order to send the event</param>
         /// <param name="message">The message to send</param>
-        void SendMessage<T>(IConnection<TCLIENT> connection, T message);
+        void SendMessage<T>(IConnection connection, T message);
         /// <summary>
         /// This event is fired whenever any connection receives a message
         /// </summary>
-        event EventHandler<EventArgs<KeyValuePair<IConnection<TCLIENT>, object>>> MessageReceived;
+        event EventHandler<EventArgs<KeyValuePair<IConnection, object>>> MessageReceived;
         /// <summary>
         /// This event returns a list of current connections.
         /// </summary>
-        IEnumerable<IConnection<TCLIENT>> Connections { get; }
+        IEnumerable<IConnection> Connections { get; }
         /// <summary>
         /// A list of operations to preform before the connection is considered established. If
         /// any of the operations return false the connection will be terminated.
         /// </summary>
-        IList<IConnectionEstablishingOperation<TCLIENT>> ConnectionEstablishingOperations { get; }
+        IList<IConnectionEstablishingOperation> ConnectionEstablishingOperations { get; }
         /// <summary>
         /// This event fires whenever a connection is terminated.
         /// </summary>
-        event EventHandler<EventArgs<IConnection<TCLIENT>>> ConnectionTerminated;
+        event EventHandler<EventArgs<IConnection>> ConnectionTerminated;
         /// <summary>
         /// This event fires whenever a connection is established. ConnectionEstablishingOperations are preformed before
         /// this event is fired
         /// </summary>
-        event EventHandler<EventArgs<IConnection<TCLIENT>>> ConnectionEstablished;
+        event EventHandler<EventArgs<IConnection>> ConnectionEstablished;
 
         void StartListeningForConnections();
         void StopListeningForConnections();
@@ -52,7 +52,7 @@ namespace JollyBit.BS.Server.Networking
     /// An operation that is to be preformed before a connection is considered established.
     /// </summary>
     /// <typeparam name="TCLIENT"></typeparam>
-    public interface IConnectionEstablishingOperation<TCLIENT>
+    public interface IConnectionEstablishingOperation
     {
         /// <summary>
         /// Does an operation for a specific connection. This method should return quickly and not block the
@@ -62,10 +62,10 @@ namespace JollyBit.BS.Server.Networking
         /// <param name="callbackFunc">This function should be called when the operation is complete. If the function's only
         /// parameter is false the connection will be terminated. The callback function should be called in the same thread
         /// as DoConnectionEstablishingOperation was called from.</param>
-        void DoConnectionEstablishingOperation(IConnection<TCLIENT> connection, Action<bool> callbackFunc);
+        void DoConnectionEstablishingOperation(IConnection connection, Action<bool> callbackFunc);
     }
 
-    internal class ConnectionManager<TCLIENT> : IConnectionManager<TCLIENT>
+    internal class ConnectionManager : IConnectionManager
     {
         private readonly IDictionary<object, Connection> _connectionDict = new Dictionary<object, Connection>();
         private readonly INetworkPeer _network;
@@ -84,7 +84,7 @@ namespace JollyBit.BS.Server.Networking
             Connection conn = _connectionDict[e.Connection];
             Debug.AssertNotNull(conn, "conn should not be null");
             conn.RaiseConnectionTerminated();
-            if (ConnectionTerminated != null) ConnectionTerminated(this, new EventArgs<IConnection<TCLIENT>>(conn));
+            if (ConnectionTerminated != null) ConnectionTerminated(this, new EventArgs<IConnection>(conn));
         }
 
         void _network_DataReceived(object sender, NetworkPeerConnectionEventArgs e)
@@ -93,7 +93,7 @@ namespace JollyBit.BS.Server.Networking
             Debug.AssertNotNull(conn, "conn should not be null");
             Debug.AssertNotNull(e.Data, "e.Data should not be null");
             conn.RaiseMessageReceived(new EventArgs<object>(e.Data));
-            if (MessageReceived != null) MessageReceived(this, new EventArgs<KeyValuePair<IConnection<TCLIENT>, object>>(new KeyValuePair<IConnection<TCLIENT>, object>(conn, e.Data)));
+            if (MessageReceived != null) MessageReceived(this, new EventArgs<KeyValuePair<IConnection, object>>(new KeyValuePair<IConnection, object>(conn, e.Data)));
         }
 
         void _network_ConnectionEstablished(object sender, NetworkPeerConnectionEventArgs e)
@@ -114,11 +114,11 @@ namespace JollyBit.BS.Server.Networking
                 {
                     //End of operations make connection official
                     connection.RaiseConnectionEstablished();
-                    if (ConnectionEstablished != null) ConnectionEstablished(this, new EventArgs<IConnection<TCLIENT>>(connection));
+                    if (ConnectionEstablished != null) ConnectionEstablished(this, new EventArgs<IConnection>(connection));
                     return;
                 }
                 //Do next operation in list
-                IConnectionEstablishingOperation<TCLIENT> currentOperation = _connectionEstablishingOperations[currentOperationIndex];
+                IConnectionEstablishingOperation currentOperation = _connectionEstablishingOperations[currentOperationIndex];
                 currentOperation.DoConnectionEstablishingOperation(connection, callback);
             };
             callback(true);
@@ -127,7 +127,7 @@ namespace JollyBit.BS.Server.Networking
         #endregion
 
         #region IConnectionManager
-        public void SendMessage<T>(IConnection<TCLIENT> connection, T message)
+        public void SendMessage<T>(IConnection connection, T message)
         {
             Connection conn = connection as Connection;
             if (conn != null)
@@ -136,28 +136,28 @@ namespace JollyBit.BS.Server.Networking
             }
             else conn.SendMessage(message);
         }
-        public IEnumerable<IConnection<TCLIENT>> Connections
+        public IEnumerable<IConnection> Connections
         {
-            get { return _connectionDict.Cast<IConnection<TCLIENT>>(); }
+            get { return _connectionDict.Cast<IConnection>(); }
         }
-        private readonly IList<IConnectionEstablishingOperation<TCLIENT>> _connectionEstablishingOperations = new List<IConnectionEstablishingOperation<TCLIENT>>();
-        public IList<IConnectionEstablishingOperation<TCLIENT>> ConnectionEstablishingOperations
+        private readonly IList<IConnectionEstablishingOperation> _connectionEstablishingOperations = new List<IConnectionEstablishingOperation>();
+        public IList<IConnectionEstablishingOperation> ConnectionEstablishingOperations
         {
             get { return _connectionEstablishingOperations; }
         }
-        public event EventHandler<EventArgs<KeyValuePair<IConnection<TCLIENT>, object>>> MessageReceived;
-        public event EventHandler<EventArgs<IConnection<TCLIENT>>> ConnectionTerminated;
-        public event EventHandler<EventArgs<IConnection<TCLIENT>>> ConnectionEstablished;
+        public event EventHandler<EventArgs<KeyValuePair<IConnection, object>>> MessageReceived;
+        public event EventHandler<EventArgs<IConnection>> ConnectionTerminated;
+        public event EventHandler<EventArgs<IConnection>> ConnectionEstablished;
         #endregion
 
         /// <summary>
         /// A dumb connection wich simply relies on ConnectionManager for all functionality
         /// </summary>
-        private class Connection : IConnection<TCLIENT>
+        private class Connection : IConnection
         {
-            private readonly IConnectionManager<TCLIENT> _connectionManager;
+            private readonly IConnectionManager _connectionManager;
             public readonly object NetPeerConnection;
-            public Connection(ConnectionManager<TCLIENT> connectionManager, object netPeerConnection)
+            public Connection(ConnectionManager connectionManager, object netPeerConnection)
             {
                 _connectionManager = connectionManager;
                 NetPeerConnection = netPeerConnection;
@@ -182,8 +182,8 @@ namespace JollyBit.BS.Server.Networking
             }
             public event EventHandler ConnectionTerminated;
 
-            private TCLIENT _client = default(TCLIENT);
-            public TCLIENT Client
+            private IClient _client = null;
+            public IClient Client
             {
                 get { return _client; }
                 set { _client = value; }

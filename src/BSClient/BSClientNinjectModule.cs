@@ -21,13 +21,13 @@ namespace JollyBit.BS.Client
         public override void Load()
         {
             Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
-            Bind<GLState>().To<GLState>().InSingletonScope();
-            Bind<IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
-            Bind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
-            Bind<ContentManager>().To<ContentManager>().InSingletonScope();
-            Bind<IClientConnection<object>>().To<Connection<object>>().InSingletonScope();
-            Bind<IConnection<object>>().ToMethod(context => Kernel.Get<IClientConnection<object>>());
-            Bind<IConfigManager>().ToMethod(
+            Rebind<GLState>().To<GLState>().InSingletonScope();
+            Rebind<IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
+            Rebind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
+            Rebind<ContentManager>().To<ContentManager>().InSingletonScope();
+            Rebind<IClientConnection>().To<Connection>().InSingletonScope();
+            Rebind<IConnection>().ToMethod(context => Kernel.Get<IClientConnection>());
+            Rebind<IConfigManager>().ToMethod(
                 (context) =>
                 {
                     //XmlSerializer

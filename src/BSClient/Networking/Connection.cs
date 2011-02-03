@@ -7,7 +7,7 @@ using Ninject;
 
 namespace JollyBit.BS.Client.Networking
 {
-    public class Connection<TCLIENT> : IClientConnection<TCLIENT>
+    public class Connection : IClientConnection
     {
         INetworkPeer _network;
         object _networkPeerConnection;
@@ -49,8 +49,8 @@ namespace JollyBit.BS.Client.Networking
 
         public event EventHandler ConnectionTerminated;
 
-        private TCLIENT _client = default(TCLIENT);
-        public TCLIENT Client
+        private IClient _client = null;
+        public IClient Client
         {
             get { return _client; }
             set { _client = value; }
