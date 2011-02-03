@@ -30,7 +30,8 @@ namespace JollyBit.BS.Server.Utility
         IDatabaseRecord<T> Get<T>(Guid uniqueId);
         IDatabaseRecord<T> Save<T>(T obj);
         IEnumerable<IDatabaseRecord<T>> SaveAll<T>(IEnumerable<T> obj);
-        Guid? GetObjectsUniqueId(object obj);
+        Guid? GetObjectsUniqueId<T>(T obj);
+        bool Delete<T>(T obj);
     }
     public class SQLiteObjectDatabase : IObjectDatabase
     {
@@ -155,11 +156,29 @@ namespace JollyBit.BS.Server.Utility
             }
             else return new DatabaseRecord<T>(uniqueId, (T)obj);
         }
+        public bool Delete<T>(T obj)
+        {
+            if (obj == null) throw new ArgumentException("", "obj");
+            Guid uniqueId;
+            if (_objToGuid.TryGetValue(obj, out uniqueId))
+            {
+                //Remove from dicts
+                _objToGuid.Remove(obj);
+                _guidToObj.Remove(uniqueId);
+                //Remove from database
+                _conn.CreateCommand()
+                    .SetCommandText("DELETE FROM Objects WHERE Id = @Id")
+                    .AddParm("@Id", uniqueId)
+                    .ExecuteNonQuery();
+                return true;
+            }
+            return false;
+        }
         public IEnumerable<IDatabaseRecord<T>> SaveAll<T>(IEnumerable<T> obj)
         {
             return obj.Select(o => Save<T>(o));
         }
-        public Guid? GetObjectsUniqueId(object obj)
+        public Guid? GetObjectsUniqueId<T>(T obj)
         {
             Guid id;
             if (_objToGuid.TryGetValue(obj, out id))

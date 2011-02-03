@@ -14,7 +14,7 @@ using System.IO;
 namespace JollyBit.BS.Test.Utility
 {
     [TestFixture]
-    public class ObjectDatabaseTest
+    public class SQLiteObjectDatabaseTest
     {
         private class TestObj
         {
@@ -94,6 +94,29 @@ namespace JollyBit.BS.Test.Utility
             var newRecord = database.Get<TestObj>();
             Assert.IsTrue(record.UniqueId == newRecord.UniqueId && testObj.Value1 == newRecord.Value.Value1 && testObj.Value2 == newRecord.Value.Value2, "IObjectDatabase.Get() failed to return an object from storage");
         }
-
+        [Test]
+        public void TestDelete()
+        {
+            var testObj = new TestObj("This is a simple test hope shit does not go wrong!!", 666);
+            var record = database.Save(testObj);
+            Assert.IsTrue(Object.ReferenceEquals(testObj, record.Value), "IObjectDatabase.Save failed to return the same object that was passed to it in the returned record");
+            database.Delete(record.Value);
+            record = database.Get<TestObj>();
+            Assert.IsTrue(record == null, "IObjectDatabase.Delete() failed to delete an object from memory");
+            database.Dispose();
+            database = new SQLiteObjectDatabase(databaseFile);
+            record = database.Get<TestObj>();
+            Assert.IsTrue(record == null, "IObjectDatabase.Delete() failed to delete an object from storage");
+        }
+        [Test]
+        public void TestGetObjectsUniqueId()
+        {
+            var testObj = new TestObj("This is a simple test hope shit does not go wrong!!", 666);
+            var record = database.Save(testObj);
+            Assert.IsTrue(Object.ReferenceEquals(testObj, record.Value), "IObjectDatabase.Save failed to return the same object that was passed to it in the returned record");
+            Guid? id = database.GetObjectsUniqueId(record.Value);
+            Assert.IsTrue(id != null, "IObjectDatabase.GetObjectsUniqueId failed");
+            Assert.IsTrue(id.Value == record.UniqueId, "IObjectDatabase.GetObjectsUniqueId failed");
+        }
     }
 }
