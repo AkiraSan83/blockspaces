@@ -42,13 +42,12 @@ namespace JollyBit.BS.Server.Utility
         {
             if (_dict.TryGetValue(key.GetHashCode(), out collection))
             {
-                reference = collection.FirstOrDefault(r => Object.ReferenceEquals(r, key));
+                reference = collection.FirstOrDefault(r => Object.Equals(r.Key.Target, key));
                 if (reference.Key != null)
                 {
-                    object target = reference.Key.Target;
                     if (reference.Key.IsAlive)
                     {
-                        value = (TVALUE)target;
+                        value = (TVALUE)reference.Value;
                         return true;
                     }
                     else //Remove dead weak ref
