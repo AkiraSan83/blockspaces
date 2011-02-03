@@ -43,7 +43,7 @@ namespace JollyBit.BS.Test.Utility
             File.Delete(databaseFile);
         }
         [Test]
-        public void GetAll()
+        public void TestGetAll()
         {
             List<TestObj> testObjs = new List<TestObj>();
             for (int i = 0; i < 10; i++)
