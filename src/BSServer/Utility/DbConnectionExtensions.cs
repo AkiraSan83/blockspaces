@@ -11,17 +11,18 @@ namespace JollyBit.BS.Server.Utility
 {
     public static class DbConnectionExtensions
     {
-        public static DbCommand AddParm<T>(this DbCommand cmd, string parmName, T parmValue)
+        public static T AddParm<T>(this T cmd, string parmName, object parmValue) where T : DbCommand
         {
-            SqlParameter parm = new SqlParameter(parmName, parmValue);
+            DbParameter parm = cmd.CreateParameter();
+            parm.ParameterName = parmName;
+            parm.Value = parmValue;
             cmd.Parameters.Add(parm);
             return cmd;
         }
-        public static DbCommand CreateCommand<T>(this T conn, string commandText) where T : DbConnection
+        public static T SetCommandText<T>(this T command, string commandText) where T : DbCommand
         {
-            DbCommand comm = conn.CreateCommand();
-            comm.CommandText = commandText;
-            return comm;
+            command.CommandText = commandText;
+            return command;
         }
         public static DataSet ExecuteQuery<T>(this T cmd) where T : DbCommand
         {
