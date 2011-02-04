@@ -8,6 +8,7 @@ using JollyBit.BS.Core.World;
 using JollyBit.BS.Core.Networking;
 using JollyBit.BS.Server.Networking;
 using JollyBit.BS.Core.Networking.Messages;
+using Ninject.Extensions.Logging;
 
 namespace JollyBit.BS.Server.World
 {
@@ -16,15 +17,18 @@ namespace JollyBit.BS.Server.World
         private IDictionary<ushort,IBlock> _blocks = new Dictionary<ushort, IBlock>();
         private IDictionary<IBlock,ushort> _shorts = new Dictionary<IBlock, ushort>();
         private ushort counter = 1;
+        private ILogger _logger;
 
         [Inject]
-        public BlockManager(IConnectionManager icm) {
+        public BlockManager(IConnectionManager icm, ILoggerFactory loggerFactory) {
             icm.ConnectionEstablished += this.clientConnected;
+            _logger = loggerFactory.GetLogger(typeof(BlockManager));
+            _logger.Info("BlockManager started");
         }
 
         private void clientConnected(object sender, EventArgs<IConnection> eargs) {
             BlockMessage message = new BlockMessage();
-
+            _logger.Debug("BlockManager is sending blocks to client");
             foreach(var x in _blocks) {
                 message.ID = x.Key;
 
