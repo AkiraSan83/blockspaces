@@ -5,7 +5,7 @@ using System.Text;
 using JollyBit.BS.Core.World;
 using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS.Core.World.Generation
+namespace JollyBit.BS.Server.World.Generation
 {
     public interface IGenerator
     {

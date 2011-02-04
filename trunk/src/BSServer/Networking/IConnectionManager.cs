@@ -43,7 +43,11 @@ namespace JollyBit.BS.Server.Networking
         /// this event is fired
         /// </summary>
         event EventHandler<EventArgs<IConnection>> ConnectionEstablished;
-
+        /// <summary>
+        /// This event fires when the connection is done being initialized. This occurs after the  
+        /// ConnectionEstablished event fires.
+        /// </summary>
+        event EventHandler<EventArgs<IConnection>> ConnectionInitialized;
         void StartListeningForConnections();
         void StopListeningForConnections();
     }
@@ -76,6 +80,16 @@ namespace JollyBit.BS.Server.Networking
             _network.ConnectionEstablished += new EventHandler<NetworkPeerConnectionEventArgs>(_network_ConnectionEstablished);
             _network.MessageReceived += new EventHandler<NetworkPeerConnectionEventArgs>(_network_DataReceived);
             _network.ConnectionTerminated += new EventHandler<NetworkPeerConnectionEventArgs>(_network_ConnectionTerminated);
+            this.MessageReceived += new EventHandler<EventArgs<KeyValuePair<IConnection, object>>>(ConnectionManager_MessageReceived);
+        }
+
+        void ConnectionManager_MessageReceived(object sender, EventArgs<KeyValuePair<IConnection, object>> e)
+        {
+            //Raise Initialization Complete Message
+            if (e.Data.Value is InitializationCompleteMessage)
+            {
+                if (ConnectionInitialized != null) ConnectionInitialized(this, new EventArgs<IConnection>(e.Data.Key));
+            }
         }
 
         #region Network Events
@@ -83,6 +97,7 @@ namespace JollyBit.BS.Server.Networking
         {
             Connection conn = _connectionDict[e.Connection];
             Debug.AssertNotNull(conn, "conn should not be null");
+            _connectionDict.Remove(conn);
             conn.RaiseConnectionTerminated();
             if (ConnectionTerminated != null) ConnectionTerminated(this, new EventArgs<IConnection>(conn));
         }
@@ -99,6 +114,7 @@ namespace JollyBit.BS.Server.Networking
         void _network_ConnectionEstablished(object sender, NetworkPeerConnectionEventArgs e)
         {
             Connection connection = new Connection(this, e.Connection);
+            _connectionDict.Add(e.Connection, connection);
             int currentOperationIndex = -1;
             Action<bool> callback = null;
             callback = (bool success) =>
@@ -149,6 +165,7 @@ namespace JollyBit.BS.Server.Networking
         public event EventHandler<EventArgs<KeyValuePair<IConnection, object>>> MessageReceived;
         public event EventHandler<EventArgs<IConnection>> ConnectionTerminated;
         public event EventHandler<EventArgs<IConnection>> ConnectionEstablished;
+        public event EventHandler<EventArgs<IConnection>> ConnectionInitialized;
         #endregion
 
         /// <summary>

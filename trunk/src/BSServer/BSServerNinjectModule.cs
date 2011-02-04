@@ -9,6 +9,8 @@ using JollyBit.BS.Core.Utility;
 using JsonExSerializer;
 using System.IO;
 using JollyBit.BS.Core.World;
+using JollyBit.BS.Server.World;
+using JollyBit.BS.Server.World.Generation;
 
 namespace JollyBit.BS.Server
 {
@@ -17,6 +19,8 @@ namespace JollyBit.BS.Server
         public override void Load()
         {
             Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
+            Rebind<IGenerator>().To<SimpleTerrainGenerator>();
+            Rebind<IMap>().To<Map>().InSingletonScope();
             Rebind<IConnectionManager>().To<ConnectionManager>().InSingletonScope();
             Rebind<IBlockManager>().To<JollyBit.BS.Server.World.BlockManager>().InSingletonScope();
             Rebind<IConfigManager>().ToMethod(

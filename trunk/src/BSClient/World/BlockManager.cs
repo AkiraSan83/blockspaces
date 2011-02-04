@@ -20,13 +20,15 @@ namespace JollyBit.BS.Client.World
         [Inject]
         public BlockManager(IConnection connection, ILoggerFactory logFactory) {
             _logger = logFactory.GetLogger(typeof(BlockManager));
-            connection.MessageReceived += handleMessage;
+            connection.MessageReceived += new EventHandler<EventArgs<object>>(connection_MessageReceived);
             _logger.Info("BlockManager started");
         }
 
-        private void handleMessage(object sender, EventArgs<object> eargs) {
-            if(eargs.Data.GetType() == typeof(BlockMessage)) {
-                BlockMessage m = (BlockMessage)(eargs.Data);
+        void connection_MessageReceived(object sender, EventArgs<object> e)
+        {
+            if (e.Data.GetType() == typeof(BlockMessage))
+            {
+                BlockMessage m = (BlockMessage)(e.Data);
                 JollyBit.BS.Client.World.Block block = new JollyBit.BS.Client.World.Block(m.Left, m.Right, m.Front, m.Back, m.Top, m.Bottom);
                 _blocks[m.ID] = block;
                 _shorts[block] = m.ID;

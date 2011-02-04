@@ -48,6 +48,10 @@
     <Compile Include="Utility\DictionaryWithWeaklyReferencedKey.cs" />
     <Compile Include="Utility\DictionaryWithWeaklyReferencedValues.cs" />
     <Compile Include="Utility\ObjectDatabase.cs" />
+    <Compile Include="World\Generation\IGenerator.cs" />
+    <Compile Include="World\Generation\SimpleTerrainGenerator.cs" />
+    <Compile Include="World\Generation\SphereGenerator.cs" />
+    <Compile Include="World\Map.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BSCore\BSCore.csproj">

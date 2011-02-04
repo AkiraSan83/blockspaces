@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JollyBit.BS.Core;
+using JollyBit.BS.Core.World;
+using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS.Core.World.Generation
+namespace JollyBit.BS.Server.World.Generation
 {
     public class SphereGenerator : IGenerator
     {
@@ -14,7 +17,7 @@ namespace JollyBit.BS.Core.World.Generation
             set { _radiusSquared = value * value; }
         }
         private IBlock _block = new Block();
-        public IBlock GenerateBlock(Utility.Point3L location)
+        public IBlock GenerateBlock(Point3L location)
         {
             if (location.X * location.X + location.Y * location.Y + location.Z * location.Z < _radiusSquared)
             {

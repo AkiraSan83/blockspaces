@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JollyBit.BS.Core.Utility;
-using JollyBit.BS.Core.World.Generation;
+using JollyBit.BS.Core.Networking.Messages;
 
 namespace JollyBit.BS.Core.World
 {
@@ -26,9 +26,11 @@ namespace JollyBit.BS.Core.World
         event EventHandler<BlockChangedEventArgs> BlockChanged;
         Point3L Location { get; set; }
         IMap Map { get; set; }
+        ChunkMessage CreateMessage();
+        void FillFromMessage(ChunkMessage message);
     }
 
-    public interface IMap
+    public interface IMap : IService
     {
         IChunk this[Point3L blockLocation] { get; }
         IEnumerable<IChunk> Chunks { get; }

@@ -23,6 +23,7 @@ namespace JollyBit.BS.Client
             Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
             Rebind<GLState>().To<GLState>().InSingletonScope();
             Rebind<IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
+            Rebind<IMap>().To<JollyBit.BS.Client.World.Map>().InSingletonScope();
             Rebind<ITextureAtlasFactory>().To<TextureAtlasFactory>().InSingletonScope();
             Rebind<ContentManager>().To<ContentManager>().InSingletonScope();
             Rebind<IClientConnection>().To<Connection>().InSingletonScope();

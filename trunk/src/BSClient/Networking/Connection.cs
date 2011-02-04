@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using JollyBit.BS.Core.Networking;
 using Ninject;
+using JollyBit.BS.Core.Networking.Messages;
+using Ninject.Extensions.Logging;
 
 namespace JollyBit.BS.Client.Networking
 {
@@ -11,13 +13,25 @@ namespace JollyBit.BS.Client.Networking
     {
         INetworkPeer _network;
         object _networkPeerConnection;
+        ILogger _logger;
         [Inject]
-        public Connection(INetworkPeer network)
+        public Connection(INetworkPeer network, ILoggerFactory logFactory)
         {
+            _logger = logFactory.GetLogger(typeof(Connection));
             _network = network;
             _network.ConnectionEstablished += new EventHandler<NetworkPeerConnectionEventArgs>(_network_ConnectionEstablished);
             _network.ConnectionTerminated += new EventHandler<NetworkPeerConnectionEventArgs>(_network_ConnectionTerminated);
             _network.MessageReceived += new EventHandler<NetworkPeerConnectionEventArgs>(_network_MessageReceived);
+            this.MessageReceived += new EventHandler<Core.Utility.EventArgs<object>>(Connection_MessageReceived);
+        }
+
+        void Connection_MessageReceived(object sender, Core.Utility.EventArgs<object> e)
+        {
+            if (e.Data is InitializationCompleteMessage)
+            {
+                _logger.Info("Initialization Complete Message received. Sending reply.");
+                SendMessage(new InitializationCompleteMessage());
+            }
         }
 
         void _network_MessageReceived(object sender, NetworkPeerConnectionEventArgs e)

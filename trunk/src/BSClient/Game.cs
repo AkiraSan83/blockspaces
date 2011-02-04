@@ -63,7 +63,7 @@ namespace JollyBit.BS.Client
             Constants.Kernel = new StandardKernel();
             Constants.Kernel.Load(new BSClientNinjectModule());
             Constants.Kernel.Bind<ITimeService>().ToConstant(this);
-            Constants.Kernel.GetAll<IService>(); //Start all the services
+            IList<IService> services = Constants.Kernel.GetAll<IService>().ToList(); //Start all the services
 			// Handle mouse and keyboard events
 			new Input(this);
 
@@ -110,12 +110,7 @@ namespace JollyBit.BS.Client
 //            c = mapRenderer.Map[new Point3L(-1, 0, 0)];
 //            c = mapRenderer.Map[new Point3L(-1, 0, -1)];
 //            c = mapRenderer.Map[new Point3L(0, 0, -1)];
-			for(int i = 0; i < 2; i++) {
-				for(int j = 0; j < 2; j++) {
-					c = mapRenderer.Map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
-					//Console.WriteLine("Generating chunk {0}x{1}",i,j);
-				}
-			}
+
 			// Build trident and add to the render list
 			//_renderList.Add( new Trident() );
 

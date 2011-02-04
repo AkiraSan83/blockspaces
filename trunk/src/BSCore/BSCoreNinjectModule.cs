@@ -5,7 +5,6 @@ using System.Text;
 using Ninject.Modules;
 using Ninject;
 using JollyBit.BS.Core.World;
-using JollyBit.BS.Core.World.Generation;
 using JollyBit.BS.Core.Utility;
 using System.IO;
 using JollyBit.BS.Core.Networking;
@@ -20,12 +19,11 @@ namespace JollyBit.BS.Core
         public override void Load()
         {
             //Register services
-            Bind<IService>().To<IBlockManager>();
+            Bind<IService>().ToMethod(context => Kernel.Get<IBlockManager>());
+            Bind<IService>().ToMethod(context => Kernel.Get<IMap>());
 
             //Create bindings
             Rebind<IKernel>().ToConstant(this.Kernel);
-            Rebind<IMap>().To<Map>().InSingletonScope();
-            Rebind<IGenerator>().To<SimpleTerrainGenerator>();
             Rebind<IChunk>().To<Chunk>();
             Rebind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
             Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
