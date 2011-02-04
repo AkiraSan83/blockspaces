@@ -115,6 +115,7 @@ namespace JollyBit.BS.Server.Networking
                     //End of operations make connection official
                     connection.RaiseConnectionEstablished();
                     if (ConnectionEstablished != null) ConnectionEstablished(this, new EventArgs<IConnection>(connection));
+                    connection.SendMessage(new InitializationCompleteMessage());
                     return;
                 }
                 //Do next operation in list

@@ -53,7 +53,7 @@ namespace JollyBit.BS.Server
                     targetElapsed = _lastStopWatch + _tickIntervalMilliseconds;
                     if (Tick != null) Tick(this, new TimeTickEventArgs(_elapsedTime, _currentTime));
                 }
-                else Thread.Sleep(0);
+                else Thread.Sleep(1);
             }
         }
 

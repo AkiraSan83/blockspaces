@@ -72,11 +72,11 @@ namespace JollyBit.BS.Core.Networking.Messages
                         if (messageAttr.MessageTypeId != null)
                         {
                             Debug.AssertFalse(_messageTypeIdToMessageType.ContainsKey((ushort)messageAttr.MessageTypeId), "Two message types cannot have the same MessageTypeId!");
-                            messageTypeDesc = new MessageTypeDescription((ushort)messageAttr.MessageTypeId, type, 0, messageAttr.DeliveryMethod);
+                            messageTypeDesc = new MessageTypeDescription((ushort)messageAttr.MessageTypeId, type, (int)messageAttr.SequenceChannel, messageAttr.DeliveryMethod);
                         }
                         else
                         {
-                            messageTypeDesc = new MessageTypeDescription(currentMessageTypeId, type, 0, messageAttr.DeliveryMethod);
+                            messageTypeDesc = new MessageTypeDescription(currentMessageTypeId, type, (int)messageAttr.SequenceChannel, messageAttr.DeliveryMethod);
                             currentMessageTypeId++;
                         }
                         _messageTypeIdToMessageType.Add(messageTypeDesc.MessageTypeId, messageTypeDesc);

@@ -15,6 +15,8 @@ namespace JollyBit.BS.Core.Networking.Messages
     {
         public readonly NetDeliveryMethod DeliveryMethod;
         private ushort? _messageTypeId = null;
+        private SequenceChannels _sequenceChannel = SequenceChannels.NotSpecified;
+        
 
         /// <summary>
         /// The id used to identify the message type. If this parameter is null
@@ -40,5 +42,17 @@ namespace JollyBit.BS.Core.Networking.Messages
         {
             DeliveryMethod = deliveryMethod;
         }
+
+        public SequenceChannels SequenceChannel
+        {
+            get { return _sequenceChannel; }
+            set { _sequenceChannel = value; }
+        }
+    }
+
+    public enum SequenceChannels
+    {
+        NotSpecified = -1,
+        Initialization = 1
     }
 }
