@@ -20,16 +20,18 @@ namespace JollyBit.BS.Server.World
         private ILogger _logger;
 
         [Inject]
-        public BlockManager(IConnectionManager icm, ILoggerFactory loggerFactory) {
-            icm.ConnectionEstablished += this.clientConnected;
+        public BlockManager(IConnectionManager connectionManager, ILoggerFactory loggerFactory) {
+            connectionManager.ConnectionEstablished += new EventHandler<EventArgs<IConnection>>(connectionManager_ConnectionEstablished);
             _logger = loggerFactory.GetLogger(typeof(BlockManager));
             _logger.Info("BlockManager started");
         }
 
-        private void clientConnected(object sender, EventArgs<IConnection> eargs) {
+        void connectionManager_ConnectionEstablished(object sender, EventArgs<IConnection> e)
+        {
             BlockMessage message = new BlockMessage();
             _logger.Debug("BlockManager is sending blocks to client");
-            foreach(var x in _blocks) {
+            foreach (var x in _blocks)
+            {
                 message.ID = x.Key;
 
                 message.Front = x.Value.GetTextureForSide(BlockSides.Front).FileLocation;
@@ -39,7 +41,7 @@ namespace JollyBit.BS.Server.World
                 message.Top = x.Value.GetTextureForSide(BlockSides.Top).FileLocation;
                 message.Bottom = x.Value.GetTextureForSide(BlockSides.Bottom).FileLocation;
 
-                eargs.Data.SendMessage(message);
+                e.Data.SendMessage(message);
             }
         }
 

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LibNoise;
-
+using JollyBit.BS.Core;
+using JollyBit.BS.Core.World;
 using JollyBit.BS.Core.Utility;
 
-namespace JollyBit.BS.Core.World.Generation
+namespace JollyBit.BS.Server.World.Generation
 {
     public class SimpleTerrainGenerator : IGenerator
     {
@@ -34,7 +35,7 @@ namespace JollyBit.BS.Core.World.Generation
 //			return val;
 //		}
 		
-        public IBlock GenerateBlock(Utility.Point3L location)
+        public IBlock GenerateBlock(Point3L location)
         {
             double value = ((_perlinNoise.GetValue(location.X, location.Z, 10) + 1.0) / 2.0);
             if (((double)(maxHeight - location.Y)) / (double)(maxHeight) > value)
