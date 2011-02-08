@@ -2,7 +2,7 @@ using System;
 
 namespace BSLauncher
 {
-    class MainClass
+    public class MainClass
     {
         public static void Main (string[] args)
         {

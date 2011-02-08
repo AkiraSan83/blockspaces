@@ -26,6 +26,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Xml.Serialization;
+using ProtoBuf;
 
 namespace OpenTK
 {
@@ -34,11 +35,13 @@ namespace OpenTK
     /// </summary>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
+    [ProtoContract]
     public struct Quaternion : IEquatable<Quaternion>
     {
         #region Fields
-
+        [ProtoMember(1, IsRequired = true)]
         Vector3 xyz;
+        [ProtoMember(2, IsRequired = true)]
         float w;
 
         #endregion
