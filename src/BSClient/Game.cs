@@ -182,6 +182,7 @@ namespace JollyBit.BS.Client
         [STAThread]
         public static void Main()
         {
+            Console.WindowWidth = 100;
             using (BSClient example = new BSClient())
             {
 				example.Run(30.0);
