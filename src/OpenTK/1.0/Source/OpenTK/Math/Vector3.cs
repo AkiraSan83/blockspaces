@@ -25,6 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using ProtoBuf;
 namespace OpenTK
 {
     /// <summary>
@@ -35,6 +36,7 @@ namespace OpenTK
     /// </remarks>
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
+    [ProtoContract]
     public struct Vector3 : IEquatable<Vector3>
     {
         #region Fields
@@ -42,16 +44,19 @@ namespace OpenTK
         /// <summary>
         /// The X component of the Vector3.
         /// </summary>
+        [ProtoMember(1, IsRequired = true)]
         public float X;
 
         /// <summary>
         /// The Y component of the Vector3.
         /// </summary>
+        [ProtoMember(2, IsRequired = true)]
         public float Y;
 
         /// <summary>
         /// The Z component of the Vector3.
         /// </summary>
+        [ProtoMember(3, IsRequired = true)]
         public float Z;
 
         #endregion

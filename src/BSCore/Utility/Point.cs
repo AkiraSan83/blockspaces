@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
+using ProtoBuf;
 
 namespace JollyBit.BS.Core.Utility
 {
+    [ProtoContract]
     public struct Point3L
     {
+        [ProtoMember(1)]
         public long X;
+        [ProtoMember(2)]
         public long Y;
+        [ProtoMember(3)]
         public long Z;
         public Point3L(long x, long y, long z)
         {
