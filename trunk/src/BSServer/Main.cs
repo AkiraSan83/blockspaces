@@ -13,6 +13,7 @@ namespace JollyBit.BS.Server
 	{
 		public static void Main (string[] args)
 		{
+            Console.WindowWidth = 100;
             Constants.Kernel = new StandardKernel();
             Constants.Kernel.Load(new BSServerNinjectModule());
             Server server = new Server();

@@ -15,7 +15,7 @@ namespace JollyBit.BS.Core.Networking
         {
             _config = new NetPeerConfiguration("BlockSpaces");
             _config.Port = 12421;
-            _config.MaximumTransmissionUnit = 1000;
+            _config.UseMessageRecycling = true;
         }
         public int Port
         {

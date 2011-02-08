@@ -9,9 +9,9 @@ namespace JollyBit.BS.Core
 {
     public class Constants
     {
-        public const byte CHUNK_SIZE_X = 50;
-        public const byte CHUNK_SIZE_Y = 50;
-        public const byte CHUNK_SIZE_Z = 50;
+        public const byte CHUNK_SIZE_X = 20;
+        public const byte CHUNK_SIZE_Y = 20;
+        public const byte CHUNK_SIZE_Z = 20;
 
         public static IKernel Kernel = null;
     }

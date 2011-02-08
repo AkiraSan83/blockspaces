@@ -68,6 +68,9 @@ namespace JollyBit.BS.Core.Networking
             if(MessageReceived == null) return;
             ushort messageTypeId = message.ReadUInt16();
             IMessageTypeDescription mtd = _messageTypeManager.GetMessageTypeDescription(messageTypeId);
+#if DEBUG
+            _logger.Debug("Received message. Type='{0}' TypeId='{1}' Length='{2}'", mtd.MessageType.Name, mtd.MessageTypeId, message.LengthBytes);
+#endif 
             object ret;
             using (MemoryStream stream = new MemoryStream(message.ReadBytes(message.LengthBytes - 2)))
             {
@@ -91,15 +94,15 @@ namespace JollyBit.BS.Core.Networking
                         switch (status)
 	                    {
                             case NetConnectionStatus.Connected:
-                                _logger.Info("Client connected. IP = {0} Port = {1}", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                                _logger.Info("Client connected. IP='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionEstablished != null) ConnectionEstablished(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnected:
-                                _logger.Info("Client disconnected. IP = {0} Port = {1}", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
-                                if (ConnectionTerminated != null) ConnectionEstablished(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
+                                _logger.Info("Client disconnected. IP='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                                if (ConnectionTerminated != null) ConnectionTerminated(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnecting:
-                                _logger.Info("Client disconnecting. IP = {0} Port = {1}", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                                _logger.Info("Client disconnecting. IP='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionTerminating != null) ConnectionTerminating(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.InitiatedConnect:
@@ -112,15 +115,15 @@ namespace JollyBit.BS.Core.Networking
                     case NetIncomingMessageType.VerboseDebugMessage:
                     case NetIncomingMessageType.DebugMessage:
 #if DEBUG
-                        _logger.Debug("Recived message with type {0}. Message = '{1}'", message.MessageType.ToString(), message.ReadString());
+                        _logger.Debug("Lidgren debug message. Message='{0}'", message.ReadString());
 #endif 
                         break;
                     case NetIncomingMessageType.WarningMessage:
-                        _logger.Warn("Recived message with type {0}. Message = '{1}'", message.MessageType.ToString(), message.ReadString());
+                        _logger.Warn("Lidgren warning message. Message='{0}'", message.ReadString());
                         break;
                     case NetIncomingMessageType.ErrorMessage:
                     case NetIncomingMessageType.Error:
-                        _logger.Error("Recived message with type {0}. Message = '{1}'", message.MessageType.ToString(), message.ReadString());
+                        _logger.Error("Lidgren error message. Message='{0}'", message.ReadString());
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                     case NetIncomingMessageType.ConnectionLatencyUpdated:
@@ -148,6 +151,9 @@ namespace JollyBit.BS.Core.Networking
                 stream.Seek(0, SeekOrigin.Begin);
                 outMessage.Write(stream.ToArray());
             }
+#if DEBUG
+            _logger.Debug("Sending message. Type='{0}' TypeId='{1}' Length='{2}'", mtd.MessageType.Name, mtd.MessageTypeId, outMessage.LengthBytes);
+#endif 
             this.SendMessage(outMessage, connection as NetConnection, mtd.DeliveryMethod, mtd.SequenceChannel);
         }
 
