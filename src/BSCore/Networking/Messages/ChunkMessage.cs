@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace JollyBit.BS.Core.Networking.Messages
 {
-    [Message(Lidgren.Network.NetDeliveryMethod.ReliableOrdered, SequenceChannel = SequenceChannels.Initialization)]
+    [Message(Lidgren.Network.NetDeliveryMethod.ReliableUnordered, SequenceChannel = SequenceChannels.Initialization)]
     [DataContract]
     public class ChunkMessage : IMessage
     {
