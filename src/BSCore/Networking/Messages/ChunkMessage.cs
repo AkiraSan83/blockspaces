@@ -2,18 +2,18 @@ using System;
 using JollyBit.BS.Core.World;
 using JollyBit.BS.Core;
 using JollyBit.BS.Core.Utility;
-using System.Runtime.Serialization;
+using ProtoBuf;
 
 namespace JollyBit.BS.Core.Networking.Messages
 {
-    [Message(Lidgren.Network.NetDeliveryMethod.ReliableUnordered, SequenceChannel = SequenceChannels.Initialization)]
-    [DataContract]
+    [Message(Lidgren.Network.NetDeliveryMethod.ReliableUnordered)]
+    [ProtoContract]
     public class ChunkMessage : IMessage
     {
-        [DataMember(Order=1, IsRequired=true)]
+        [ProtoMember(1, IsRequired = true, IsPacked = true)]
         public ushort[] Chunk;
 
-        [DataMember(Order = 2, IsRequired = true)]
+        [ProtoMember(2, IsRequired = true)]
         public Point3L Location = new Point3L();
     }
 }
