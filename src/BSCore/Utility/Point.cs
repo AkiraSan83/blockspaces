@@ -10,11 +10,11 @@ namespace JollyBit.BS.Core.Utility
     [ProtoContract]
     public struct Point3L
     {
-        [ProtoMember(1)]
+        [ProtoMember(1, IsRequired = true)]
         public long X;
-        [ProtoMember(2)]
+        [ProtoMember(2, IsRequired = true)]
         public long Y;
-        [ProtoMember(3)]
+        [ProtoMember(3, IsRequired = true)]
         public long Z;
         public Point3L(long x, long y, long z)
         {
