@@ -11,6 +11,8 @@ using System.IO;
 using JollyBit.BS.Core.World;
 using JollyBit.BS.Server.World;
 using JollyBit.BS.Server.World.Generation;
+using JollyBit.BS.Core.Networking.Messages;
+using JollyBit.BS.Server.Networking.Messages;
 
 namespace JollyBit.BS.Server
 {
@@ -23,6 +25,7 @@ namespace JollyBit.BS.Server
             Rebind<IMap>().To<Map>().InSingletonScope();
             Rebind<IConnectionManager>().To<ConnectionManager>().InSingletonScope();
             Rebind<IBlockManager>().To<JollyBit.BS.Server.World.BlockManager>().InSingletonScope();
+            Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
             Rebind<IConfigManager>().ToMethod(
                 (context) =>
                 {

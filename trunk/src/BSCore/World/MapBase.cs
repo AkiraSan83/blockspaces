@@ -7,16 +7,20 @@ using JollyBit.BS.Core.Utility;
 using JollyBit.BS.Core.World;
 using JollyBit.BS.Core;
 using JollyBit.BS.Core.Networking.Messages;
+using Ninject.Extensions.Logging;
+
 namespace JollyBit.BS.Core.World
 {
     public abstract class MapBase
     {
         protected IDictionary<Point3L, IChunk> _chunks = new Dictionary<Point3L, IChunk>();
         protected IKernel _kernel;
+        protected ILogger _logger;
 
-        public MapBase(IKernel kernel)
+        public MapBase(IKernel kernel, ILoggerFactory loggerFactory)
         {
             _kernel = kernel;
+            _logger = loggerFactory.GetLogger(this.GetType());
         }
 
         

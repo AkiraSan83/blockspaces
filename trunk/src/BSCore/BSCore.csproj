@@ -40,9 +40,11 @@
     <Compile Include="BSCoreNinjectModule.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Networking\IConnection.cs" />
+    <Compile Include="Networking\Messages\MessageTypeMessage.cs" />
     <Compile Include="Networking\Messages\IMessageTypeManager.cs" />
     <Compile Include="Networking\Messages\InitializationCompleteMessage.cs" />
     <Compile Include="Networking\Messages\MessageAttribute.cs" />
+    <Compile Include="Networking\Messages\MessageTypeManagerBase.cs" />
     <Compile Include="Networking\NetworkConfig.cs" />
     <Compile Include="Networking\NetworkPeer.cs" />
     <Compile Include="Utility\ChangedEventArgs.cs" />

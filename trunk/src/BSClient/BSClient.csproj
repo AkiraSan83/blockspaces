@@ -60,6 +60,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Networking\Connection.cs" />
     <Compile Include="Networking\IClientConnection.cs" />
+    <Compile Include="Networking\Messages\MessageTypeManager.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\ContentManager.cs" />
     <Compile Include="Rendering\GLState.cs" />

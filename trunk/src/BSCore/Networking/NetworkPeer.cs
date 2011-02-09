@@ -42,13 +42,14 @@ namespace JollyBit.BS.Core.Networking
     public class NetworkPeer : NetPeer, INetworkPeer
     {
         private readonly ILogger _logger;
-        private readonly IMessageTypeManager _messageTypeManager;
+        private IMessageTypeManager _messageTypeManager = null;
         private readonly ITimeService _timeService;
-        public NetworkPeer(ILoggerFactory loggerFactory, NetPeerConfiguration config, IMessageTypeManager messageTypeManager, ITimeService timeService)
+        private readonly IKernel _kernel;
+        public NetworkPeer(ILoggerFactory loggerFactory, NetPeerConfiguration config, ITimeService timeService, IKernel kernel)
             : base(config)
         {
+            _kernel = kernel;
             _logger = loggerFactory.GetLogger(typeof(NetworkPeer));
-            _messageTypeManager = messageTypeManager;
             _timeService = timeService;
             _timeService.Tick += new EventHandler<TimeTickEventArgs>(_timeService_Tick);
         }
@@ -68,8 +69,13 @@ namespace JollyBit.BS.Core.Networking
             if(MessageReceived == null) return;
             ushort messageTypeId = message.ReadUInt16();
             IMessageTypeDescription mtd = _messageTypeManager.GetMessageTypeDescription(messageTypeId);
+            if (mtd == null) //unknown message... log and drop
+            {
+                _logger.Warn("Received unknown message. The message will be ignored. TypeId='{0}' Length='{1}' Ip='{2}' Port='{3}'", messageTypeId, message.LengthBytes, message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                return;
+            }
 #if DEBUG
-            _logger.Debug("Received message. Type='{0}' TypeId='{1}' Length='{2}'", mtd.MessageType.Name, mtd.MessageTypeId, message.LengthBytes);
+            _logger.Debug("Received message. Type='{0}' TypeId='{1}' Length='{2}' Ip='{3}' Port='{4}'", mtd.MessageType.Name, mtd.MessageTypeId, message.LengthBytes, message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
 #endif 
             object ret;
             using (MemoryStream stream = new MemoryStream(message.ReadBytes(message.LengthBytes - 2)))
@@ -94,15 +100,15 @@ namespace JollyBit.BS.Core.Networking
                         switch (status)
 	                    {
                             case NetConnectionStatus.Connected:
-                                _logger.Info("Client connected. IP='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                                _logger.Info("Client connected. Ip='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionEstablished != null) ConnectionEstablished(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnected:
-                                _logger.Info("Client disconnected. IP='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                                _logger.Info("Client disconnected. Ip='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionTerminated != null) ConnectionTerminated(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.Disconnecting:
-                                _logger.Info("Client disconnecting. IP='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                                _logger.Info("Client disconnecting. Ip='{0}' Port='{1}'", message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
                                 if (ConnectionTerminating != null) ConnectionTerminating(this, new NetworkPeerConnectionEventArgs(message.SenderConnection, null));
                                 break;
                             case NetConnectionStatus.InitiatedConnect:
@@ -152,7 +158,7 @@ namespace JollyBit.BS.Core.Networking
                 outMessage.Write(stream.ToArray());
             }
 #if DEBUG
-            _logger.Debug("Sending message. Type='{0}' TypeId='{1}' Length='{2}'", mtd.MessageType.Name, mtd.MessageTypeId, outMessage.LengthBytes);
+            _logger.Debug("Sending message. Type='{0}' TypeId='{1}' Length='{2}' Ip='{3}' Port='{4}'", mtd.MessageType.Name, mtd.MessageTypeId, outMessage.LengthBytes, (connection as NetConnection).RemoteEndpoint.Address.ToString(), (connection as NetConnection).RemoteEndpoint.Port);
 #endif 
             this.SendMessage(outMessage, connection as NetConnection, mtd.DeliveryMethod, mtd.SequenceChannel);
         }
@@ -171,6 +177,7 @@ namespace JollyBit.BS.Core.Networking
 
         public void Start()
         {
+            _messageTypeManager = _kernel.Get<IMessageTypeManager>();
             this.Configuration.AcceptIncomingConnections = true;
             base.Start();
             //while(true)
