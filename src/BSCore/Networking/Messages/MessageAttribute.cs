@@ -11,10 +11,10 @@ namespace JollyBit.BS.Core.Networking.Messages
     /// This attribute is used to indicate that a class will be serialized and sent as a message
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-    sealed class MessageAttribute : Attribute
+    public sealed class MessageAttribute : Attribute
     {
         public readonly NetDeliveryMethod DeliveryMethod;
-        private ushort? _messageTypeId = null;
+        private ushort _messageTypeId = 0;
         private SequenceChannels _sequenceChannel = SequenceChannels.NotSpecified;
         
 
@@ -24,12 +24,12 @@ namespace JollyBit.BS.Core.Networking.Messages
         /// MessageTypeId values between 1 and 100 are valid. An error will be thrown if two message types have the same
         /// MessageTypeId.
         /// </summary
-        public ushort? MessageTypeId
+        public ushort MessageTypeId
         {
             get { return _messageTypeId; }
             set 
             {
-                Debug.AssertTrue(value != 1 && value < 101, "MessageTypeId must be between 1 and 100");
+                Debug.AssertTrue(value != 0 && value < 101, "MessageTypeId must be between 1 and 100");
                 _messageTypeId = value; 
             }
         } 

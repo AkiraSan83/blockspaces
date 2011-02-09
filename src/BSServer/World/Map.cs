@@ -9,6 +9,7 @@ using JollyBit.BS.Core.World;
 using JollyBit.BS.Core;
 using JollyBit.BS.Server.Networking;
 using JollyBit.BS.Core.Networking.Messages;
+using Ninject.Extensions.Logging;
 
 namespace JollyBit.BS.Server.World
 {
@@ -18,7 +19,8 @@ namespace JollyBit.BS.Server.World
         private IConnectionManager _connectionManager;
 
         [Inject]
-        public Map(IKernel kernel, IGenerator generator, IConnectionManager connectionManager) : base(kernel)
+        public Map(IKernel kernel, IGenerator generator, IConnectionManager connectionManager, ILoggerFactory loggerFactory)
+            : base(kernel, loggerFactory)
         {
             _generator = generator;
             _connectionManager = connectionManager;
@@ -30,6 +32,7 @@ namespace JollyBit.BS.Server.World
                 }
             }
             _connectionManager.ConnectionInitialized += new EventHandler<EventArgs<Core.Networking.IConnection>>(_connectionManager_ConnectionInitialized);
+            _logger.Info("Map started.");
         }
 
         void _connectionManager_ConnectionInitialized(object sender, EventArgs<Core.Networking.IConnection> e)

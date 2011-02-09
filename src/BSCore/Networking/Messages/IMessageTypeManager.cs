@@ -16,14 +16,14 @@ namespace JollyBit.BS.Core.Networking.Messages
         int SequenceChannel { get; }
         NetDeliveryMethod DeliveryMethod { get; }
     }
-    public interface IMessageTypeManager
+    public interface IMessageTypeManager : IService
     {
         IMessageTypeDescription GetMessageTypeDescription(uint messageTypeId);
         IMessageTypeDescription GetMessageTypeDescription(Type messageType);
     }
-    internal class MessageTypeDescription : IMessageTypeDescription
+    public class MessageTypeDescription : IMessageTypeDescription
     {
-        private readonly ushort _messageTypeId;
+        private ushort _messageTypeId;
         private readonly Type _messageType;
         private readonly int _sequenceChannel;
         private NetDeliveryMethod _deliveryMethod;
@@ -41,6 +41,7 @@ namespace JollyBit.BS.Core.Networking.Messages
         public ushort MessageTypeId
         {
             get { return _messageTypeId; }
+            set { _messageTypeId = value; }
         }
         public int SequenceChannel
         {
@@ -49,60 +50,6 @@ namespace JollyBit.BS.Core.Networking.Messages
         public NetDeliveryMethod DeliveryMethod
         {
             get { return _deliveryMethod; }
-        }
-    }
-    internal class MessageTypeManager : IMessageTypeManager
-    {
-        private readonly ILogger _logger;
-        public MessageTypeManager(ILogger logger)
-        {
-            _logger = logger;
-            reflectAssemblyForMessageTypes();
-        }
-        private void reflectAssemblyForMessageTypes()
-        {
-            ushort currentMessageTypeId = 101;
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-                foreach (Type type in assembly.GetTypes())
-                {
-                    MessageAttribute messageAttr = type.GetCustomAttributes(typeof(MessageAttribute), false).FirstOrDefault() as MessageAttribute;
-                    if (messageAttr != null)
-                    {
-                        MessageTypeDescription messageTypeDesc;
-                        if (messageAttr.MessageTypeId != null)
-                        {
-                            Debug.AssertFalse(_messageTypeIdToMessageType.ContainsKey((ushort)messageAttr.MessageTypeId), "Two message types cannot have the same MessageTypeId!");
-                            messageTypeDesc = new MessageTypeDescription((ushort)messageAttr.MessageTypeId, type, (int)messageAttr.SequenceChannel, messageAttr.DeliveryMethod);
-                        }
-                        else
-                        {
-                            messageTypeDesc = new MessageTypeDescription(currentMessageTypeId, type, (int)messageAttr.SequenceChannel, messageAttr.DeliveryMethod);
-                            currentMessageTypeId++;
-                        }
-                        _messageTypeIdToMessageType.Add(messageTypeDesc.MessageTypeId, messageTypeDesc);
-                        _messageTypeToMessageTypeId.Add(messageTypeDesc.MessageType, messageTypeDesc);
-                    }
-                }
-        }
-        private IDictionary<uint, IMessageTypeDescription> _messageTypeIdToMessageType = new Dictionary<uint, IMessageTypeDescription>();
-        private IDictionary<Type, IMessageTypeDescription> _messageTypeToMessageTypeId = new Dictionary<Type, IMessageTypeDescription>();
-        public IMessageTypeDescription GetMessageTypeDescription(uint messageTypeId)
-        {
-            IMessageTypeDescription messageTypeDesc;
-            if (_messageTypeIdToMessageType.TryGetValue(messageTypeId, out messageTypeDesc))
-            {
-                return messageTypeDesc;
-            }
-            return null;
-        }
-        public IMessageTypeDescription GetMessageTypeDescription(Type messageType)
-        {
-            IMessageTypeDescription messageTypeDesc;
-            if (_messageTypeToMessageTypeId.TryGetValue(messageType, out messageTypeDesc))
-            {
-                return messageTypeDesc;
-            }
-            return null;
         }
     }
 }

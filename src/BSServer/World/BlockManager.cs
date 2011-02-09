@@ -29,7 +29,7 @@ namespace JollyBit.BS.Server.World
         void connectionManager_ConnectionEstablished(object sender, EventArgs<IConnection> e)
         {
             BlockMessage message = new BlockMessage();
-            _logger.Debug("BlockManager is sending blocks to client");
+            _logger.Debug("Sending block types to client.");
             foreach (var x in _blocks)
             {
                 message.ID = x.Key;

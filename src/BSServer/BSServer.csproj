@@ -41,6 +41,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Networking\IConnectionManager.cs" />
+    <Compile Include="Networking\Messages\MessageTypeManager.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Utility\DbConnectionExtensions.cs" />
     <Compile Include="World\BlockManager.cs" />

@@ -13,6 +13,8 @@ using JollyBit.BS.Core.Networking;
 using JollyBit.BS.Client.Networking;
 using JollyBit.BS.Core.World;
 using JollyBit.BS.Client.World;
+using JollyBit.BS.Core.Networking.Messages;
+using JollyBit.BS.Client.Networking.Messages;
 
 namespace JollyBit.BS.Client
 {
@@ -28,6 +30,7 @@ namespace JollyBit.BS.Client
             Rebind<ContentManager>().To<ContentManager>().InSingletonScope();
             Rebind<IClientConnection>().To<Connection>().InSingletonScope();
             Rebind<IConnection>().ToMethod(context => Kernel.Get<IClientConnection>());
+            Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
             Rebind<IConfigManager>().ToMethod(
                 (context) =>
                 {

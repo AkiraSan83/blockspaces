@@ -21,7 +21,7 @@ namespace JollyBit.BS.Client.World
         public BlockManager(IConnection connection, ILoggerFactory logFactory) {
             _logger = logFactory.GetLogger(typeof(BlockManager));
             connection.MessageReceived += new EventHandler<EventArgs<object>>(connection_MessageReceived);
-            _logger.Info("BlockManager started");
+            _logger.Info("BlockManager started.");
         }
 
         void connection_MessageReceived(object sender, EventArgs<object> e)
@@ -32,7 +32,6 @@ namespace JollyBit.BS.Client.World
                 JollyBit.BS.Client.World.Block block = new JollyBit.BS.Client.World.Block(m.Left, m.Right, m.Front, m.Back, m.Top, m.Bottom);
                 _blocks[m.ID] = block;
                 _shorts[block] = m.ID;
-                _logger.Debug("BlockManager received block type {0}.", m.ID);
             }
         }
 

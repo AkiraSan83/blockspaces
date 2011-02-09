@@ -18,7 +18,8 @@ namespace JollyBit.BS.Core
     {
         public override void Load()
         {
-            //Register services
+            //Register services - Order is important services bound first get to register for events first and consequently receive events first.
+            Bind<IService>().ToMethod(context => Kernel.Get<IMessageTypeManager>());
             Bind<IService>().ToMethod(context => Kernel.Get<IBlockManager>());
             Bind<IService>().ToMethod(context => Kernel.Get<IMap>());
 
@@ -26,7 +27,6 @@ namespace JollyBit.BS.Core
             Rebind<IKernel>().ToConstant(this.Kernel);
             Rebind<IChunk>().To<Chunk>();
             Rebind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
-            Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
             string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
             Rebind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
                 .WithConstructorArgument("workingDirectory", path + "assets/");
@@ -45,9 +45,9 @@ namespace JollyBit.BS.Core
                 NLog.Targets.ConsoleTarget consoleTarget = new NLog.Targets.ConsoleTarget();
                 config.AddTarget("console", fileTarget);
 
-                fileTarget.FileName = "${basedir}/log.txt";
-                fileTarget.Layout = "${longdate}|${level}|${message}";
-                consoleTarget.Layout = "[${date:format=HH\\:MM\\:ss}] [${level}] [${message}]";
+                fileTarget.FileName = "${basedir}/${processname}_Log.txt";
+                fileTarget.Layout = "[${longdate}] [${level}] [${message}]";
+                consoleTarget.Layout = ">> [${date:format=HH\\:MM\\:ss}] [${level}] [${message}]";
                 //rules
                 NLog.Config.LoggingRule loggingRule;
                 loggingRule = new NLog.Config.LoggingRule("*", NLog.LogLevel.Debug, fileTarget);
