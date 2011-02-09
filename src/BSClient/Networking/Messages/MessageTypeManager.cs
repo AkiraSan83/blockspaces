@@ -10,10 +10,12 @@ namespace JollyBit.BS.Client.Networking.Messages
 {
     public class MessageTypeManager : MessageTypeManagerBase
     {
+        private IConnection _connection;
         public MessageTypeManager(ILogger logger, IConnection connection)
             : base(false, logger)
         {
-            connection.MessageReceived += new EventHandler<Core.Utility.EventArgs<object>>(connection_MessageReceived);
+            _connection = connection;
+            _connection.MessageReceived += new EventHandler<Core.Utility.EventArgs<object>>(connection_MessageReceived);
         }
 
         void connection_MessageReceived(object sender, Core.Utility.EventArgs<object> e)
@@ -41,6 +43,7 @@ namespace JollyBit.BS.Client.Networking.Messages
                 else
                 {
                     _logger.Warn("Unknown MessageTypeMessage received. MessageTypeId='{0}' MessageTypeName='{1}'", messageTypeMessage.MessageTypeId, messageTypeMessage.MessageTypeName);
+                    _connection.SendMessage(new UnknownMessageTypeMessage(messageTypeMessage.MessageTypeId));
                 }
             }
         } 

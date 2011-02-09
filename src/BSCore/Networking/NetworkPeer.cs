@@ -72,6 +72,7 @@ namespace JollyBit.BS.Core.Networking
             if (mtd == null) //unknown message... log and drop
             {
                 _logger.Warn("Received unknown message. The message will be ignored. TypeId='{0}' Length='{1}' Ip='{2}' Port='{3}'", messageTypeId, message.LengthBytes, message.SenderConnection.RemoteEndpoint.Address.ToString(), message.SenderConnection.RemoteEndpoint.Port);
+                this.SendMessage(new UnknownMessageTypeMessage(messageTypeId), message.SenderConnection);
                 return;
             }
 #if DEBUG
