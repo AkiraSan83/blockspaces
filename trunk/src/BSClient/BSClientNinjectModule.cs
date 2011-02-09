@@ -22,6 +22,10 @@ namespace JollyBit.BS.Client
     {
         public override void Load()
         {
+            //Register services - Order is important services bound first get to register for events first and consequently receive events first.
+
+
+            //Create bindings
             Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
             Rebind<GLState>().To<GLState>().InSingletonScope();
             Rebind<IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
