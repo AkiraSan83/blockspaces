@@ -23,13 +23,9 @@ namespace JollyBit.BS.Core
             Rebind<IChunk>().To<Chunk>();
             Rebind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
             string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
-            Rebind<IFileSystem>().To<StandardFileSystem>().InSingletonScope()
-                .WithConstructorArgument("workingDirectory", path + "assets/");
-            Rebind<NetPeerConfiguration>().ToMethod(
-                (context) =>
-                {
-                    return Kernel.Get<IConfigManager>().GetConfig<NetworkConfig>().CreateNetPeerConfig();
-                }).InSingletonScope();
+            Rebind<IFileSystem>().To<StandardFileSystem>().InSingletonScope().WithConstructorArgument("workingDirectory", new FileReference(path + "assets/"));
+            Rebind<NetPeerConfiguration>().ToMethod(context => Kernel.Get<NetworkConfig>().CreateNetPeerConfig()).InSingletonScope();
+            Rebind<IConfigManager>().To<ConfigManager>().InSingletonScope().WithConstructorArgument("fileReference", new FileReference(Application.ExecutablePath).GetFileName() + "_config.json");
 
             //Logging config stuff
             {
@@ -55,6 +51,7 @@ namespace JollyBit.BS.Core
 
             //Register services - Order is important services bound first get to register for events first and consequently receive events first.
             IStartupService startup = Kernel.Get<IStartupService>();
+            startup.RegisterStartupType<IConfigManager>();
             startup.RegisterStartupType<IMessageTypeManager>();
             startup.RegisterStartupType<IBlockManager>();
             startup.RegisterStartupType<IMap>();

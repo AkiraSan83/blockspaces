@@ -21,12 +21,12 @@ namespace JollyBit.BS.Core.World
 
     public interface IBlock
     {
-        IFileReference GetTextureForSide(BlockSides side);
+        FileReference GetTextureForSide(BlockSides side);
     }
 
     public class Block : IBlock
     {
-        public IFileReference GetTextureForSide(BlockSides side)
+        public FileReference GetTextureForSide(BlockSides side)
         {
             if (side == BlockSides.Top)
             {
@@ -38,7 +38,7 @@ namespace JollyBit.BS.Core.World
 	   
 	public class AnnoyingStoneBlock : IBlock
     {
-        public IFileReference GetTextureForSide(BlockSides side)
+        public FileReference GetTextureForSide(BlockSides side)
         {
 //            if(side == BlockSides.Top)
 //                return new FileReference("stone_top.png");

@@ -35,22 +35,6 @@ namespace JollyBit.BS.Client
             Rebind<IClientConnection>().To<Connection>().InSingletonScope();
             Rebind<IConnection>().ToMethod(context => Kernel.Get<IClientConnection>());
             Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
-            Rebind<IConfigManager>().ToMethod(
-                (context) =>
-                {
-                    //XmlSerializer
-                    Stream stream = context.Kernel.Get<IFileSystem>().OpenFile("ClientConfig.json");
-                    ConfigManager configManager;
-                    if (stream != null)
-                    {
-                        TextReader reader = new StreamReader(stream);
-                        JsonExSerializer.Serializer serializer = new JsonExSerializer.Serializer(typeof(ConfigManager));
-                        configManager = serializer.Deserialize(stream) as ConfigManager;
-                        stream.Close();
-                    }
-                    else configManager = new ConfigManager();
-                    return configManager;
-                }).InSingletonScope();
         }
     }
 }

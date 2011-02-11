@@ -8,7 +8,8 @@ using JsonExSerializer;
 
 namespace JollyBit.BS.Core.Networking
 {
-    public class NetworkConfig : IConfigSection
+    [ConfigSection]
+    public class NetworkConfig
     {
         private NetPeerConfiguration _config;
         public NetworkConfig()

@@ -15,7 +15,8 @@ using JollyBit.BS.Core;
 using JollyBit.BS.Core.Utility;
 
 namespace JollyBit.BS.Client {
-	public class InputConfig : IConfigSection {
+    [ConfigSection]
+	public class InputConfig {
 		public float KeySpeed = 0.25f;
         public float MouseSpeed = 0.001f;
 		public bool InvertMouse = false;
@@ -32,7 +33,7 @@ namespace JollyBit.BS.Client {
 			this._gameWindow = client;
 			
 			// Get the config
-			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<InputConfig>();
+            _config = Constants.Kernel.Get<InputConfig>();
 			
 			// Center and hide the cursor
 			this.recenter();

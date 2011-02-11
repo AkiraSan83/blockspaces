@@ -11,7 +11,7 @@ namespace JollyBit.BS.Core.Utility
     {
         public readonly string _workingDirectory;
         [Inject]
-        public StandardFileSystem(string workingDirectory)
+        public StandardFileSystem(FileReference workingDirectory)
         {
             _workingDirectory = workingDirectory;
             if (_workingDirectory[_workingDirectory.Length - 1] != '/' ||
@@ -26,7 +26,7 @@ namespace JollyBit.BS.Core.Utility
             }
         }
 
-        public System.IO.Stream OpenFile(string path)
+        public System.IO.Stream OpenFile(FileReference path)
         {
             path = _workingDirectory + fixPath(path);
             if (File.Exists(path))
@@ -35,21 +35,18 @@ namespace JollyBit.BS.Core.Utility
                 return null;
         }
 
-        public Stream CreateFile(string path)
+        public Stream CreateFile(FileReference path)
         {
             path = fixPath(path);
             if (File.Exists(_workingDirectory + path))
             {
-                return OpenFile(path);
+                DeleteFile(path);
             }
-            else
-            {
-                CreateDirectory(path.Substring(0, path.Length - Path.GetFileName(path).Length));
-                return File.Create(_workingDirectory + path);
-            }
+            CreateDirectory(path.FileLocation.Substring(0, path.FileLocation.Length - Path.GetFileName(path).Length));
+            return File.Create(_workingDirectory + path);
         }
 
-        public void CreateDirectory(string path)
+        public void CreateDirectory(FileReference path)
         {
             path = _workingDirectory + fixPath(path);
             if (!Directory.Exists(path))
@@ -58,7 +55,7 @@ namespace JollyBit.BS.Core.Utility
             }
         }
 
-        public void DeleteFile(string path)
+        public void DeleteFile(FileReference path)
         {
             path = _workingDirectory + fixPath(path);
             if (File.Exists(path))
@@ -67,7 +64,7 @@ namespace JollyBit.BS.Core.Utility
             }
         }
 
-        public void DeleteDirectory(string path)
+        public void DeleteDirectory(FileReference path)
         {
             path = _workingDirectory + fixPath(path);
             if (Directory.Exists(path))
@@ -76,7 +73,7 @@ namespace JollyBit.BS.Core.Utility
             }
         }
 
-        public IEnumerable<string> ListFilesInDirectory(string path)
+        public IEnumerable<string> ListFilesInDirectory(FileReference path)
         {
             path = _workingDirectory + fixPath(path);
             if (Directory.Exists(path))
@@ -85,7 +82,7 @@ namespace JollyBit.BS.Core.Utility
                 return null;
         }
 
-        public IEnumerable<string> ListDirectoriesInDirectory(string path)
+        public IEnumerable<string> ListDirectoriesInDirectory(FileReference path)
         {
             path = _workingDirectory + fixPath(path);
             if (Directory.Exists(path))
@@ -96,9 +93,7 @@ namespace JollyBit.BS.Core.Utility
 
         private string fixPath(string path)
         {
-            return path
-                .Replace('/', Path.DirectorySeparatorChar)
-                .Replace('\\', Path.DirectorySeparatorChar);
+            return FileReference.FixPath(path);
         }
     }
 }

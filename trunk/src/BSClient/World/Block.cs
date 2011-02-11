@@ -18,7 +18,7 @@ namespace JollyBit.BS.Client.World
             Bottom = bottom;
         }
 
-        public IFileReference GetTextureForSide(BlockSides side) {
+        public FileReference GetTextureForSide(BlockSides side) {
             switch(side) {
                 case BlockSides.Left: return new FileReference(Left);
                 case BlockSides.Right: return new FileReference(Right);

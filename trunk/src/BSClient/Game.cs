@@ -29,7 +29,8 @@ using JollyBit.BS.Client.Networking;
 
 namespace JollyBit.BS.Client
 {
-	public class ClientConfig : IConfigSection {
+    [ConfigSection]
+	public class ClientConfig {
 		public int DebugSleepTime = 0;
 		public bool EnableTrident = false;
 		//public double MaxFPS = 60.0;
@@ -62,6 +63,7 @@ namespace JollyBit.BS.Client
 			//Setup Ninject
 			Constants.Kernel = new StandardKernel();
 			Constants.Kernel.Load(new BSClientNinjectModule());
+            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
 			Constants.Kernel.Bind<ITimeService>().ToConstant(this);
             Constants.Kernel.Get<IStartupService>().ActivateStartupTypes();
 			// Handle mouse and keyboard events
@@ -71,7 +73,7 @@ namespace JollyBit.BS.Client
 			_camera = new Camera();
 			
 			// Get client config
-			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<ClientConfig>();
+			_config = Constants.Kernel.Get<ClientConfig>();
 			//this.TargetRenderFrequency = _config.MaxFPS;
 			//Console.WriteLine(this.TargetRenderFrequency);
 			
@@ -127,7 +129,12 @@ namespace JollyBit.BS.Client
 			Constants.Kernel.Get<IClientConnection>().Connect("127.0.0.1", 12421);
 			
 			GC.Collect();
-		}    
+		}
+
+        void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            Constants.Kernel.Dispose();
+        }    
 
 		private double _fps = 0; // render frequency adder
 		private int _fpsCount = 0; // Frames since last FPS update
@@ -167,13 +174,6 @@ namespace JollyBit.BS.Client
 			
 			if(_config.DebugSleepTime != 0)
 				Thread.Sleep(_config.DebugSleepTime);
-		}
-
-
-		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
-		{
-			Constants.Kernel.Get<IConfigManager>().SaveConfig();
-			base.OnClosing(e);
 		}
 
 		/// <summary>

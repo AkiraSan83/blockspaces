@@ -20,7 +20,7 @@ namespace JollyBit.BS.Core.Networking.Messages
 
         /// <summary>
         /// The id used to identify the message type. If this parameter is null
-        /// the MessageType will automatically be assigned a MessageTypeId wich is usally what is desired.
+        /// the MessageType will automatically be assigned a MessageTypeId which is usually what is desired.
         /// MessageTypeId values between 1 and 100 are valid. An error will be thrown if two message types have the same
         /// MessageTypeId.
         /// </summary

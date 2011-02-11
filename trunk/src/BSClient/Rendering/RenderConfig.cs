@@ -9,7 +9,8 @@ using Ninject.Extensions.Logging;
 
 namespace JollyBit.BS.Client.Rendering
 {
-	public class RenderConfig : IConfigSection
+    [ConfigSection]
+	public class RenderConfig
 	{
 		private GLState _glState;
 		private ILogger _logger;

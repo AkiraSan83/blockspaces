@@ -16,7 +16,7 @@ namespace JollyBit.BS.Server
 			Console.WindowWidth = 100;
 			Constants.Kernel = new StandardKernel();
 			Constants.Kernel.Load(new BSServerNinjectModule());
-			Server server = new Server();
+            Server server = new Server();
 			Constants.Kernel.Bind<ITimeService>().ToConstant(server);
 			Constants.Kernel.Get<IStartupService>().ActivateStartupTypes(); //Start all the services
 			IConnectionManager connectionManager = Constants.Kernel.Get<IConnectionManager>();
@@ -31,8 +31,6 @@ namespace JollyBit.BS.Server
 					c = map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
 				}
 			}
-
-			Console.ReadLine();
 		}
 	}
 }

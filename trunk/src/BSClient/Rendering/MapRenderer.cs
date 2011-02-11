@@ -30,7 +30,7 @@ namespace JollyBit.BS.Client.Rendering
 		[Inject]
         public MapRenderer(IMap map, IKernel kernel, ITextureAtlasFactory textureAtlasFactory)
         {
-			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+            _config = Constants.Kernel.Get<RenderConfig>();
 			
             Map = map;
             _textureAtlas = textureAtlasFactory.CreateTextureAtlas(new Size(_config.MaxTextureSize,_config.MaxTextureSize), new Size(_config.MaxTextureSize/16,_config.MaxTextureSize/16), 4);
