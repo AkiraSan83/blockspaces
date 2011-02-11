@@ -63,7 +63,7 @@ namespace JollyBit.BS.Client
 			//Setup Ninject
 			Constants.Kernel = new StandardKernel();
 			Constants.Kernel.Load(new BSClientNinjectModule());
-            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
 			Constants.Kernel.Bind<ITimeService>().ToConstant(this);
             Constants.Kernel.Get<IStartupService>().ActivateStartupTypes();
 			// Handle mouse and keyboard events
