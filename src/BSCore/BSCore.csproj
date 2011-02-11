@@ -57,6 +57,7 @@
     <Compile Include="Utility\IStartupService.cs" />
     <Compile Include="Utility\ITimeService.cs" />
     <Compile Include="Utility\Point.cs" />
+    <Compile Include="Utility\ReflectionHelper.cs" />
     <Compile Include="Utility\StandardFileSystem.cs" />
     <Compile Include="World\Chunk.cs" />
     <Compile Include="World\IBlock.cs" />

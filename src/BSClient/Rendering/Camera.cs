@@ -25,7 +25,7 @@ namespace JollyBit.BS.Client.Rendering
 
         private RenderConfig _config;
         public Camera() {
-            _config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+            _config = Constants.Kernel.Get<RenderConfig>();
         }
 
         private Matrix4 _modelView;

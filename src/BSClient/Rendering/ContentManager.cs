@@ -27,7 +27,7 @@ namespace JollyBit.BS.Client.Rendering
             _fileSystem = fileSystem;
         }
 
-        public IBitmap LoadBitmap(IFileReference fileReference)
+        public IBitmap LoadBitmap(FileReference fileReference)
         {
             IBitmap bitmap;
             if (tryGetFromCache<IBitmap>(fileReference.FileLocation, out bitmap))

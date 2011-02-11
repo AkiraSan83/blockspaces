@@ -25,6 +25,12 @@ namespace JollyBit.BS.Core.Utility
         {
             _kernel = kernel;
             StartupTypes = new List<Type>();
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+        }
+
+        void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            _kernel.Dispose();
         }
         public IList<Type> StartupTypes { get; private set; }
         public void ActivateStartupTypes()

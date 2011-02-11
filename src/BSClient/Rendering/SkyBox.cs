@@ -25,7 +25,7 @@ namespace JollyBit.BS.Client.Rendering
 		private RenderConfig _config;
         public SkyBox(IBitmap neg_x, IBitmap pos_x, IBitmap neg_y, IBitmap pos_y, IBitmap neg_z, IBitmap pos_z)
         {
-			_config = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>();
+            _config = Constants.Kernel.Get<RenderConfig>();
 			
             ITextureAtlasFactory atlasFactory = Constants.Kernel.Get<ITextureAtlasFactory>();
             _atlas = atlasFactory.CreateTextureAtlas(new Size(_config.MaxTextureSize,_config.MaxTextureSize/2), new Size(_config.MaxTextureSize / 4, _config.MaxTextureSize / 4), 1);
@@ -44,7 +44,7 @@ namespace JollyBit.BS.Client.Rendering
                 _vbo.Dispose();
                 _vbo = null;
             }
-            float v = Constants.Kernel.Get<IConfigManager>().GetConfig<RenderConfig>().FarClippingPlane / 2;
+            float v = Constants.Kernel.Get<RenderConfig>().FarClippingPlane / 2;
             Vertex[] vertexes = new Vertex[]
             {
                 //_pos_z
