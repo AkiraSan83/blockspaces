@@ -30,7 +30,7 @@ namespace JollyBit.BS.Core.World
         void FillFromMessage(ChunkMessage message);
     }
 
-    public interface IMap : IService
+    public interface IMap
     {
         IChunk this[Point3L blockLocation] { get; }
         IEnumerable<IChunk> Chunks { get; }

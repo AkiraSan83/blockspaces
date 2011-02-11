@@ -16,7 +16,7 @@ namespace JollyBit.BS.Core.Networking.Messages
         int SequenceChannel { get; }
         NetDeliveryMethod DeliveryMethod { get; }
     }
-    public interface IMessageTypeManager : IService
+    public interface IMessageTypeManager
     {
         IMessageTypeDescription GetMessageTypeDescription(uint messageTypeId);
         IMessageTypeDescription GetMessageTypeDescription(Type messageType);
