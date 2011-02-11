@@ -31,6 +31,10 @@ namespace JollyBit.BS.Server
 					c = map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
 				}
 			}
+
+            while (Console.ReadKey().Key != ConsoleKey.Escape) { }
+            Constants.Kernel.Dispose();
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
 		}
 	}
 }
