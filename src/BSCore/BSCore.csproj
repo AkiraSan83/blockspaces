@@ -54,7 +54,7 @@
     <Compile Include="Utility\EventArgs.cs" />
     <Compile Include="Utility\IFileReference.cs" />
     <Compile Include="Utility\IFileSystem.cs" />
-    <Compile Include="Utility\IService.cs" />
+    <Compile Include="Utility\IStartupService.cs" />
     <Compile Include="Utility\ITimeService.cs" />
     <Compile Include="Utility\Point.cs" />
     <Compile Include="Utility\StandardFileSystem.cs" />

@@ -25,7 +25,7 @@ namespace JollyBit.BS.Core.Networking
         void Start();
         void Stop();
         void Connect(string host, int port);
-        void Disconnect();
+        void Disconnect();        
     }
 
     public class NetworkPeerConnectionEventArgs : EventArgs

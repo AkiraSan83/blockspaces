@@ -18,13 +18,8 @@ namespace JollyBit.BS.Core
     {
         public override void Load()
         {
-            //Register services - Order is important services bound first get to register for events first and consequently receive events first.
-            Bind<IService>().ToMethod(context => Kernel.Get<IMessageTypeManager>());
-            Bind<IService>().ToMethod(context => Kernel.Get<IBlockManager>());
-            Bind<IService>().ToMethod(context => Kernel.Get<IMap>());
-
             //Create bindings
-            Rebind<IKernel>().ToConstant(this.Kernel);
+            Rebind<IStartupService>().To<StartupService>().InSingletonScope();
             Rebind<IChunk>().To<Chunk>();
             Rebind<INetworkPeer>().To<NetworkPeer>().InSingletonScope();
             string path = Application.ExecutablePath.Substring(0, Application.ExecutablePath.Length - Path.GetFileName(Application.ExecutablePath).Length);
@@ -57,6 +52,12 @@ namespace JollyBit.BS.Core
                 //activate
                 NLog.LogManager.Configuration = config;
             }
+
+            //Register services - Order is important services bound first get to register for events first and consequently receive events first.
+            IStartupService startup = Kernel.Get<IStartupService>();
+            startup.RegisterStartupType<IMessageTypeManager>();
+            startup.RegisterStartupType<IBlockManager>();
+            startup.RegisterStartupType<IMap>();
         }
     }
 }
