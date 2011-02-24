@@ -34,7 +34,7 @@ namespace JollyBit.BS.Core.World
     {
         IChunk this[Point3L blockLocation] { get; }
         IEnumerable<IChunk> Chunks { get; }
-        event EventHandler<ItemChangedEventArgs<IChunk>> ChunkChanged;
+        event EventHandler<ChangedEventArgs<IChunk>> ChunkChanged;
     }
 
     public static class MapExtensions

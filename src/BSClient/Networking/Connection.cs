@@ -29,6 +29,7 @@ namespace JollyBit.BS.Client.Networking
         {
             if (e.Data is InitializationCompleteMessage)
             {
+                if (ConnectionInitialized != null) ConnectionInitialized(this, new EventArgs());
                 _logger.Info("Initialization Complete Message received. Sending reply.");
                 SendMessage(new InitializationCompleteMessage());
             }
@@ -58,10 +59,9 @@ namespace JollyBit.BS.Client.Networking
         }
 
         public event EventHandler<Core.Utility.EventArgs<object>> MessageReceived;
-
         public event EventHandler ConnectionEstablished;
-
         public event EventHandler ConnectionTerminated;
+        public event EventHandler ConnectionInitialized;
 
         private IClient _client = null;
         public IClient Client
@@ -81,5 +81,6 @@ namespace JollyBit.BS.Client.Networking
             _network.Disconnect();
             //_network.Stop();
         }
+
     }
 }

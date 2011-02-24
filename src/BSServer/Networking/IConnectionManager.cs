@@ -30,43 +30,21 @@ namespace JollyBit.BS.Server.Networking
         /// </summary>
         IEnumerable<IConnection> Connections { get; }
         /// <summary>
-        /// A list of operations to preform before the connection is considered established. If
-        /// any of the operations return false the connection will be terminated.
-        /// </summary>
-        IList<IConnectionEstablishingOperation> ConnectionEstablishingOperations { get; }
-        /// <summary>
         /// This event fires whenever a connection is terminated.
         /// </summary>
         event EventHandler<EventArgs<IConnection>> ConnectionTerminated;
         /// <summary>
-        /// This event fires whenever a connection is established. ConnectionEstablishingOperations are preformed before
-        /// this event is fired
+        /// This event fires whenever a connection is established. This event is fired before the connection
+        /// is considered initialized. This event should be used to send client initialization data.
         /// </summary>
         event EventHandler<EventArgs<IConnection>> ConnectionEstablished;
         /// <summary>
-        /// This event fires when the connection is done being initialized. This occurs after the  
+        /// This event fires when the connection is initialized. This occurs after the  
         /// ConnectionEstablished event fires.
         /// </summary>
         event EventHandler<EventArgs<IConnection>> ConnectionInitialized;
         void StartListeningForConnections();
         void StopListeningForConnections();
-    }
-
-    /// <summary>
-    /// An operation that is to be preformed before a connection is considered established.
-    /// </summary>
-    /// <typeparam name="TCLIENT"></typeparam>
-    public interface IConnectionEstablishingOperation
-    {
-        /// <summary>
-        /// Does an operation for a specific connection. This method should return quickly and not block the
-        /// calling thread.
-        /// </summary>
-        /// <param name="connection">The connection the operation is to be preformed on/for</param>
-        /// <param name="callbackFunc">This function should be called when the operation is complete. If the function's only
-        /// parameter is false the connection will be terminated. The callback function should be called in the same thread
-        /// as DoConnectionEstablishingOperation was called from.</param>
-        void DoConnectionEstablishingOperation(IConnection connection, Action<bool> callbackFunc);
     }
 
     internal class ConnectionManager : IConnectionManager
@@ -88,6 +66,8 @@ namespace JollyBit.BS.Server.Networking
             //Raise Initialization Complete Message
             if (e.Data.Value is InitializationCompleteMessage)
             {
+                Connection conn;
+                if ((conn = e.Data.Key as Connection) != null) conn.RaiseConnectionInitialized();
                 if (ConnectionInitialized != null) ConnectionInitialized(this, new EventArgs<IConnection>(e.Data.Key));
             }
         }
@@ -115,30 +95,9 @@ namespace JollyBit.BS.Server.Networking
         {
             Connection connection = new Connection(this, e.Connection);
             _connectionDict.Add(e.Connection, connection);
-            int currentOperationIndex = -1;
-            Action<bool> callback = null;
-            callback = (bool success) =>
-            {
-                currentOperationIndex++;
-                if (!success)
-                {
-                    //Operation failed disconnect
-                    _network.TerminateConnection(connection.NetPeerConnection);
-                    return;
-                }
-                if (_connectionEstablishingOperations.Count == currentOperationIndex)
-                {
-                    //End of operations make connection official
-                    connection.RaiseConnectionEstablished();
-                    if (ConnectionEstablished != null) ConnectionEstablished(this, new EventArgs<IConnection>(connection));
-                    connection.SendMessage(new InitializationCompleteMessage());
-                    return;
-                }
-                //Do next operation in list
-                IConnectionEstablishingOperation currentOperation = _connectionEstablishingOperations[currentOperationIndex];
-                currentOperation.DoConnectionEstablishingOperation(connection, callback);
-            };
-            callback(true);
+            connection.RaiseConnectionEstablished();
+            if (ConnectionEstablished != null) ConnectionEstablished(this, new EventArgs<IConnection>(connection));
+            connection.SendMessage(new InitializationCompleteMessage());
         }
         
         #endregion
@@ -157,11 +116,6 @@ namespace JollyBit.BS.Server.Networking
         {
             get { return _connectionDict.Cast<IConnection>(); }
         }
-        private readonly IList<IConnectionEstablishingOperation> _connectionEstablishingOperations = new List<IConnectionEstablishingOperation>();
-        public IList<IConnectionEstablishingOperation> ConnectionEstablishingOperations
-        {
-            get { return _connectionEstablishingOperations; }
-        }
         public event EventHandler<EventArgs<KeyValuePair<IConnection, object>>> MessageReceived;
         public event EventHandler<EventArgs<IConnection>> ConnectionTerminated;
         public event EventHandler<EventArgs<IConnection>> ConnectionEstablished;
@@ -169,7 +123,7 @@ namespace JollyBit.BS.Server.Networking
         #endregion
 
         /// <summary>
-        /// A dumb connection wich simply relies on ConnectionManager for all functionality
+        /// A dumb connection which simply relies on ConnectionManager for all functionality
         /// </summary>
         private class Connection : IConnection
         {
@@ -199,6 +153,11 @@ namespace JollyBit.BS.Server.Networking
                 if (ConnectionEstablished != null) ConnectionTerminated(this, new EventArgs());
             }
             public event EventHandler ConnectionTerminated;
+            public void RaiseConnectionInitialized()
+            {
+                if (ConnectionInitialized != null) ConnectionInitialized(this, new EventArgs());
+            }
+            public event EventHandler ConnectionInitialized;
 
             private IClient _client = null;
             public IClient Client

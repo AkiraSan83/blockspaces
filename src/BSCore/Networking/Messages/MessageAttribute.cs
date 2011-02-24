@@ -53,6 +53,7 @@ namespace JollyBit.BS.Core.Networking.Messages
     public enum SequenceChannels
     {
         NotSpecified = 0,
-        Initialization = 1
+        Initialization = 1,
+        Position = 1
     }
 }

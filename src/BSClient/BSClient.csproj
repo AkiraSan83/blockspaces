@@ -60,6 +60,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Networking\Connection.cs" />
     <Compile Include="Networking\IClientConnection.cs" />
+    <Compile Include="Networking\Messages\MessageComponentAssociation.cs" />
     <Compile Include="Networking\Messages\MessageTypeManager.cs" />
     <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Rendering\ContentManager.cs" />
@@ -76,6 +77,8 @@
     <Compile Include="Input.cs" />
     <Compile Include="Rendering\RenderConfig.cs" />
     <Compile Include="Rendering\Frustum.cs" />
+    <Compile Include="World\Actors\IClientSyncComponent.cs" />
+    <Compile Include="World\Actors\PositionComponent.cs" />
     <Compile Include="World\BlockManager.cs" />
     <Compile Include="World\Block.cs" />
     <Compile Include="World\Map.cs" />

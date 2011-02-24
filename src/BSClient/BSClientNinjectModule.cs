@@ -15,6 +15,8 @@ using JollyBit.BS.Core.World;
 using JollyBit.BS.Client.World;
 using JollyBit.BS.Core.Networking.Messages;
 using JollyBit.BS.Client.Networking.Messages;
+using JollyBit.BS.Core.World.Actors;
+using JollyBit.BS.Client.World.Actors;
 
 namespace JollyBit.BS.Client
 {
@@ -25,7 +27,7 @@ namespace JollyBit.BS.Client
             //Register services - Order is important services bound first get to register for events first and consequently receive events first.
 
 
-            //Create bindings
+            //Create Bindings
             Kernel.Load(new JollyBit.BS.Core.BSCoreNinjectModule());
             Rebind<GLState>().To<GLState>().InSingletonScope();
             Rebind<IBlockManager>().To<JollyBit.BS.Client.World.BlockManager>().InSingletonScope();
@@ -35,6 +37,13 @@ namespace JollyBit.BS.Client
             Rebind<IClientConnection>().To<Connection>().InSingletonScope();
             Rebind<IConnection>().ToMethod(context => Kernel.Get<IClientConnection>());
             Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
+
+            //Create Component Bindings
+            Rebind<IPositionableComponent>().To<PositionComponent>().InActorScope();
+            Rebind<IClientSyncComponent>().ToProvider<ClientSyncComponentProvider>().InActorScope();
+
+            //Associate each ActorMessage with a component type that will handle the message
+            Bind<MessageComponentAssociation>().ToConstant(MessageComponentAssociation.Create<PositionMessage, IPositionableComponent>());
         }
     }
 }
