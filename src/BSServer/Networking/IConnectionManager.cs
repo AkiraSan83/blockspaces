@@ -114,7 +114,7 @@ namespace JollyBit.BS.Server.Networking
         }
         public IEnumerable<IConnection> Connections
         {
-            get { return _connectionDict.Cast<IConnection>(); }
+            get { return _connectionDict.Values.Cast<IConnection>(); }
         }
         public event EventHandler<EventArgs<KeyValuePair<IConnection, object>>> MessageReceived;
         public event EventHandler<EventArgs<IConnection>> ConnectionTerminated;

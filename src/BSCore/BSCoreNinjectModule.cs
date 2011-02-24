@@ -29,8 +29,8 @@ namespace JollyBit.BS.Core
             Rebind<IFileSystem>().To<StandardFileSystem>().InSingletonScope().WithConstructorArgument("workingDirectory", new FileReference(path + "assets/"));
             Rebind<NetPeerConfiguration>().ToMethod(context => Kernel.Get<NetworkConfig>().CreateNetPeerConfig()).InSingletonScope();
             Rebind<IConfigManager>().To<ConfigManager>().InSingletonScope().WithConstructorArgument("fileReference", new FileReference(Application.ExecutablePath).GetFileName() + "_config.json");
-            Bind<IActor>().ToMethod(context => context.Parameters.First(parm => parm.Name == "actor") as IActor);
-            Bind<IActor>().ToProvider<ActorProvider>();
+            Rebind<ActorProvider>().To<ActorProvider>().InSingletonScope();   
+            Rebind<IActor>().ToProvider<ActorProvider>();
             
             //Logging config stuff
             {
