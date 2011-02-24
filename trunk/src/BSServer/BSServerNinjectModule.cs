@@ -15,6 +15,7 @@ using JollyBit.BS.Core.Networking.Messages;
 using JollyBit.BS.Server.Networking.Messages;
 using JollyBit.BS.Core.World.Actors;
 using JollyBit.BS.Server.World.Actors;
+using JollyBit.BS.Server.Utility;
 
 namespace JollyBit.BS.Server
 {
@@ -33,6 +34,10 @@ namespace JollyBit.BS.Server
             //Create Component Bindings
             Rebind<IPositionableComponent>().To<PositionComponent>().InActorScope();
             Rebind<IServerSyncComponent>().To<SimpleSyncComponent>().InActorScope();
+
+            //Register services - Order is important services bound first get to register for events first and consequently receive events first.
+            IStartupService startup = Kernel.Get<IStartupService>();
+            startup.RegisterStartupType<TestService>();
         }
     }
 }

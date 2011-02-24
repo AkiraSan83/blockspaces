@@ -45,6 +45,7 @@
     <Compile Include="Networking\Messages\MessageTypeManager.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Utility\DbConnectionExtensions.cs" />
+    <Compile Include="Utility\TestService.cs" />
     <Compile Include="World\Actors\IServerSyncComponent.cs" />
     <Compile Include="World\Actors\PositionComponent.cs" />
     <Compile Include="World\Actors\SimpleSyncComponent.cs" />

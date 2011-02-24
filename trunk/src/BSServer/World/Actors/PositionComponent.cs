@@ -6,6 +6,7 @@ using JollyBit.BS.Core.World.Actors;
 using OpenTK;
 using JollyBit.BS.Core.Networking.Messages;
 using JollyBit.BS.Server.Networking;
+using JollyBit.BS.Core.Networking;
 
 namespace JollyBit.BS.Server.World.Actors
 {
@@ -17,26 +18,27 @@ namespace JollyBit.BS.Server.World.Actors
         {
             _syncComponent = syncComponent;
             _syncComponent.ConnectionEnteringRelevantSet += new EventHandler<Core.Utility.EventArgs<Core.Networking.IConnection>>(_syncComponent_ConnectionEnteringRelevantSet);
+            sendPosition();
         }
         void _syncComponent_ConnectionEnteringRelevantSet(object sender, Core.Utility.EventArgs<Core.Networking.IConnection> e)
         {
             e.Data.SendMessage(new PositionMessage(Actor.ActorId, Position, Rotation));
         }
-        protected override void OnPositionChanged(Vector3 oldPosition, Vector3 newPosition)
+        private void sendPosition()
         {
             PositionMessage msg = new PositionMessage(Actor.ActorId, Position, Rotation);
-            foreach (var conn in _syncComponent.RelevantConnections)
+            foreach (IConnection conn in _syncComponent.RelevantConnections)
             {
                 conn.SendMessage(msg);
             }
         }
+        protected override void OnPositionChanged(Vector3 oldPosition, Vector3 newPosition)
+        {
+            sendPosition();
+        }
         protected override void OnRotationChanged(Quaternion oldRotation, Quaternion newRotation)
         {
-            PositionMessage msg = new PositionMessage(Actor.ActorId, Position, Rotation);
-            foreach (var conn in _syncComponent.RelevantConnections)
-            {
-                conn.SendMessage(msg);
-            }
+            sendPosition();
         }
     }
 }

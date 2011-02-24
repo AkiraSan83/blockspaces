@@ -37,6 +37,7 @@ namespace JollyBit.BS.Client
             Rebind<IClientConnection>().To<Connection>().InSingletonScope();
             Rebind<IConnection>().ToMethod(context => Kernel.Get<IClientConnection>());
             Rebind<IMessageTypeManager>().To<MessageTypeManager>().InSingletonScope();
+            Rebind<ClientSyncComponentProvider>().To<ClientSyncComponentProvider>().InSingletonScope();
 
             //Create Component Bindings
             Rebind<IPositionableComponent>().To<PositionComponent>().InActorScope();
@@ -44,6 +45,10 @@ namespace JollyBit.BS.Client
 
             //Associate each ActorMessage with a component type that will handle the message
             Bind<MessageComponentAssociation>().ToConstant(MessageComponentAssociation.Create<PositionMessage, IPositionableComponent>());
+
+            //Register services - Order is important services bound first get to register for events first and consequently receive events first.
+            IStartupService startup = Kernel.Get<IStartupService>();
+            startup.RegisterStartupType<ClientSyncComponentProvider>();
         }
     }
 }

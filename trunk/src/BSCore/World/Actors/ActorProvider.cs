@@ -13,7 +13,7 @@ namespace JollyBit.BS.Core.World.Actors
     public class ActorProvider : Provider<IActor>
     {
         private int currentActorId = 1;
-        private IDictionary<int, IActor> _actors = new DictionaryWithWeaklyReferencedKey<int, IActor>();
+        private IDictionary<int, IActor> _actors = new Dictionary<int, IActor>();
         private readonly ILogger _logger;
         public ActorProvider(ILogger logger)
         {
@@ -23,7 +23,17 @@ namespace JollyBit.BS.Core.World.Actors
         {
             int? actorId = null;
             IActor actor = null;
+            //Check for actor parameter
+            {
+                IParameter parameter = context.Parameters.FirstOrDefault(parm => parm.Name.ToLower() == "actor");
+                if (parameter != null)
+                {
+                    actor = parameter.GetValue(context, context.Request.Target) as IActor;
+                    if (actor != null) actorId = actor.ActorId;
+                }
+            }
             //Check for ActorId parameter
+            if (actorId == null)
             {
                 IParameter parameter = context.Parameters.FirstOrDefault(parm => parm.Name.ToLower() == "actorid");
                 if (parameter != null) 
@@ -36,7 +46,7 @@ namespace JollyBit.BS.Core.World.Actors
                 currentActorId++;
             }
             //If actor not in _actors dictionary create a new actor
-            if (!_actors.TryGetValue(actorId.Value, out actor))
+            if (actor == null && !_actors.TryGetValue(actorId.Value, out actor))
             {
                 actor = new Actor(actorId.Value);
                 _actors.Add(actorId.Value, actor);
