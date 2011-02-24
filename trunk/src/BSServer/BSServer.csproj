@@ -45,10 +45,10 @@
     <Compile Include="Networking\Messages\MessageTypeManager.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Utility\DbConnectionExtensions.cs" />
+    <Compile Include="World\Actors\IServerSyncComponent.cs" />
+    <Compile Include="World\Actors\PositionComponent.cs" />
+    <Compile Include="World\Actors\SimpleSyncComponent.cs" />
     <Compile Include="World\BlockManager.cs" />
-    <Compile Include="Utility\DictionaryBase.cs" />
-    <Compile Include="Utility\DictionaryWithWeaklyReferencedKey.cs" />
-    <Compile Include="Utility\DictionaryWithWeaklyReferencedValues.cs" />
     <Compile Include="Utility\ObjectDatabase.cs" />
     <Compile Include="World\Generation\IGenerator.cs" />
     <Compile Include="World\Generation\SimpleTerrainGenerator.cs" />

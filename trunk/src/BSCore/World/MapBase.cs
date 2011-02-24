@@ -43,7 +43,7 @@ namespace JollyBit.BS.Core.World
                     _chunks[chunkLocation] = value;
                 }
                 else _chunks.Add(chunkLocation, value);
-                if (ChunkChanged != null) ChunkChanged(this, new ItemChangedEventArgs<IChunk>(chunk, value));
+                if (ChunkChanged != null) ChunkChanged(this, new ChangedEventArgs<IChunk>(chunk, value));
             }
         }
 
@@ -61,7 +61,7 @@ namespace JollyBit.BS.Core.World
             get { return _chunks.Values; }
         }
 
-        public event EventHandler<ItemChangedEventArgs<IChunk>> ChunkChanged;
+        public event EventHandler<ChangedEventArgs<IChunk>> ChunkChanged;
 
     }
 }

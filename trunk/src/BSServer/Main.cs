@@ -6,6 +6,7 @@ using JollyBit.BS.Server.Networking;
 using JollyBit.BS.Core.Networking;
 using JollyBit.BS.Core.Utility;
 using JollyBit.BS.Core.World;
+using JollyBit.BS.Core.World.Actors;
 
 namespace JollyBit.BS.Server
 {
@@ -13,25 +14,32 @@ namespace JollyBit.BS.Server
 	{
 		public static void Main (string[] args)
 		{
+            //Config
 			Console.WindowWidth = 100;
 			Constants.Kernel = new StandardKernel();
 			Constants.Kernel.Load(new BSServerNinjectModule());
             Server server = new Server();
 			Constants.Kernel.Bind<ITimeService>().ToConstant(server);
-			Constants.Kernel.Get<IStartupService>().ActivateStartupTypes(); //Start all the services
+			
+            
+            //Start
+            Constants.Kernel.Get<IStartupService>().ActivateStartupTypes(); //Start all the services
 			IConnectionManager connectionManager = Constants.Kernel.Get<IConnectionManager>();
-			connectionManager.StartListeningForConnections();
+            //Temp code
+            //Generate a world
+            IMap map = Constants.Kernel.Get<IMap>();
+            IChunk c;
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    c = map[new Point3L(i * Constants.CHUNK_SIZE_X - 1, 0, j * Constants.CHUNK_SIZE_Z - 1)];
+                }
+            }
+            connectionManager.StartListeningForConnections();
 			server.Start();
 
-			// Generate a world
-			IMap map = Constants.Kernel.Get<IMap>();
-			IChunk c;
-			for(int i = 0; i < 2; i++) {
-				for(int j = 0; j < 2; j++) {
-					c = map[new Point3L(i*Constants.CHUNK_SIZE_X-1, 0, j*Constants.CHUNK_SIZE_Z-1)];
-				}
-			}
-
+            //Console Shit
             while (Console.ReadKey().Key != ConsoleKey.Escape) { }
             Constants.Kernel.Dispose();
             System.Diagnostics.Process.GetCurrentProcess().Kill();

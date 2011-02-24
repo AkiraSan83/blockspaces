@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace JollyBit.BS.Server.Utility
+namespace JollyBit.BS.Core.Utility
 {
     public abstract class DictionaryBase<TKEY, TVALUE> : IDictionary<TKEY, TVALUE>
     {
@@ -68,7 +68,7 @@ namespace JollyBit.BS.Server.Utility
         public abstract int Count { get; }
         public virtual bool IsReadOnly
         {
-            get { return true; }
+            get { return false; }
         }
         public virtual bool Remove(KeyValuePair<TKEY, TVALUE> item)
         {

@@ -13,7 +13,7 @@ using Ninject;
 
 namespace JollyBit.BS.Client.Rendering
 {
-    public class Camera : IPositionable
+    public class Camera
     {
         private Vector3 _position = new Vector3(0,0,0);
 
@@ -137,8 +137,5 @@ namespace JollyBit.BS.Client.Rendering
             get { throw new NotImplementedException("Rotation not implemented."); }
             set { throw new NotImplementedException("Rotation not implemented."); }
         }
-
-        
-
     }
 }

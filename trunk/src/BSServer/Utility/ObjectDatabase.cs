@@ -7,6 +7,7 @@ using Ninject.Extensions.Logging;
 using System.Runtime.Serialization;
 using System.Data.SQLite;
 using System.Data;
+using JollyBit.BS.Core.Utility;
 
 namespace JollyBit.BS.Server.Utility
 {

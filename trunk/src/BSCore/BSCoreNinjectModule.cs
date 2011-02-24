@@ -11,11 +11,14 @@ using JollyBit.BS.Core.Networking;
 using Lidgren.Network;
 using System.Windows.Forms;
 using JollyBit.BS.Core.Networking.Messages;
+using JollyBit.BS.Core.World.Actors;
 
 namespace JollyBit.BS.Core
 {
     public class BSCoreNinjectModule : NinjectModule
     {
+
+
         public override void Load()
         {
             //Create bindings
@@ -26,7 +29,9 @@ namespace JollyBit.BS.Core
             Rebind<IFileSystem>().To<StandardFileSystem>().InSingletonScope().WithConstructorArgument("workingDirectory", new FileReference(path + "assets/"));
             Rebind<NetPeerConfiguration>().ToMethod(context => Kernel.Get<NetworkConfig>().CreateNetPeerConfig()).InSingletonScope();
             Rebind<IConfigManager>().To<ConfigManager>().InSingletonScope().WithConstructorArgument("fileReference", new FileReference(Application.ExecutablePath).GetFileName() + "_config.json");
-
+            Bind<IActor>().ToMethod(context => context.Parameters.First(parm => parm.Name == "actor") as IActor);
+            Bind<IActor>().ToProvider<ActorProvider>();
+            
             //Logging config stuff
             {
                 NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();

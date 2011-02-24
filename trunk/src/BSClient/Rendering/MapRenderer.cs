@@ -34,15 +34,15 @@ namespace JollyBit.BS.Client.Rendering
 			
             Map = map;
             _textureAtlas = textureAtlasFactory.CreateTextureAtlas(new Size(_config.MaxTextureSize,_config.MaxTextureSize), new Size(_config.MaxTextureSize/16,_config.MaxTextureSize/16), 4);
-            Map.ChunkChanged += new EventHandler<ItemChangedEventArgs<IChunk>>(Map_ChunkChanged);
+            Map.ChunkChanged += new EventHandler<ChangedEventArgs<IChunk>>(Map_ChunkChanged);
             //Create renderers for all chunks that already exist
             foreach (IChunk chunk in Map.Chunks)
             {
-                Map_ChunkChanged(this, new ItemChangedEventArgs<IChunk>(null, chunk));
+                Map_ChunkChanged(this, new ChangedEventArgs<IChunk>(null, chunk));
             }
         }
 
-        void Map_ChunkChanged(object sender, ItemChangedEventArgs<IChunk> e)
+        void Map_ChunkChanged(object sender, ChangedEventArgs<IChunk> e)
         {
             if (e.OldValue != null)
             {
@@ -134,7 +134,7 @@ namespace JollyBit.BS.Client.Rendering
         }
 
         /*
-                         _________________________ (1,1,1)
+                         _________________________ (1,1,0)
                         / _________Top_________  /|
                        / / ___________________/ / |   
                       / / /| |               / /  |  /|\
@@ -155,7 +155,7 @@ namespace JollyBit.BS.Client.Rendering
                 | | |/_/_______________| |  /     /
                 | |____________________| | /     /
                 |________Front___________|/    \/
-             (0,0,0)
+             (0,0,1)
                   ---------------------->
                         +X axis
         */
