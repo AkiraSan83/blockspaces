@@ -1,0 +1,1 @@
+Blockspaces is a cross-platform Minecraft-like game written in C# .NET 3.5.
